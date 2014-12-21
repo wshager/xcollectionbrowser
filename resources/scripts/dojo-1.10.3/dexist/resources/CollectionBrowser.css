@@ -1,0 +1,135 @@
+.dexistCollectionBrowser {
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  width: 800px;
+  height: 600px;
+}
+
+.dexistCollectionBrowser .dijitContentPane {
+	overflow: hidden;
+	padding:0;
+}
+
+.dexistCollectionBrowser #browsingGrid .field-name {
+	width:30%;
+}
+.dexistCollectionBrowser #browsingGrid .field-permissions {
+	width:15%
+}
+.dexistCollectionBrowser #browsingGrid .field-owner {
+	width:15%
+}
+.dexistCollectionBrowser #browsingGrid .field-group {
+	width:15%
+}
+.dexistCollectionBrowser #browsingGrid .field-lastModified {
+	width:25%
+}
+
+.dexistCollectionBrowser .dformaGrid-permissions .field-id {
+	width:30%
+}
+
+.dexistCollectionBrowser .dformaGrid-permissions .field-read {
+	width:10%
+}
+
+.dexistCollectionBrowser .dformaGrid-permissions .field-write {
+	width:10%
+}
+
+.dexistCollectionBrowser .dformaGrid-permissions .field-execute {
+	width:10%
+}
+
+.dexistCollectionBrowser .dformaGrid-permissions .field-special {
+	width:40%
+}
+
+.dexistCollectionBrowser .dformaGrid-acl .field-target {
+	width:20%
+}
+
+.dexistCollectionBrowser .dformaGrid-acl .field-who {
+	width:30%
+}
+
+.dexistCollectionBrowser .dformaGrid-acl .field-access {
+	width:20%
+}
+
+.dexistCollectionBrowser .dformaGrid-acl .field-read {
+	width:10%
+}
+
+.dexistCollectionBrowser .dformaGrid-acl .field-write {
+	width:10%
+}
+
+.dexistCollectionBrowser .dformaGrid-acl .field-execute {
+	width:10%
+}
+
+
+.dexistCollectionBrowser .dformaGridContainer .dgrid {
+	height:160px;
+}
+
+
+.dexistBreadCrumb {
+  height: 16px;
+  padding: 4px;
+}
+
+.dexistBreadCrumb a:hover {
+	color:#aa8899;
+	cursor:pointer;
+	text-decoration: underline;
+}
+
+.dexistBreadCrumb a:before {
+	content:"▸";
+	display:inline-block;
+	margin-left:0.1em;
+}
+
+.dexistCollectionBrowser .dijitIcon {
+	width:16px;
+	height:16px;
+	margin: 2px 3px;
+}
+
+.dexistToolbar-reload {
+	background-image:url("images/arrow_refresh.png");
+}
+
+.dexistToolbar-reindex {
+	background-image:url("images/database_refresh.png");
+}
+
+.dexistToolbar-new {
+	background-image:url("images/folder_add.png");
+}
+
+.dexistToolbar-delete {
+	background-image:url("images/bin.png");
+}
+
+.dexistToolbar-properties {
+	background-image:url("images/application_form_edit.png");
+}
+
+.dexistToolbar-copy {
+	background-image:url("images/page_copy.png");
+}
+
+.dexistToolbar-cut {
+	background-image:url("images/cut.png");
+}
+
+.dexistToolbar-paste {
+	background-image:url("images/page_paste.png");
+}
+
+.dexistToolbar-add {
+	background-image:url("images/database_add.png");
+}
