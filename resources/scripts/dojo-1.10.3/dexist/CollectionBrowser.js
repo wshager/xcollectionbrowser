@@ -555,11 +555,17 @@ define("dexist/CollectionBrowser", [
 				ev.preventDefault();
 				if(this.clipboard && this.clipboard.length > 0) {
 					console.log("Paste: %d resources", this.clipboard.length);
-					this.store.rpc("",this.clipboardCut ? "move-resources" : "copy-resources",[this.clipboard]).then(function() {
+					var id = this.collection.replace(/^\/db\/?/,"");
+					var mthd = this.clipboardCut ? "move-resources" : "copy-resources";
+					this.store.rpc(id,mthd,[this.clipboard]).then(lang.hitch(this,function(){
+						this.clipboard = null
+						this.clipboardCut = false;
 						this.refresh();
-					},function() {
+					}),lang.hitch(this,function(err){
+						this.clipboard = null
+						this.clipboardCut = false;
 						util.message("Paste Failed!", "Some resources could not be copied.");
-					});
+					}));
 				}
 			},
 

@@ -11085,11 +11085,17 @@ define([
 				ev.preventDefault();
 				if(this.clipboard && this.clipboard.length > 0) {
 					console.log("Paste: %d resources", this.clipboard.length);
-					this.store.rpc("",this.clipboardCut ? "move-resources" : "copy-resources",[this.clipboard]).then(function() {
+					var id = this.collection.replace(/^\/db\/?/,"");
+					var mthd = this.clipboardCut ? "move-resources" : "copy-resources";
+					this.store.rpc(id,mthd,[this.clipboard]).then(lang.hitch(this,function(){
+						this.clipboard = null
+						this.clipboardCut = false;
 						this.refresh();
-					},function() {
+					}),lang.hitch(this,function(err){
+						this.clipboard = null
+						this.clipboardCut = false;
 						util.message("Paste Failed!", "Some resources could not be copied.");
-					});
+					}));
 				}
 			},
 
@@ -30291,7 +30297,7 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 			if(node.dojoClick !== undefined){ return node; }
 		}while(node = node.parentNode);
 	}
-	
+
 	function doClicks(e, moveType, endType){
 		// summary:
 		//		Setup touch listeners to generate synthetic clicks immediately (rather than waiting for the browser
@@ -30300,14 +30306,18 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		//		its dojoClick property set to truthy. If a node receives synthetic clicks because one of its ancestors has its
 		//      dojoClick property set to truthy, you can disable synthetic clicks on this node by setting its own dojoClick property
 		//      to falsy.
-		
+
+		if(mouse.isRight(e)){
+			return;		// avoid spurious dojoclick event on IE10+; right click is just for context menu
+		}
+
 		var markedNode = marked(e.target);
 		clickTracker  = !e.target.disabled && markedNode && markedNode.dojoClick; // click threshold = true, number, x/y object, or "useTarget"
 		if(clickTracker){
 			useTarget = (clickTracker == "useTarget");
 			clickTarget = (useTarget?markedNode:e.target);
 			if(useTarget){
-				// We expect a click, so prevent any other 
+				// We expect a click, so prevent any other
 				// default action on "touchpress"
 				e.preventDefault();
 			}
@@ -30337,6 +30347,9 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 				}
 
 				win.doc.addEventListener(moveType, function(e){
+					if(mouse.isRight(e)){
+						return;		// avoid spurious dojoclick event on IE10+; right click is just for context menu
+					}
 					updateClickTracker(e);
 					if(useTarget){
 						// prevent native scroll event and ensure touchend is
@@ -30346,6 +30359,9 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 				}, true);
 
 				win.doc.addEventListener(endType, function(e){
+					if(mouse.isRight(e)){
+						return;		// avoid spurious dojoclick event on IE10+; right click is just for context menu
+					}
 					updateClickTracker(e);
 					if(clickTracker){
 						clickTime = (new Date()).getTime();

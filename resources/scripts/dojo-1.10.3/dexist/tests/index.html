@@ -6,7 +6,7 @@
         <script src="../../dojo/dojo.js" data-dojo-config="async:true,locale:'en-us'"></script>
         <script type="text/javascript">
 			require(["dexist/CollectionBrowser"],function(CollectionBrowser){
-				var cb = new CollectionBrowser();
+				var cb = new CollectionBrowser({target:"/collectionbrowser/db/"});
 				cb.placeAt(document.body);
 				cb.startup();
 			});
