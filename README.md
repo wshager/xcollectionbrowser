@@ -22,4 +22,4 @@ The collection browser allows for sorting and paging of long lists.
 TODO
 =====
 
-There's still work to do on Uploading and ACL.
+There's still work to do on Uploading and storing the individual resource properties, like Permissions and ACL.
