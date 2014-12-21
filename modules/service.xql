@@ -2,6 +2,7 @@ xquery version "3.0";
 
 module namespace service="http://exist-db.org/apps/collectionbrowser/service";
 
+import module namespace rql="http://lagua.nl/lib/rql" at "util/rql.xql";
 import module namespace sm="http://exist-db.org/xquery/securitymanager";
 declare namespace json="http://www.json.org";
 
@@ -12,38 +13,36 @@ declare function service:get($collection as xs:string, $id as xs:string, $direct
         service:resource-xml($collection || "/" || $id, true(), $is-collection)
 };
 
-declare function service:query($collection as xs:string, $query as map, $directives as map) {
-    let $range := $query("range")
-    let $parent := $query("collection")
-    let $resources := service:list-collection-contents($parent)
+declare function service:query($collection as xs:string, $query-string as xs:string, $directives as map) {
+    let $rqlquery := rql:parse($query-string)
+    let $parent := util:unescape-uri(rql:get-element-by-property($rqlquery,"collection"),"utf-8")
+    let $resources := 
+        for $resource in service:list-collection-contents($parent) return
+            let $path := $parent || "/" || $resource
+            let $is-collection := local-name($resource) eq "collection"
+            return
+                service:resource-xml($path, false(), $is-collection)
     let $totalcount := count($resources)
-    let $ranges := 
-        if($range) then
-            service:get-range($range, $totalcount)
+    let $rqlxq := rql:to-xq($rqlquery)
+    let $sort := $rqlxq("sort")
+    let $limit := 
+        if($rqlxq("limit")) then
+            $rqlxq("limit")
+        else if($directives("range")) then
+            rql:get-limit-from-range($directives("range"),$totalcount)
         else
             ()
-    let $subset := 
-        if($range and $ranges[2] < $totalcount) then
-		(: sequence is 1-based :)
-			subsequence($resources,$ranges[2]+1,$ranges[1])
-		else
-			$resources
-	let $content-range := 
-	    if($range) then
-	        concat("items ",min(($ranges[2],$totalcount)),"-",min(($ranges[2]+$ranges[1],$totalcount))-1,"/",$totalcount)
-	    else
-	        ""
+    let $resources := rql:xq-sort($resources, $rqlxq("sort"))
+    let $subset := rql:xq-limit($resources, $limit)
+	let $content-range := rql:get-content-range-header($limit,$totalcount)
 	return (
 	    <http:response status="200">
             <http:header name="Content-Range" value="{$content-range}"/>
+            <http:header name="sort" value="{$limit}"/>
         </http:response>,
         element root {
             if($subset) then
-                for $resource in $subset return
-                    let $path := $parent || "/" || $resource
-                    let $is-collection := local-name($resource) eq "collection"
-                    return
-                        service:resource-xml($path, false(), $is-collection)
+                $subset
             else
                 attribute json:array { "true" },
                 ()
