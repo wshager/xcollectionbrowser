@@ -10,6 +10,5 @@
     <target>collectionbrowser</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
-    <permissions user="admin" group="dba" mode="rw-rw-r--"/>
     <deployed>2014-12-14T23:13:41.504+01:00</deployed>
 </meta>
