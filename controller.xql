@@ -35,33 +35,23 @@ if ($exist:resource = 'login') then
             response:set-status-code(401),
             <status>{$err:description}</status>
         }
+else if($exist:path = "/") then
+    let $output := (
+		util:declare-option("output:method", "html5"),
+		util:declare-option("output:media-type", "text/html")
+	)
+	return doc($config:app-root || "/index.html")
 else if(starts-with($exist:path, "/db")) then
     let $seq := subsequence(tokenize($exist:path,"/"), 2)
     let $path := string-join($seq,"/")
     let $loggedIn := login:set-user("org.exist.login", (), false())
-    (: import params from config :)
     
     return rst:process($exist:path,map {
 		"module-uri" := "http://exist-db.org/apps/collectionbrowser/service",
 		"module-prefix" := "service",
-		"module-location" := $config:app-root || "/modules/service.xql"
-	}, map {
-        "collection" := request:get-parameter("collection","/db"),
-        "range" := request:get-header("range")
-    })
-else if(starts-with($exist:path, "/user")) then
-    let $seq := subsequence(tokenize($exist:path,"/"), 2)
-    let $path := string-join($seq,"/")
-    let $loggedIn := login:set-user("org.exist.login", (), false())
-    (: import params from config :)
-    
-    return rst:process($exist:path,map {
-		"module-uri" := "http://exist-db.org/apps/collectionbrowser/user",
-		"module-prefix" := "user",
-		"module-location" := $config:app-root || "/modules/user.xql"
-	}, map {
-        "range" := request:get-header("range")
-    })
+		"module-location" := $config:app-root || "/modules/service.xql",
+		"range" := request:get-header("range")
+	})
 else
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>
