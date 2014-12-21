@@ -157,23 +157,33 @@ declare function rst:import-module($directives as map) {
 	return util:import-module($uri, $prefix, $location)
 };
 
-declare %private function rst:to-plain-xml($node as element()) as element()* {
+declare %private function rst:to-plain-xml($node as element()) as item()* {
 	let $name := string(node-name($node))
 	let $name :=
 		if($name = "json") then
 			"root"
 		else if($name = "pair" and $node/@name) then
 			$node/@name
+		else if($name = "item") then
+			"json:value"
 		else
 			$name
 	return
 		if($node[@type = "array"]) then
-			for $item in $node/node() return
-				let $item := element {$name} {
-					attribute {"json:array"} {"true"},
-						$item/node()
-					}
-					return rst:to-plain-xml($item)
+			element {$name} {
+				attribute {"json:array"} {"true"},
+				for $child in $node/node() return
+					if($child instance of element()) then
+						rst:to-plain-xml($child)
+					else
+						$child
+			}
+		else if($name="json:value" and empty($node/*)) then
+			(if($node/@type = ("number","boolean")) then
+				attribute {"json:literal"} {"true"}
+			else
+				(),
+			$node/string())
 		else
 			element {$name} {
 				if($node/@type = ("number","boolean")) then
