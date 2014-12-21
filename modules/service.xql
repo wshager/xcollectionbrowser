@@ -94,11 +94,11 @@ declare function service:create-collection($target as xs:string, $create as node
 };
 
 declare function service:move-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
-    service:copyOrMove($target, $resources/string(), "move")
+    service:copyOrMove($target, $resources/json:value/string(), "move", $id)
 };
 
 declare function service:copy-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
-    service:copyOrMove($target, $resources/string(), "copy")
+    service:copyOrMove($target, $resources/json:value/string(), "copy", $id)
 };
 
 declare function service:reindex($target as xs:string, $id as xs:string, $directives as map) {
@@ -114,7 +114,7 @@ declare function service:reindex($target as xs:string, $id as xs:string, $direct
 declare function service:delete-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
     try {
         for $item in $resources/string()
-            let $resource := $target || "/" || $item
+            let $resource := "/db/" || $item
             return
                 if (xmldb:collection-available($resource)) then
                     xmldb:remove($resource)
@@ -135,7 +135,7 @@ declare function service:delete-resources($target as xs:string, $resources as no
     }
 };
 
-
+(: private functions :)
 declare
     %private
 function service:permissions-from-data($permissions) {
@@ -158,51 +158,6 @@ function service:permissions-from-data($permissions) {
         )
 };
 
-declare
-    %private
-function service:get-range($range as xs:string, $maxLimit as xs:integer) {
-	let $maxCount := 0
-	let $limit := 
-		if($maxLimit) then
-			$maxLimit
-		else
-			1 div 0e0
-	let $start := 0
-	let $end := $maxLimit
-	return
-		if($range) then
-			let $groups := text:groups($range, "^items=(\d+)-(\d+)?$")
-			return
-			if(count($groups)>0) then
-				let $start := 
-					if($groups[2]) then
-						xs:integer($groups[2])
-					else
-						$start
-				
-				let $end := 
-					if($groups[3]) then
-						xs:integer($groups[3])
-					else
-						$end
-				let $limit :=
-					if($end >= $start) then
-						min(($limit, $end + 1 - $start))
-					else
-						$limit
-				let $maxCount :=
-					if($end >= $start) then
-						1
-					else
-						$maxCount
-				return ($limit,$start,$maxCount)
-			else
-				($limit,$start,$maxCount)
-		else
-			($limit,$start,$maxCount)
-};
-
-(: private functions :)
 declare
     %private
 function service:resource-xml($path as xs:string, $single as xs:boolean, $is-collection as xs:boolean) as element(json:value) {
@@ -292,9 +247,10 @@ function service:permissions-classes-xml($permission as element(sm:permission)) 
     )
 };
 
-declare %private function service:copyOrMove($target as xs:string, $sources as xs:string*, $action as xs:string) {
+declare %private function service:copyOrMove($target as xs:string, $sources as xs:string*, $action as xs:string, $id as xs:string) {
     if(sm:has-access($target,"w")) then (
         for $source in $sources
+        let $source := "/db/" || $source
         let $isCollection := xmldb:collection-available($source)
         return
             if ($isCollection) then
@@ -305,12 +261,16 @@ declare %private function service:copyOrMove($target as xs:string, $sources as x
                         xmldb:copy($source, $target)
             else
                 let $split := text:groups($source, "^(.*)/([^/]+)$")
-                return
+                let $res :=
                     switch($action)
                         case "move" return
                             xmldb:move($split[2], $target, $split[3])
                         default return
                             xmldb:copy($split[2], $target, $split[3])
+                return
+                    <response id="{$id}" error="">
+                        <result>{$res}</result>
+                    </response>
     ) else
         <http:response status="403" message="You are not allowed to write to collection {$target}." />
 };
@@ -328,53 +288,6 @@ function service:get-permissions($id as xs:string, $class as xs:string) as eleme
 
 declare
     %private
-function service:save-permissions($id as xs:string, $recv-permissions as node()) {
-        let $cs :=
-            if($recv-permissions/pair[@name eq "id"] eq "User") then
-                ("u", if($recv-permissions/pair[@name eq "special"] eq "true") then "+s" else "-s")
-            else if($recv-permissions/pair[@name eq "id"] eq "Group") then
-                ("g", if($recv-permissions/pair[@name eq "special"] eq "true") then "+s" else "-s")
-            else if($recv-permissions/pair[@name eq "id"] eq "Other") then
-                ("o", if($recv-permissions/pair[@name eq "special"] eq "true") then "+t" else "-t")
-            else(),
-            
-        $c := $cs[1], (: received class :)
-        $s := $cs[2], (: received special :)
-            
-        $r := 
-            concat(if($recv-permissions/pair[@name eq "read"] eq "true") then
-                "+"
-            else 
-                "-"
-            ,"r"),
-        
-        $w :=
-            concat(if($recv-permissions/pair[@name eq "write"] eq "true") then
-                "+"
-            else 
-                "-"
-            ,"w"),
-            
-        $x :=
-            concat(if($recv-permissions/pair[@name eq "execute"] eq "true") then
-                "+"
-            else 
-                "-"
-            ,"x")
-            
-        return
-            if(not(empty($cs))) then
-            (
-                sm:chmod(xs:anyURI($id), $c || $r || "," || $c || $w || "," || $c || $x || "," || $c || $s),
-                <response status="ok"/>
-            )
-            else
-                <response status="fail">
-                    <message>Invalid class to set permissons for!</message>
-                </response>
-};
-
-declare
 function service:get-acl($id as xs:string, $acl-id as xs:string) as element(json:value)* {
     let $permissions := sm:get-permissions(xs:anyURI($id))/sm:permission
     let $acl := $permissions/sm:acl/sm:ace[if(string-length($acl-id) eq 0)then true() else @index eq $acl-id]
@@ -392,33 +305,6 @@ function service:get-acl($id as xs:string, $acl-id as xs:string) as element(json
                 </json:value>
         else
             <json:value json:array="true"/>
-};
-
-declare
-function service:change-properties($resources as xs:string, $owner as xs:string?, $group as xs:string?, $mime as xs:string?) {
-    for $resource in $resources
-    let $uri := xs:anyURI($resource)
-    return (
-        sm:chown($uri, $owner),
-        sm:chgrp($uri, $group),
-        sm:chmod($uri, service:permissions-from-form()),
-        xmldb:set-mime-type($resource, $mime)
-    ),
-    <response status="ok"/>
-};
-
-declare %private function service:permissions-from-form() {
-    string-join(
-        for $type in ("u", "g", "w")
-        for $perm in ("r", "w", "x")
-        let $param := request:get-parameter($type || $perm, ())
-        return
-            if ($param) then
-                $perm
-            else
-                "-",
-        ""
-    )
 };
 
 declare %private function service:list-collection-contents($collection as xs:string) {
