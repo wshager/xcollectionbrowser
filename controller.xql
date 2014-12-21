@@ -44,8 +44,7 @@ else if(starts-with($exist:path, "/db")) then
     return rst:process($exist:path,map {
 		"module-uri" := "http://exist-db.org/apps/collectionbrowser/service",
 		"module-prefix" := "service",
-		"module-location" := $config:app-root || "/modules/service.xql",
-		"id-property" := "id"
+		"module-location" := $config:app-root || "/modules/service.xql"
 	}, map {
         "collection" := request:get-parameter("collection","/db"),
         "range" := request:get-header("range")
@@ -56,7 +55,11 @@ else if(starts-with($exist:path, "/user")) then
     let $loggedIn := login:set-user("org.exist.login", (), false())
     (: import params from config :)
     
-    return rst:process($exist:path,$config:crud-params, map {
+    return rst:process($exist:path,map {
+		"module-uri" := "http://exist-db.org/apps/collectionbrowser/user",
+		"module-prefix" := "user",
+		"module-location" := $config:app-root || "/modules/user.xql"
+	}, map {
         "range" := request:get-header("range")
     })
 else
