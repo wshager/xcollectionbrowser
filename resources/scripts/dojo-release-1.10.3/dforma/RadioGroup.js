@@ -1,0 +1,4 @@
+//>>built
+define("dforma/RadioGroup","dojo/_base/declare dojo/_base/lang dojo/_base/array dojo/dom-construct dijit/form/_FormValueWidget dijit/form/RadioButton".split(" "),function(b,c,d,e,f,g){return b("dforma.RadioGroup",[f],{options:null,labelAttr:"label",baseClass:"dformaRadioGroup",templateString:'\x3cdiv data-dojo-attach-point\x3d"containerNode,focusNode"\x3e\x3c/div\x3e',buildRendering:function(){this.inherited(arguments);d.forEach(this.options,function(a){(new g(c.mixin(a,{checked:a.value==this.value}))).placeAt(this.containerNode);
+e.create("label",{"for":a.id,innerHTML:a[this.labelAttr]},this.containerNode)},this)},_getValueAttr:function(){return this.getChildren().filter(function(a){return a.get("checked")}).pop().get("value")}})});
+//# sourceMappingURL=RadioGroup.js.map

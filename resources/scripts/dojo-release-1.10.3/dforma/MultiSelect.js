@@ -1,0 +1,4 @@
+//>>built
+define("dforma/MultiSelect",["dojo/_base/declare","dojo/_base/array","dojo/dom-construct","dijit/form/MultiSelect"],function(c,b,d,e){return c("dforma.MultiSelect",e,{options:null,labelAttr:"label",valueAttr:"value",templateString:"\x3cselect multiple\x3d'${multiple}' ${!nameAttrSetting} data-dojo-attach-point\x3d'containerNode,focusNode' data-dojo-attach-event\x3d'onchange: _onChange'\x3e\x3c/select\x3e",addOption:function(a){d.create("option",{value:a[this.valueAttr],innerHTML:a[this.labelAttr],
+selected:a.selected},this.containerNode)},removeSelected:function(){b.forEach(this.getSelected(),function(a){this.containerNode.removeChild(a)},this)},startup:function(){b.forEach(this.options,function(a){this.addOption(a)},this);this.inherited(arguments)}})});
+//# sourceMappingURL=MultiSelect.js.map

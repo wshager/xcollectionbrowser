@@ -1,0 +1,3 @@
+//>>built
+define("dforma/util/string/toProperCase",["dojo/_base/lang"],function(b){b.getObject("dforma.util.string",!0);dforma.util.string.toProperCase=function(a,b){return a.replace(/\w\S*/g,function(a){return a.charAt(0).toUpperCase()+(b?a.substr(1).toLowerCase():a.substr(1))})};String.prototype.toProperCase=function(a){return dforma.util.string.toProperCase(this,a)};return dforma.util.string.toProperCase});
+//# sourceMappingURL=toProperCase.js.map

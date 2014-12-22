@@ -1,0 +1,4 @@
+//>>built
+define("dforma/ColorPaletteBox",["require","dojo/_base/declare","dojo/_base/lang","dforma/_DropDownBox"],function(a,b,e,d){return b("dforma.ColorPaletteBox",d,{baseClass:"dijitTextBox dijitComboBox dformaColorPaletteBox",dropDownDefaultValue:"#ffffff",value:"#ffffff",palette:"7x10",customColors:null,customTitles:null,postMixInProperties:function(){var c=this,b=arguments;a(["dlagua/w/ColorPalette"],function(a){c.popupClass=a;c.inherited(b)})},buildRendering:function(){this.popupProps={palette:this.palette,
+customColors:this.customColors,customTitles:this.customTitles};this.inherited(arguments)}})});
+//# sourceMappingURL=ColorPaletteBox.js.map

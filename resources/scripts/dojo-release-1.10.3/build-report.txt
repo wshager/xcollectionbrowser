@@ -1,0 +1,1590 @@
+Build started: Mon Dec 22 2014 23:07:16 GMT+0100 (CET)
+Build application version: 1.10.0-pre (NaN)
+Messages:
+info(102) Optimizing module
+	module: dgrid/extensions/nls/ro/columnHider
+	module: dgrid/extensions/nls/th/pagination
+	module: dgrid/extensions/DnD
+	module: dgrid/util/has-css3
+	module: dgrid/extensions/nls/zh-hk/pagination
+	module: dgrid/extensions/DijitRegistry
+	module: dgrid/extensions/nls/es/columnHider
+	module: dgrid/Editor
+	module: dgrid/Keyboard
+	module: dgrid/List
+	module: dgrid/extensions/nls/columnHider
+	module: dgrid/util/touch
+	module: dgrid/extensions/nls/ro/pagination
+	module: dgrid/extensions/CompoundColumns
+	module: dgrid/OnDemandGrid
+	module: dgrid/extensions/ColumnHider
+	module: dgrid/extensions/ColumnResizer
+	module: dgrid/extensions/nls/de/pagination
+	module: dgrid/extensions/nls/fr/pagination
+	module: dgrid/TouchScroll
+	module: dgrid/OnDemandList
+	module: dgrid/extensions/nls/sl/columnHider
+	module: dgrid/extensions/nls/sl/pagination
+	module: dgrid/Selection
+	module: dgrid/extensions/nls/ar/pagination
+	module: dgrid/extensions/nls/zh-cn/pagination
+	module: dgrid/ColumnSet
+	module: dgrid/Selector
+	module: dgrid/_StoreMixin
+	module: dgrid/extensions/Pagination
+	module: dgrid/extensions/nls/es/pagination
+	module: dgrid/extensions/ColumnReorder
+	module: dgrid/extensions/nls/sk/pagination
+	module: dgrid/extensions/nls/pagination
+	module: dgrid/extensions/nls/pt/pagination
+	module: dgrid/extensions/nls/ja/pagination
+	module: dgrid/GridWithColumnSetsFromHtml
+	module: dgrid/Grid
+	module: dgrid/GridFromHtml
+	module: dgrid/Tree
+	module: dgrid/CellSelection
+	module: dgrid/extensions/_DnD-touch-autoscroll
+	module: dgrid/util/misc
+	module: dforma/validate/check
+	module: dforma/validate/isbn
+	module: dforma/validate/_base
+	module: dforma/Repeat
+	module: dforma/ColorPaletteBox
+	module: dforma/validate/ca
+	module: dforma/RadioGroup
+	module: dforma/validate/regexp
+	module: dforma/validate/web
+	module: dforma/Builder
+	module: dforma/jsonschemavalidate
+	module: dforma/nls/nl/common
+	module: dforma/validate/us
+	module: dforma/util/string/cleanWhitespace
+	module: dforma/util/string/toProperCase
+	module: dforma/validate/creditCard
+	module: dforma/Label
+	module: dforma/Group
+	module: dforma/ColorPickerBox
+	module: dforma/Grid
+	module: dforma/_GroupMixin
+	module: dforma/HiddenGroup
+	module: dforma/util/i18n
+	module: dforma/LookupList
+	module: dforma/jsonschema
+	module: dforma/_DropDownBox
+	module: dforma/MultiSelect
+	module: dforma/validate/br
+	module: dforma/nls/common
+	module: dijit/_editor/nls/sk/FontChoice
+	module: dijit/form/nls/it/validate
+	module: dijit/form/nls/da/Textarea
+	module: dijit/nls/pt-pt/common
+	module: dijit/selection
+	module: dijit/form/nls/hr/ComboBox
+	module: dijit/MenuBar
+	module: dijit/nls/pt-pt/loading
+	module: dijit/_editor/nls/pl/LinkDialog
+	module: dijit/form/nls/ca/ComboBox
+	module: dijit/Viewport
+	module: dijit/form/nls/sv/ComboBox
+	module: dijit/_editor/nls/es/commands
+	module: dijit/_editor/range
+	module: dijit/_editor/nls/bg/LinkDialog
+	module: dijit/form/nls/sl/Textarea
+	module: dijit/Dialog
+	module: dijit/nls/fi/common
+	module: dijit/_ConfirmDialogMixin
+	module: dijit/_editor/nls/ja/LinkDialog
+	module: dijit/form/nls/da/ComboBox
+	module: dijit/form/Slider
+	module: dijit/_Templated
+	module: dijit/_editor/nls/az/commands
+	module: dijit/_editor/RichText
+	module: dijit/ToolbarSeparator
+	module: dijit/form/RadioButton
+	module: dijit/MenuSeparator
+	module: dijit/nls/ko/common
+	module: dijit/form/ToggleButton
+	module: dijit/CheckedMenuItem
+	module: dijit/form/nls/nl/ComboBox
+	module: dijit/_tree/dndSource
+	module: dijit/nls/zh/common
+	module: dijit/_editor/nls/FontChoice
+	module: dijit/_editor/nls/id/LinkDialog
+	module: dijit/form/nls/nb/Textarea
+	module: dijit/form/nls/el/Textarea
+	module: dijit/form/nls/de/ComboBox
+	module: dijit/form/nls/bg/validate
+	module: dijit/form/nls/he/ComboBox
+	module: dijit/_DialogMixin
+	module: dijit/_Widget
+	module: dijit/form/_SearchMixin
+	module: dijit/layout/AccordionContainer
+	module: dijit/form/nls/hu/validate
+	module: dijit/form/nls/uk/validate
+	module: dijit/_editor/nls/id/FontChoice
+	module: dijit/_editor/nls/ko/FontChoice
+	module: dijit/form/SimpleTextarea
+	module: dijit/Destroyable
+	module: dijit/form/nls/fi/Textarea
+	module: dijit/form/nls/tr/validate
+	module: dijit/_editor/nls/hu/FontChoice
+	module: dijit/form/nls/cs/ComboBox
+	module: dijit/form/MultiSelect
+	module: dijit/form/nls/zh/validate
+	module: dijit/tree/model
+	module: dijit/nls/pt/common
+	module: dijit/form/nls/fr/validate
+	module: dijit/form/nls/it/Textarea
+	module: dijit/tree/ObjectStoreModel
+	module: dijit/tree/ForestStoreModel
+	module: dijit/form/nls/ro/validate
+	module: dijit/nls/sv/common
+	module: dijit/_Calendar
+	module: dijit/form/TimeTextBox
+	module: dijit/layout/SplitContainer
+	module: dijit/Menu
+	module: dijit/dijit-all
+	module: dijit/ConfirmDialog
+	module: dijit/_base/window
+	module: dijit/_editor/nls/ru/FontChoice
+	module: dijit/_editor/nls/pt-pt/LinkDialog
+	module: dijit/form/nls/pt-pt/ComboBox
+	module: dijit/form/MappedTextBox
+	module: dijit/_editor/nls/sv/LinkDialog
+	module: dijit/form/nls/ko/validate
+	module: dijit/nls/sl/common
+	module: dijit/form/nls/pt/ComboBox
+	module: dijit/form/CheckBox
+	module: dijit/nls/common
+	module: dijit/form/Textarea
+	module: dijit/form/DropDownButton
+	module: dijit/_base/scroll
+	module: dijit/nls/sl/loading
+	module: dijit/nls/az/common
+	module: dijit/nls/ro/loading
+	module: dijit/form/nls/it/ComboBox
+	module: dijit/_TimePicker
+	module: dijit/form/nls/pl/validate
+	module: dijit/form/nls/zh-tw/validate
+	module: dijit/_editor/nls/cs/FontChoice
+	module: dijit/nls/kk/common
+	module: dijit/nls/zh/loading
+	module: dijit/_editor/nls/sk/commands
+	module: dijit/_Contained
+	module: dijit/form/nls/el/validate
+	module: dijit/InlineEditBox
+	module: dijit/nls/ja/loading
+	module: dijit/_editor/nls/az/LinkDialog
+	module: dijit/nls/id/loading
+	module: dijit/_editor/nls/id/commands
+	module: dijit/form/nls/bg/Textarea
+	module: dijit/_Container
+	module: dijit/layout/BorderContainer
+	module: dijit/_editor/nls/it/LinkDialog
+	module: dijit/_base/wai
+	module: dijit/_editor/nls/sl/LinkDialog
+	module: dijit/form/nls/es/validate
+	module: dijit/form/nls/hu/Textarea
+	module: dijit/form/nls/uk/Textarea
+	module: dijit/_editor/nls/th/FontChoice
+	module: dijit/form/nls/tr/Textarea
+	module: dijit/form/ComboBoxMixin
+	module: dijit/form/Select
+	module: dijit/Calendar
+	module: dijit/form/nls/ru/ComboBox
+	module: dijit/_editor/nls/it/FontChoice
+	module: dijit/_editor/nls/hr/commands
+	module: dijit/_editor/nls/da/LinkDialog
+	module: dijit/_base/manager
+	module: dijit/_editor/plugins/AlwaysShowToolbar
+	module: dijit/nls/es/loading
+	module: dijit/form/ComboButton
+	module: dijit/form/nls/zh/Textarea
+	module: dijit/_editor/nls/ro/LinkDialog
+	module: dijit/_editor/nls/sv/commands
+	module: dijit/nls/id/common
+	module: dijit/WidgetSet
+	module: dijit/form/RangeBoundTextBox
+	module: dijit/_editor/nls/ar/commands
+	module: dijit/form/nls/bg/ComboBox
+	module: dijit/nls/az/loading
+	module: dijit/form/nls/kk/Textarea
+	module: dijit/nls/hr/loading
+	module: dijit/form/nls/fr/Textarea
+	module: dijit/_editor/nls/da/commands
+	module: dijit/DialogUnderlay
+	module: dijit/nls/th/loading
+	module: dijit/form/nls/ro/Textarea
+	module: dijit/_editor/nls/hr/LinkDialog
+	module: dijit/form/_ToggleButtonMixin
+	module: dijit/form/nls/tr/ComboBox
+	module: dijit/form/VerticalSlider
+	module: dijit/_TemplatedMixin
+	module: dijit/_editor/nls/nl/commands
+	module: dijit/form/nls/ko/Textarea
+	module: dijit/nls/da/loading
+	module: dijit/nls/de/common
+	module: dijit/form/nls/ar/ComboBox
+	module: dijit/form/HorizontalSlider
+	module: dijit/_editor/nls/de/commands
+	module: dijit/_editor/nls/hr/FontChoice
+	module: dijit/_editor/nls/he/commands
+	module: dijit/nls/he/common
+	module: dijit/nls/de/loading
+	module: dijit/_editor/plugins/ToggleDir
+	module: dijit/_editor/nls/pl/FontChoice
+	module: dijit/_KeyNavMixin
+	module: dijit/form/_TextBoxMixin
+	module: dijit/form/nls/pl/Textarea
+	module: dijit/_editor/nls/bg/FontChoice
+	module: dijit/form/nls/zh-tw/Textarea
+	module: dijit/a11y
+	module: dijit/nls/ru/loading
+	module: dijit/form/nls/ro/ComboBox
+	module: dijit/form/TextBox
+	module: dijit/_editor/nls/es/LinkDialog
+	module: dijit/_editor/nls/ja/FontChoice
+	module: dijit/form/_DateTimeTextBox
+	module: dijit/_editor/nls/cs/commands
+	module: dijit/nls/sv/loading
+	module: dijit/layout/StackContainer
+	module: dijit/form/_RadioButtonMixin
+	module: dijit/nls/he/loading
+	module: dijit/nls/fr/common
+	module: dijit/form/Form
+	module: dijit/nls/uk/common
+	module: dijit/nls/it/common
+	module: dijit/form/nls/sl/ComboBox
+	module: dijit/form/_FormWidgetMixin
+	module: dijit/main
+	module: dijit/_editor/nls/kk/LinkDialog
+	module: dijit/_base/place
+	module: dijit/form/nls/es/Textarea
+	module: dijit/nls/cs/loading
+	module: dijit/_BidiMixin
+	module: dijit/nls/fr/loading
+	module: dijit/nls/zh-tw/loading
+	module: dijit/form/nls/el/ComboBox
+	module: dijit/form/nls/nb/ComboBox
+	module: dijit/form/nls/az/Textarea
+	module: dijit/nls/pl/common
+	module: dijit/_base/sniff
+	module: dijit/_editor/nls/pt/commands
+	module: dijit/nls/es/common
+	module: dijit/form/nls/kk/validate
+	module: dijit/form/nls/sk/validate
+	module: dijit/_editor/nls/uk/LinkDialog
+	module: dijit/nls/hu/common
+	module: dijit/form/nls/id/validate
+	module: dijit/_editor/nls/it/commands
+	module: dijit/_base/popup
+	module: dijit/form/nls/fi/ComboBox
+	module: dijit/form/nls/th/validate
+	module: dijit/_editor/plugins/NewPage
+	module: dijit/nls/da/common
+	module: dijit/nls/uk/loading
+	module: dijit/registry
+	module: dijit/form/nls/ja/validate
+	module: dijit/_base/focus
+	module: dijit/PopupMenuBarItem
+	module: dijit/form/_FormMixin
+	module: dijit/BackgroundIframe
+	module: dijit/layout/TabController
+	module: dijit/_MenuBase
+	module: dijit/_editor/nls/fi/LinkDialog
+	module: dijit/_editor/nls/pt-pt/FontChoice
+	module: dijit/_editor/_Plugin
+	module: dijit/layout/ScrollingTabController
+	module: dijit/_editor/nls/sv/FontChoice
+	module: dijit/form/_ListMouseMixin
+	module: dijit/form/nls/ca/validate
+	module: dijit/form/nls/sv/validate
+	module: dijit/_OnDijitClickMixin
+	module: dijit/tree/_dndSelector
+	module: dijit/form/VerticalRuleLabels
+	module: dijit/_editor/nls/fr/LinkDialog
+	module: dijit/_editor/nls/ru/commands
+	module: dijit/nls/fi/loading
+	module: dijit/layout/StackController
+	module: dijit/nls/el/loading
+	module: dijit/_editor/nls/ca/LinkDialog
+	module: dijit/_editor/nls/el/LinkDialog
+	module: dijit/_editor/nls/nl/LinkDialog
+	module: dijit/form/DateTextBox
+	module: dijit/form/_FormValueMixin
+	module: dijit/nls/sk/common
+	module: dijit/layout/AccordionPane
+	module: dijit/nls/hr/common
+	module: dijit/nls/nb/loading
+	module: dijit/form/_AutoCompleterMixin
+	module: dijit/TitlePane
+	module: dijit/form/CurrencyTextBox
+	module: dijit/place
+	module: dijit/form/ComboBox
+	module: dijit/layout/_LayoutWidget
+	module: dijit/_editor/nls/tr/LinkDialog
+	module: dijit/form/nls/nl/validate
+	module: dijit/Fieldset
+	module: dijit/_editor/nls/bg/commands
+	module: dijit/_editor/nls/commands
+	module: dijit/_editor/nls/el/FontChoice
+	module: dijit/layout/_ContentPaneResizeMixin
+	module: dijit/_editor/nls/az/FontChoice
+	module: dijit/form/_ButtonMixin
+	module: dijit/form/nls/de/validate
+	module: dijit/_editor/nls/hu/commands
+	module: dijit/tree/TreeStoreModel
+	module: dijit/_editor/nls/uk/commands
+	module: dijit/_editor/nls/tr/commands
+	module: dijit/a11yclick
+	module: dijit/_editor/nls/sl/FontChoice
+	module: dijit/nls/nl/common
+	module: dijit/form/nls/az/validate
+	module: dijit/nls/cs/common
+	module: dijit/nls/it/loading
+	module: dijit/_editor/plugins/Print
+	module: dijit/form/HorizontalRule
+	module: dijit/nls/pl/loading
+	module: dijit/hccss
+	module: dijit/_editor/nls/zh/commands
+	module: dijit/form/HorizontalRuleLabels
+	module: dijit/Editor
+	module: dijit/_editor/nls/da/FontChoice
+	module: dijit/nls/nb/common
+	module: dijit/form/nls/sk/Textarea
+	module: dijit/popup
+	module: dijit/_editor/nls/zh-tw/LinkDialog
+	module: dijit/layout/TabContainer
+	module: dijit/_base
+	module: dijit/_editor/nls/nb/LinkDialog
+	module: dijit/form/nls/hu/ComboBox
+	module: dijit/_editor/nls/ro/FontChoice
+	module: dijit/form/nls/uk/ComboBox
+	module: dijit/nls/sk/loading
+	module: dijit/_editor/plugins/EnterKeyHandling
+	module: dijit/form/nls/id/Textarea
+	module: dijit/_editor/nls/he/LinkDialog
+	module: dijit/layout/LinkPane
+	module: dijit/form/_FormValueWidget
+	module: dijit/_editor/nls/ro/commands
+	module: dijit/_BidiSupport
+	module: dijit/tree/_dndContainer
+	module: dijit/form/nls/th/Textarea
+	module: dijit/focus
+	module: dijit/nls/bg/loading
+	module: dijit/_editor/nls/de/LinkDialog
+	module: dijit/form/nls/zh/ComboBox
+	module: dijit/form/nls/ja/Textarea
+	module: dijit/_editor/nls/ko/commands
+	module: dijit/nls/ja/common
+	module: dijit/_editor/nls/sl/commands
+	module: dijit/form/nls/pt-pt/validate
+	module: dijit/ColorPalette
+	module: dijit/form/nls/kk/ComboBox
+	module: dijit/form/nls/fr/ComboBox
+	module: dijit/form/nls/ca/Textarea
+	module: dijit/form/nls/sv/Textarea
+	module: dijit/_CssStateMixin
+	module: dijit/_editor/nls/pl/commands
+	module: dijit/nls/el/common
+	module: dijit/form/FilteringSelect
+	module: dijit/_WidgetBase
+	module: dijit/form/nls/th/ComboBox
+	module: dijit/MenuBarItem
+	module: dijit/form/nls/ko/ComboBox
+	module: dijit/_editor/nls/el/commands
+	module: dijit/_editor/nls/nb/commands
+	module: dijit/_editor/nls/es/FontChoice
+	module: dijit/_editor/html
+	module: dijit/form/nls/ja/ComboBox
+	module: dijit/_editor/nls/zh/LinkDialog
+	module: dijit/form/nls/validate
+	module: dijit/form/nls/nl/Textarea
+	module: dijit/form/_FormWidget
+	module: dijit/form/nls/pl/ComboBox
+	module: dijit/form/nls/zh-tw/ComboBox
+	module: dijit/form/nls/de/Textarea
+	module: dijit/_editor/nls/fi/commands
+	module: dijit/form/nls/he/Textarea
+	module: dijit/nls/nl/loading
+	module: dijit/_editor/nls/zh/FontChoice
+	module: dijit/_editor/nls/kk/FontChoice
+	module: dijit/nls/hu/loading
+	module: dijit/dijit
+	module: dijit/form/NumberSpinner
+	module: dijit/MenuItem
+	module: dijit/_AttachMixin
+	module: dijit/_editor/nls/LinkDialog
+	module: dijit/form/nls/ru/validate
+	module: dijit/nls/bg/common
+	module: dijit/_editor/nls/pt/LinkDialog
+	module: dijit/DropDownMenu
+	module: dijit/form/nls/cs/Textarea
+	module: dijit/ConfirmTooltipDialog
+	module: dijit/_base/typematic
+	module: dijit/form/nls/es/ComboBox
+	module: dijit/_editor/nls/ko/LinkDialog
+	module: dijit/_editor/nls/zh-tw/commands
+	module: dijit/_editor/plugins/LinkDialog
+	module: dijit/_editor/nls/pt/FontChoice
+	module: dijit/_editor/nls/uk/FontChoice
+	module: dijit/_editor/nls/hu/LinkDialog
+	module: dijit/nls/ar/common
+	module: dijit/form/_ListBase
+	module: dijit/nls/tr/loading
+	module: dijit/form/nls/az/ComboBox
+	module: dijit/form/nls/hr/validate
+	module: dijit/_editor/nls/ar/LinkDialog
+	module: dijit/typematic
+	module: dijit/_editor/plugins/FontChoice
+	module: dijit/form/nls/pt-pt/Textarea
+	module: dijit/nls/ro/common
+	module: dijit/_editor/plugins/ViewSource
+	module: dijit/form/nls/ar/validate
+	module: dijit/form/nls/pt/Textarea
+	module: dijit/_editor/nls/ar/FontChoice
+	module: dijit/_editor/nls/fi/FontChoice
+	module: dijit/form/_FormSelectWidget
+	module: dijit/form/_ComboBoxMenu
+	module: dijit/layout/_TabContainerBase
+	module: dijit/form/nls/da/validate
+	module: dijit/_KeyNavContainer
+	module: dijit/nls/zh-tw/common
+	module: dijit/_editor/nls/ru/LinkDialog
+	module: dijit/form/DataList
+	module: dijit/Tooltip
+	module: dijit/PopupMenuItem
+	module: dijit/nls/kk/loading
+	module: dijit/_editor/nls/fr/FontChoice
+	module: dijit/layout/ContentPane
+	module: dijit/_editor/nls/ca/FontChoice
+	module: dijit/_WidgetsInTemplateMixin
+	module: dijit/_editor/nls/nl/FontChoice
+	module: dijit/form/nls/Textarea
+	module: dijit/form/VerticalRule
+	module: dijit/nls/ko/loading
+	module: dijit/_HasDropDown
+	module: dijit/form/nls/he/validate
+	module: dijit/_editor/nls/tr/FontChoice
+	module: dijit/form/nls/sl/validate
+	module: dijit/_editor/nls/cs/LinkDialog
+	module: dijit/nls/tr/common
+	module: dijit/tree/dndSource
+	module: dijit/form/_CheckBoxMixin
+	module: dijit/_editor/plugins/FullScreen
+	module: dijit/nls/ca/loading
+	module: dijit/nls/ca/common
+	module: dijit/layout/LayoutContainer
+	module: dijit/nls/th/common
+	module: dijit/form/nls/cs/validate
+	module: dijit/form/nls/ru/Textarea
+	module: dijit/layout/utils
+	module: dijit/ProgressBar
+	module: dijit/_PaletteMixin
+	module: dijit/_editor/nls/kk/commands
+	module: dijit/form/nls/ComboBox
+	module: dijit/Declaration
+	module: dijit/_editor/selection
+	module: dijit/nls/pt/loading
+	module: dijit/_editor/nls/fr/commands
+	module: dijit/form/nls/nb/validate
+	module: dijit/_editor/nls/pt-pt/commands
+	module: dijit/_editor/plugins/TextColor
+	module: dijit/_FocusMixin
+	module: dijit/_editor/nls/th/LinkDialog
+	module: dijit/_editor/nls/zh-tw/FontChoice
+	module: dijit/form/ValidationTextBox
+	module: dijit/nls/ru/common
+	module: dijit/_editor/nls/nb/FontChoice
+	module: dijit/form/NumberTextBox
+	module: dijit/_editor/nls/th/commands
+	module: dijit/_editor/nls/he/FontChoice
+	module: dijit/form/_ComboBoxMenuMixin
+	module: dijit/Tree
+	module: dijit/form/nls/fi/validate
+	module: dijit/form/Button
+	module: dijit/form/_ExpandingTextAreaMixin
+	module: dijit/form/nls/hr/Textarea
+	module: dijit/_editor/nls/ja/commands
+	module: dijit/CalendarLite
+	module: dijit/form/nls/sk/ComboBox
+	module: dijit/_editor/nls/sk/LinkDialog
+	module: dijit/RadioMenuItem
+	module: dijit/Toolbar
+	module: dijit/nls/ar/loading
+	module: dijit/_editor/nls/de/FontChoice
+	module: dijit/form/nls/pt/validate
+	module: dijit/form/_Spinner
+	module: dijit/form/nls/id/ComboBox
+	module: dijit/nls/loading
+	module: dijit/form/nls/ar/Textarea
+	module: dijit/_editor/nls/ca/commands
+	module: dijit/_editor/plugins/TabIndent
+	module: dijit/TooltipDialog
+	module: xstyle/core/base
+	module: xstyle/core/load-imports
+	module: xstyle/core/expression
+	module: xstyle/ext/widget
+	module: xstyle/has-class
+	module: xstyle/ext/scrollbar
+	module: xstyle/main
+	module: xstyle/core/load-css
+	module: xstyle/core/elemental
+	module: xstyle/shim/boxOffsets
+	module: xstyle/shim/gradient
+	module: xstyle/ext/dgrid
+	module: xstyle/css
+	module: xstyle/util/createStyleSheet
+	module: xstyle/core/Rule
+	module: xstyle/shim/transition
+	module: xstyle/shim/var
+	module: xstyle/core/observe
+	module: xstyle/shim/ie-filter
+	module: xstyle/shim/pseudo
+	module: xstyle/ext/event-delegate
+	module: xstyle/core/utils
+	module: xstyle/shim/inlineBlock
+	module: xstyle/ext/supported
+	module: xstyle/core/generate
+	module: xstyle/ext/event
+	module: xstyle/core/parser
+	module: dexist/CollectionBrowser
+	module: dojo/cldr/nls/pt/ethiopic
+	module: dojo/nls/ja/colors
+	module: dojo/nls/uk/colors
+	module: dojo/cldr/nls/pl/number
+	module: dojo/cldr/nls/roc
+	module: dojo/_base/lang
+	module: dojo/cldr/nls/persian
+	module: dojo/cldr/nls/sl/number
+	module: dojo/date/stamp
+	module: dojo/cldr/nls/nl/hebrew
+	module: dojo/_base/xhr
+	module: dojo/cldr/nls/de/chinese
+	module: dojo/Evented
+	module: dojo/cldr/nls/ja/indian
+	module: dojo/cldr/nls/cs/currency
+	module: dojo/cldr/nls/it/number
+	module: dojo/_base/NodeList
+	module: dojo/cldr/nls/ru/currency
+	module: dojo/loadInit
+	module: dojo/cldr/nls/pl/roc
+	module: dojo/cldr/nls/zh-hant/indian
+	module: dojo/errors/RequestTimeoutError
+	module: dojo/cldr/nls/ja/currency
+	module: dojo/date/locale
+	module: dojo/cldr/nls/nl/generic
+	module: dojo/cldr/nls/ru/generic
+	module: dojo/cldr/nls/zh/islamic
+	module: dojo/request/xhr
+	module: dojo/cldr/nls/en/japanese
+	module: dojo/cldr/monetary
+	module: dojo/cldr/nls/ca/number
+	module: dojo/request/node
+	module: dojo/cldr/nls/es/islamic
+	module: dojo/cldr/nls/fr/chinese
+	module: dojo/nls/ru/colors
+	module: dojo/cldr/nls/ro/islamic
+	module: dojo/data/util/sorter
+	module: dojo/cldr/nls/en/buddhist
+	module: dojo/cldr/nls/number
+	module: dojo/nls/fr/colors
+	module: dojo/cldr/nls/ca/generic
+	module: dojo/cldr/nls/hu/gregorian
+	module: dojo/dnd/AutoSource
+	module: dojo/cldr/nls/da/hebrew
+	module: dojo/rpc/JsonService
+	module: dojo/cldr/nls/sv/number
+	module: dojo/cldr/nls/th/chinese
+	module: dojo/cldr/nls/ca/buddhist
+	module: dojo/cldr/nls/th/currency
+	module: dojo/cldr/nls/ru/indian
+	module: dojo/cldr/nls/ro/hebrew
+	module: dojo/nls/th/colors
+	module: dojo/nls/pt-pt/colors
+	module: dojo/cldr/nls/pt/gregorian
+	module: dojo/cldr/nls/fr/indian
+	module: dojo/mouse
+	module: dojo/nls/he/colors
+	module: dojo/cldr/nls/fr/currency
+	module: dojo/dnd/Avatar
+	module: dojo/cldr/nls/th/indian
+	module: dojo/topic
+	module: dojo/cldr/nls/de/currency
+	module: dojo/NodeList-traverse
+	module: dojo/cldr/nls/en-gb/indian
+	module: dojo/uacss
+	module: dojo/store/DataStore
+	module: dojo/data/api/Request
+	module: dojo/html
+	module: dojo/touch
+	module: dojo/cldr/nls/zh/chinese
+	module: dojo/cldr/nls/en/generic
+	module: dojo/nls/pt/colors
+	module: dojo/cldr/nls/th/roc
+	module: dojo/cldr/nls/en-ca/currency
+	module: dojo/io/iframe
+	module: dojo/cldr/nls/sl/currency
+	module: dojo/cldr/nls/ro/chinese
+	module: dojo/cldr/nls/zh-tw/number
+	module: dojo/store/Cache
+	module: dojo/cldr/nls/en-au/generic
+	module: dojo/cldr/nls/it/islamic
+	module: dojo/cldr/nls/pt/indian
+	module: dojo/cldr/nls/nl/currency
+	module: dojo/cldr/nls/th/dangi
+	module: dojo/cldr/nls/el/roc
+	module: dojo/cldr/nls/sv/persian
+	module: dojo/request/util
+	module: dojo/cldr/nls/ko/ethiopic
+	module: dojo/cldr/nls/de/number
+	module: dojo/data/ItemFileReadStore
+	module: dojo/nls/tr/colors
+	module: dojo/dnd/Selector
+	module: dojo/cldr/nls/nb/number
+	module: dojo/cldr/nls/da/roc
+	module: dojo/cldr/nls/zh/japanese
+	module: dojo/cldr/nls/currency
+	module: dojo/cldr/nls/zh-hant/ethiopic
+	module: dojo/cldr/nls/pt/roc
+	module: dojo/cldr/nls/hu/generic
+	module: dojo/nls/fi/colors
+	module: dojo/cldr/nls/pl/japanese
+	module: dojo/cldr/nls/zh/buddhist
+	module: dojo/cldr/nls/ru/coptic
+	module: dojo/request/script
+	module: dojo/request/default
+	module: dojo/cldr/nls/fr/coptic
+	module: dojo/cldr/nls/sv/dangi
+	module: dojo/keys
+	module: dojo/cldr/nls/en-au/number
+	module: dojo/cldr/nls/zh-hant/generic
+	module: dojo/on/asyncEventListener
+	module: dojo/cldr/nls/pl/buddhist
+	module: dojo/cldr/nls/sv/roc
+	module: dojo/cldr/nls/ro/gregorian
+	module: dojo/cldr/nls/th/coptic
+	module: dojo/cldr/nls/hu/currency
+	module: dojo/cldr/nls/en/hebrew
+	module: dojo/cldr/nls/nl/roc
+	module: dojo/cldr/nls/zh-hant/islamic
+	module: dojo/cldr/nls/nl/islamic
+	module: dojo/cldr/nls/ru/islamic
+	module: dojo/data/api/Item
+	module: dojo/cldr/nls/nb/gregorian
+	module: dojo/AdapterRegistry
+	module: dojo/NodeList-data
+	module: dojo/store/JsonRest
+	module: dojo/cldr/nls/fr-ch/currency
+	module: dojo/cldr/nls/ja/hebrew
+	module: dojo/cldr/nls/pt-pt/generic
+	module: dojo/cldr/nls/nl/number
+	module: dojo/aspect
+	module: dojo/cldr/nls/pt-pt/roc
+	module: dojo/cldr/nls/th/persian
+	module: dojo/cldr/nls/en-ca/generic
+	module: dojo/cldr/nls/pt/coptic
+	module: dojo/cldr/nls/es/hebrew
+	module: dojo/nls/zh/colors
+	module: dojo/nls/cs/colors
+	module: dojo/node
+	module: dojo/cldr/nls/da/generic
+	module: dojo/_base/window
+	module: dojo/cldr/nls/it/gregorian
+	module: dojo/_base/html
+	module: dojo/cldr/nls/ar/currency
+	module: dojo/cldr/nls/zh-hant/hebrew
+	module: dojo/cldr/nls/ca/roc
+	module: dojo/_base/event
+	module: dojo/cldr/nls/el/currency
+	module: dojo/dnd/Moveable
+	module: dojo/cldr/nls/zh/indian
+	module: dojo/dom-style
+	module: dojo/cldr/nls/pt/currency
+	module: dojo/ready
+	module: dojo/cldr/nls/nb/currency
+	module: dojo/cldr/nls/el/gregorian
+	module: dojo/dnd/Container
+	module: dojo/cldr/nls/ja/coptic
+	module: dojo/cldr/nls/tr/coptic
+	module: dojo/cldr/nls/es/chinese
+	module: dojo/dnd/common
+	module: dojo/data/ObjectStore
+	module: dojo/cldr/nls/en-au/currency
+	module: dojo/cldr/nls/it/japanese
+	module: dojo/cldr/nls/ja/generic
+	module: dojo/nls/bg/colors
+	module: dojo/cldr/nls/en/islamic
+	module: dojo/cldr/nls/da/number
+	module: dexist/nls/cb-layer_ar
+	module: dexist/nls/cb-layer_ca
+	module: dexist/nls/cb-layer_cs
+	module: dexist/nls/cb-layer_da
+	module: dexist/nls/cb-layer_de
+	module: dexist/nls/cb-layer_el
+	module: dexist/nls/cb-layer_en-gb
+	module: dexist/nls/cb-layer_en-us
+	module: dexist/nls/cb-layer_es-es
+	module: dexist/nls/cb-layer_fi-fi
+	module: dexist/nls/cb-layer_fr-fr
+	module: dexist/nls/cb-layer_he-il
+	module: dexist/nls/cb-layer_hu
+	module: dexist/nls/cb-layer_it-it
+	module: dexist/nls/cb-layer_ja-jp
+	module: dexist/nls/cb-layer_ko-kr
+	module: dexist/nls/cb-layer_nl-nl
+	module: dexist/nls/cb-layer_nb
+	module: dexist/nls/cb-layer_pl
+	module: dexist/nls/cb-layer_pt-br
+	module: dexist/nls/cb-layer_pt-pt
+	module: dexist/nls/cb-layer_ru
+	module: dexist/nls/cb-layer_sk
+	module: dexist/nls/cb-layer_sl
+	module: dexist/nls/cb-layer_sv
+	module: dexist/nls/cb-layer_th
+	module: dexist/nls/cb-layer_tr
+	module: dexist/nls/cb-layer_zh-tw
+	module: dexist/nls/cb-layer_zh-cn
+	module: dexist/nls/cb-layer_ROOT
+	module: dojo/dojo
+	module: dojo/cldr/nls/he/currency
+	module: dojo/cldr/nls/zh-hant/coptic
+	module: dojo/cldr/nls/it/buddhist
+	module: dojo/cldr/nls/ru/hebrew
+	module: dojo/nls/ar/colors
+	module: dojo/nls/id/colors
+	module: dojo/cldr/nls/fr/hebrew
+	module: dojo/cldr/nls/sv/japanese
+	module: dojo/cldr/nls/ro/number
+	module: dojo/dom
+	module: dojo/cldr/nls/en-au/islamic
+	module: dojo/cldr/nls/ca/chinese
+	module: dojo/cldr/nls/ro/buddhist
+	module: dojo/nls/ko/colors
+	module: dojo/cldr/nls/islamic-tbla
+	module: dojo/cldr/nls/en-gb/generic
+	module: dojo/cldr/nls/th/hebrew
+	module: dojo/cldr/nls/sv/buddhist
+	module: dojo/_base/sniff
+	module: dojo/cldr/nls/pt/generic
+	module: dojo/cldr/nls/cs/japanese
+	module: dojo/number
+	module: dojo/cldr/nls/zh-hant/gregorian
+	module: dojo/DeferredList
+	module: dojo/cldr/nls/ru/japanese
+	module: dojo/promise/Promise
+	module: dojo/_base/browser
+	module: dojo/_base/url
+	module: dojo/cldr/nls/en-gb/currency
+	module: dojo/hash
+	module: dojo/json
+	module: dojo/cldr/nls/hu/islamic
+	module: dojo/cldr/nls/el/generic
+	module: dojo/cldr/nls/it/chinese
+	module: dojo/cldr/nls/pt/hebrew
+	module: dojo/cldr/nls/ar/roc
+	module: dojo/cldr/nls/en/chinese
+	module: dojo/cldr/nls/ar/persian
+	module: dojo/cldr/nls/en-ca/gregorian
+	module: dojo/cldr/nls/zh-hk/currency
+	module: dojo/cldr/nls/zh/coptic
+	module: dojo/regexp
+	module: dojo/cldr/nls/ko/gregorian
+	module: dojo/cldr/nls/fr/persian
+	module: dojo/fx
+	module: dojo/cldr/nls/en-au/chinese
+	module: dojo/nls/hu/colors
+	module: dojo/cldr/nls/fr-ch/number
+	module: dojo/nls/sk/colors
+	module: dojo/cldr/nls/tr/hebrew
+	module: dojo/cldr/nls/pt-pt/currency
+	module: dojo/cldr/nls/fi/currency
+	module: dojo/cldr/nls/zh-hk/number
+	module: dojo/nls/colors
+	module: dojo/cldr/nls/tr/generic
+	module: dojo/cldr/nls/pl/generic
+	module: dojo/store/Observable
+	module: dojo/cldr/nls/tr/gregorian
+	module: dojo/dnd/Mover
+	module: dojo/cldr/nls/ko/roc
+	module: dojo/io/script
+	module: dojo/cldr/nls/pt-pt/islamic
+	module: dojo/store/util/SimpleQueryEngine
+	module: dojo/nls/pl/colors
+	module: dojo/cldr/nls/tr/japanese
+	module: dojo/cldr/nls/ko/currency
+	module: dojo/_base/kernel
+	module: dojo/cldr/nls/da/currency
+	module: dojo/_base/unload
+	module: dojo/cldr/nls/da/islamic
+	module: dojo/cldr/nls/ar/coptic
+	module: dojo/data/api/Read
+	module: dojo/_firebug/firebug
+	module: dojo/currency
+	module: dojo/cldr/nls/zh/persian
+	module: dojo/cldr/nls/tr/buddhist
+	module: dojo/colors
+	module: dojo/behavior
+	module: dojo/cldr/nls/en/number
+	module: dojo/_base/Deferred
+	module: dojo/dnd/move
+	module: dojo/cldr/nls/zh-hant/chinese
+	module: dojo/cldr/nls/ko/coptic
+	module: dojo/cldr/nls/en/roc
+	module: dojo/cldr/nls/zh/gregorian
+	module: dojo/cldr/nls/zh-hant/currency
+	module: dojo/cldr/nls/nl/chinese
+	module: dojo/cldr/nls/ru/chinese
+	module: dojo/cldr/nls/ja/number
+	module: dojo/cldr/nls/ja/islamic
+	module: dojo/nls/kk/colors
+	module: dojo/promise/instrumentation
+	module: dojo/cldr/nls/zh/ethiopic
+	module: dojo/router/RouterBase
+	module: dojo/nls/ca/colors
+	module: dojo/cldr/supplemental
+	module: dojo/cldr/nls/es/number
+	module: dojo/cldr/nls/sv/gregorian
+	module: dojo/cldr/nls/ja/dangi
+	module: dojo/cache
+	module: dojo/cldr/nls/generic
+	module: dojo/cldr/nls/es/currency
+	module: dojo/cldr/nls/he/hebrew
+	module: dojo/cldr/nls/pl/ethiopic
+	module: dojo/cldr/nls/zh-hant/dangi
+	module: dojo/dom-prop
+	module: dojo/cldr/nls/he/generic
+	module: dojo/cldr/nls/zh/hebrew
+	module: dojo/cldr/nls/cs/hebrew
+	module: dojo/nls/el/colors
+	module: dojo/data/api/Identity
+	module: dojo/cldr/nls/zh-hant/number
+	module: dojo/NodeList-manipulate
+	module: dojo/_base/json
+	module: dojo/main
+	module: dojo/cldr/nls/en-gb/islamic
+	module: dojo/cldr/nls/cs/buddhist
+	module: dojo/cldr/nls/pt/islamic
+	module: dojo/store/api/Store
+	module: dojo/cldr/nls/pt-pt/hebrew
+	module: dojo/cldr/nls/ru/buddhist
+	module: dojo/cldr/nls/ja/roc
+	module: dojo/nls/zh-tw/colors
+	module: dojo/cldr/nls/ja/japanese
+	module: dojo/cldr/nls/nb/generic
+	module: dojo/router
+	module: dojo/NodeList
+	module: dojo/i18n
+	module: dojo/cldr/nls/islamic-umalqura
+	module: dojo/selector/acme
+	module: dojo/store/Memory
+	module: dojo/promise/tracer
+	module: dojo/cldr/nls/ja/buddhist
+	module: dojo/cldr/nls/ru/number
+	module: dojo/cldr/nls/fi/generic
+	module: dojo/request
+	module: dojo/cldr/nls/hu/roc
+	module: dojo/cldr/nls/pt-pt/gregorian
+	module: dojo/cldr/nls/fr/number
+	module: dojo/cldr/nls/ja/gregorian
+	module: dojo/cldr/nls/ar/hebrew
+	module: dojo/has
+	module: dojo/data/ItemFileWriteStore
+	module: dojo/cldr/nls/th/japanese
+	module: dojo/cldr/nls/th/number
+	module: dojo/cldr/nls/hu/indian
+	module: dojo/cldr/nls/ko/generic
+	module: dojo/cldr/nls/he/number
+	module: dojo/cldr/nls/fr/japanese
+	module: dojo/cldr/nls/ko/hebrew
+	module: dojo/cldr/nls/tr/roc
+	module: dojo/on
+	module: dojo/cldr/nls/cs/generic
+	module: dojo/window
+	module: dojo/cldr/nls/th/buddhist
+	module: dojo/cldr/nls/ethiopic-amete-alem
+	module: dojo/cldr/nls/de/japanese
+	module: dojo/cldr/nls/fi/hebrew
+	module: dojo/cldr/nls/fr/buddhist
+	module: dojo/when
+	module: dojo/nls/sl/colors
+	module: dojo/_base/loader
+	module: dojo/cldr/nls/hu/chinese
+	module: dojo/cldr/nls/el/japanese
+	module: dojo/cldr/nls/fr/dangi
+	module: dojo/cldr/nls/tr/islamic
+	module: dojo/cldr/nls/pt/japanese
+	module: dojo/cldr/nls/pl/islamic
+	module: dojo/back
+	module: dojo/cldr/nls/pt/number
+	module: dojo/cldr/nls/de/buddhist
+	module: dojo/cldr/nls/pl/indian
+	module: dojo/dom-form
+	module: dojo/nls/it/colors
+	module: dojo/cldr/nls/ro/ethiopic
+	module: dojo/promise/all
+	module: dojo/fx/easing
+	module: dojo/cldr/nls/nl/japanese
+	module: dojo/cldr/nls/sv/ethiopic
+	module: dojo/cldr/nls/nl/persian
+	module: dojo/cldr/nls/ru/persian
+	module: dojo/cldr/nls/zh-tw/gregorian
+	module: dojo/cldr/nls/he/japanese
+	module: dojo/cldr/nls/zh/roc
+	module: dojo/cldr/nls/gregorian
+	module: dojo/cldr/nls/nl/buddhist
+	module: dojo/cldr/nls/en/currency
+	module: dojo/cldr/nls/tr/number
+	module: dojo/cldr/nls/sv/generic
+	module: dojo/sniff
+	module: dojo/cldr/nls/pt-pt/chinese
+	module: dojo/cldr/nls/ca/currency
+	module: dojo/cldr/nls/ru/ethiopic
+	module: dojo/on/throttle
+	module: dojo/cldr/nls/japanese
+	module: dojo/fx/Toggler
+	module: dojo/on/debounce
+	module: dojo/NodeList-html
+	module: dojo/cldr/nls/fr-ch/gregorian
+	module: dojo/gears
+	module: dojo/dnd/autoscroll
+	module: dojo/nls/sv/colors
+	module: dojo/cldr/nls/de/generic
+	module: dojo/cldr/nls/buddhist
+	module: dojo/cldr/nls/islamic
+	module: dojo/cldr/nls/hu/coptic
+	module: dojo/cldr/nls/indian
+	module: dojo/_base/query
+	module: dojo/dom-construct
+	module: dojo/cldr/nls/es/roc
+	module: dojo/cldr/nls/he/islamic
+	module: dojo/cldr/nls/ru/roc
+	module: dojo/cldr/nls/sv/indian
+	module: dojo/promise/first
+	module: dojo/rpc/JsonpService
+	module: dojo/NodeList-fx
+	module: dojo/NodeList-dom
+	module: dojo/cldr/nls/hu/japanese
+	module: dojo/cldr/nls/fr-ch/generic
+	module: dojo/cldr/nls/ja/chinese
+	module: dojo/cldr/nls/hu/buddhist
+	module: dojo/cldr/nls/pl/coptic
+	module: dojo/dnd/TimedMoveable
+	module: dojo/cldr/nls/nb/islamic
+	module: dojo/selector/_loader
+	module: dojo/cldr/nls/sk/generic
+	module: dojo/cldr/nls/fr/generic
+	module: dojo/cldr/nls/fi/islamic
+	module: dojo/cldr/nls/zh/number
+	module: dojo/cldr/nls/cs/number
+	module: dojo/string
+	module: dojo/dnd/Manager
+	module: dojo/cldr/nls/tr/ethiopic
+	module: dojo/cldr/nls/en-gb/chinese
+	module: dojo/cldr/nls/es/gregorian
+	module: dojo/cldr/nls/th/generic
+	module: dojo/nls/de/colors
+	module: dojo/_base/declare
+	module: dojo/cldr/nls/ar/japanese
+	module: dojo/cldr/nls/el/hebrew
+	module: dojo/nls/ro/colors
+	module: dojo/cldr/nls/pt/chinese
+	module: dojo/cldr/nls/ko/islamic
+	module: dojo/dom-attr
+	module: dojo/cldr/nls/nb/japanese
+	module: dojo/cldr/nls/pt-pt/number
+	module: dojo/nls/nb/colors
+	module: dojo/cldr/nls/cs/islamic
+	module: dojo/cldr/nls/hu/persian
+	module: dojo/cldr/nls/ar/buddhist
+	module: dojo/cldr/nls/zh/currency
+	module: dojo/cldr/nls/th/gregorian
+	module: dojo/hccss
+	module: dojo/cldr/nls/el/buddhist
+	module: dojo/date
+	module: dojo/cldr/nls/pt/buddhist
+	module: dojo/cldr/nls/nb/buddhist
+	module: dojo/cldr/nls/en-au/japanese
+	module: dojo/cldr/nls/pl/currency
+	module: dojo/request/watch
+	module: dojo/cldr/nls/zh-hant/persian
+	module: dojo/cldr/nls/de/roc
+	module: dojo/cldr/nls/islamic-civil
+	module: dojo/cldr/nls/cs/gregorian
+	module: dojo/cldr/nls/ar/number
+	module: dojo/cldr/nls/sv/coptic
+	module: dojo/cldr/nls/hu/hebrew
+	module: dojo/cldr/nls/fi/chinese
+	module: dojo/cldr/nls/zh-hk/gregorian
+	module: dojo/cldr/nls/he/gregorian
+	module: dojo/cldr/nls/ko/number
+	module: dojo/cldr/nls/fr/roc
+	module: dojo/cldr/nls/islamic-rgsa
+	module: dojo/_base/connect
+	module: dojo/cldr/nls/fi/number
+	module: dojo/cldr/nls/pl/chinese
+	module: dojo/cldr/nls/sv/islamic
+	module: dojo/cldr/nls/cs/chinese
+	module: dojo/dom-geometry
+	module: dojo/cldr/nls/pl/hebrew
+	module: dojo/nls/nl/colors
+	module: dojo/data/api/Write
+	module: dojo/cldr/nls/en-gb/japanese
+	module: dojo/cldr/nls/sl/gregorian
+	module: dojo/cldr/nls/ja/ethiopic
+	module: dojo/cldr/nls/it/roc
+	module: dojo/cldr/nls/zh-hant/roc
+	module: dojo/cldr/nls/nb/roc
+	module: dojo/store/util/QueryResults
+	module: dojo/data/util/simpleFetch
+	module: dojo/cldr/nls/nl/indian
+	module: dojo/cldr/nls/sk/currency
+	module: dojo/cldr/nls/de/islamic
+	module: dojo/cldr/nls/it/hebrew
+	module: dojo/cldr/nls/nl/dangi
+	module: dojo/cldr/nls/da/gregorian
+	module: dojo/cldr/nls/ar/generic
+	module: dojo/cldr/nls/cs/roc
+	module: dojo/cldr/nls/hu/number
+	module: dojo/cldr/nls/th/ethiopic
+	module: dojo/dnd/Target
+	module: dojo/cldr/nls/it/currency
+	module: dojo/cldr/nls/fr/ethiopic
+	module: dojo/cldr/nls/sk/number
+	module: dojo/cldr/nls/pt-pt/japanese
+	module: dojo/cldr/nls/ca/gregorian
+	module: dojo/errors/RequestError
+	module: dojo/nls/hr/colors
+	module: dojo/cldr/nls/ru/gregorian
+	module: dojo/cldr/nls/fi/japanese
+	module: dojo/nls/da/colors
+	module: dojo/text
+	module: dojo/cldr/nls/ro/currency
+	module: dojo/dom-class
+	module: dojo/cldr/nls/fi/gregorian
+	module: dojo/cldr/nls/chinese
+	module: dojo/cldr/nls/fr/islamic
+	module: dojo/cldr/nls/hebrew
+	module: dojo/cldr/nls/pt-pt/buddhist
+	module: dojo/cldr/nls/sv/currency
+	module: dojo/cldr/nls/zh-tw/currency
+	module: dojo/cldr/nls/de/gregorian
+	module: dojo/cldr/nls/fi/buddhist
+	module: dojo/cldr/nls/sv/hebrew
+	module: dojo/cldr/nls/pl/gregorian
+	module: dojo/cldr/nls/en/gregorian
+	module: dojo/cldr/nls/ko/japanese
+	module: dojo/nls/es/colors
+	module: dojo/cldr/nls/pt/persian
+	module: dojo/nls/az/colors
+	module: dojo/cldr/nls/ko/dangi
+	module: dojo/cldr/nls/da/japanese
+	module: dojo/cldr/nls/th/islamic
+	module: dojo/errors/CancelError
+	module: dojo/cldr/nls/fr/gregorian
+	module: dojo/cldr/nls/nl/ethiopic
+	module: dojo/cldr/nls/ko/buddhist
+	module: dojo/cldr/nls/da/buddhist
+	module: dojo/cldr/nls/zh/generic
+	module: dojo/cldr/nls/zh-hant/japanese
+	module: dojo/request/handlers
+	module: dojo/rpc/RpcService
+	module: dojo/cldr/nls/coptic
+	module: dojo/io-query
+	module: dojo/cldr/nls/es/generic
+	module: dojo/selector/lite
+	module: dojo/domReady
+	module: dojo/cldr/nls/ro/generic
+	module: dojo/cldr/nls/zh-hant/buddhist
+	module: dojo/data/util/filter
+	module: dojo/data/api/Notification
+	module: dojo/Deferred
+	module: dojo/request/registry
+	module: dojo/cldr/nls/nl/coptic
+	module: dojo/cldr/nls/nl/gregorian
+	module: dojo/request/iframe
+	module: dojo/cldr/nls/ethiopic
+	module: dojo/cldr/nls/en-au/gregorian
+	module: dojo/_base/fx
+	module: dojo/cldr/nls/sl/generic
+	module: dojo/cldr/nls/en-gb/gregorian
+	module: dojo/throttle
+	module: dojo/cldr/nls/es/japanese
+	module: dojo/debounce
+	module: dojo/cldr/nls/ko/chinese
+	module: dojo/cldr/nls/el/number
+	module: dojo/cldr/nls/de/hebrew
+	module: dojo/cldr/nls/dangi
+	module: dojo/cldr/nls/es/buddhist
+	module: dojo/cldr/nls/tr/persian
+	module: dojo/query
+	module: dojo/_base/array
+	module: dojo/cldr/nls/pl/persian
+	module: dojo/cldr/nls/hu/ethiopic
+	module: dojo/cldr/nls/nb/hebrew
+	module: dojo/request/notify
+	module: dojo/cookie
+	module: dojo/cldr/nls/tr/currency
+	module: dojo/Stateful
+	module: dojo/_base/Color
+	module: dojo/dnd/Source
+	module: dojo/cldr/nls/it/generic
+	module: dojo/cldr/nls/ja/persian
+	module: dojo/errors/create
+	module: dojo/_base/config
+	module: dojo/cldr/nls/ro/coptic
+	module: dojo/cldr/nls/fi/roc
+	module: dojo/parser
+	module: dojo/cldr/nls/ar/islamic
+	module: dojo/cldr/nls/sk/gregorian
+	module: dojo/require
+	module: dojo/cldr/nls/ar/ethiopic
+	module: dojo/cldr/nls/ar/gregorian
+	module: dstore/Cache
+	module: dstore/Request
+	module: dstore/Memory
+	module: dstore/Promised
+	module: dstore/Store
+	module: dstore/QueryResults
+	module: dstore/legacy/DstoreAdapter
+	module: dstore/RequestMemory
+	module: dstore/Filter
+	module: dstore/Tree
+	module: dstore/Rest
+	module: dstore/SimpleQuery
+	module: dstore/QueryMethod
+	module: dstore/charting/StoreSeries
+	module: dstore/Csv
+	module: dstore/Trackable
+	module: dstore/legacy/StoreAdapter
+	module: put-selector/put
+	module: dexist/cb-layer
+info(106) Optimizing CSS.
+	file: D:/workspace/dojo-master-src/dgrid/css/TouchScroll.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/nihilo.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/squid.css
+	file: D:/workspace/dojo-master-src/dgrid/css/extensions/ColumnResizer.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/claro.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/tundra.css
+	file: D:/workspace/dojo-master-src/dgrid/css/extensions/ColumnReorder.css
+	file: D:/workspace/dojo-master-src/dgrid/css/extensions/ColumnHider.css
+	file: D:/workspace/dojo-master-src/dgrid/css/dgrid_rtl.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/cactus.css
+	file: D:/workspace/dojo-master-src/dgrid/css/columnset.css
+	file: D:/workspace/dojo-master-src/dgrid/css/dgrid.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/sage.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/slate.css
+	file: D:/workspace/dojo-master-src/dgrid/css/skins/soria.css
+	file: D:/workspace/dojo-master-src/dgrid/css/extensions/Pagination.css
+	file: D:/workspace/dojo-master-src/dgrid/css/extensions/CompoundColumns.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Dialog_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/layout/TabContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/layout/AccordionContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/layout/AccordionContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Slider_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/Slider_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/TimeTextBox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/AccordionContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/soria.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/nihilo.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/ColorPalette.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Editor.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Common_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Checkbox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/TabContainer_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/TimePicker.css
+	file: D:/workspace/dojo-master-src/dijit/icons/editorIcons.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Slider.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Calendar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Slider.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Dialog.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Tree.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/tundra.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/TitlePane_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Checkbox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Slider_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/ColorPalette.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Editor.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/claro_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Menu.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Toolbar.css
+	file: D:/workspace/dojo-master-src/dijit/icons/editorIcons_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Menu_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/TitlePane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Calendar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/TitlePane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/AccordionContainer_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Menu_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Dialog.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Editor_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Toolbar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Menu_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/TitlePane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/ColorPalette.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Tree.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Button.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/soria_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Menu.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/TabContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/TimePicker.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Button_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/TimeTextBox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/ColorPalette.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/TitlePane_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/claro.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/ProgressBar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Button_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/layout/TabContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Toolbar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/TabContainer_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/InlineEditBox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Menu_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Dialog_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Editor_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/layout/SplitContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Select.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Editor.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/BorderContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/TabContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Checkbox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Tree_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/layout/ContentPane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/AccordionContainer_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/ContentPane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Dialog.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Tree_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/layout/TabContainer_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/dijit_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/layout/BorderContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/TitlePane_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Calendar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/ProgressBar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Toolbar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/ProgressBar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Editor.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Button_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/RadioButton.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Button.css
+	file: D:/workspace/dojo-master-src/dijit/icons/commonIcons_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/icons/commonIcons.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/TimePicker.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/document.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/tundra_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/Button.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Tree.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Button.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/TimePicker.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Dialog_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/layout/TabContainer_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Menu.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Dialog.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/ContentPane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Calendar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/ProgressBar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Tree_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/ProgressBar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Tree.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Slider.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Menu.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Editor_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Tree_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Calendar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/Editor_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/TimePicker_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/dijit.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/layout/BorderContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/Calendar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/AccordionContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/TitlePane_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/NumberSpinner.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/form/Select.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/ProgressBar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/ProgressBar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/Checkbox.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/Select.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/BorderContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/Select.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Calendar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Common.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/nihilo_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/layout/SplitContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/Slider_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/TitlePane.css
+	file: D:/workspace/dojo-master-src/dijit/themes/claro/form/RadioButton.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/TimePicker_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/TimePicker_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/layout/SplitContainer.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/Slider.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/form/RadioButton.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/form/RadioButton.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/ProgressBar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Dialog_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/soria/Toolbar.css
+	file: D:/workspace/dojo-master-src/dijit/themes/nihilo/Calendar_rtl.css
+	file: D:/workspace/dojo-master-src/dijit/themes/tundra/layout/ContentPane.css
+	file: D:/workspace/dojo-master-src/xstyle/ext/dgrid.css
+	file: D:/workspace/dojo-master-src/xstyle/shims.css
+	file: D:/workspace/dojo-master-src/dojo/_firebug/firebug.css
+	file: D:/workspace/dojo-master-src/dojo/resources/dojo.css
+	file: D:/workspace/dojo-master-src/dojo/resources/dnd.css
+info(107) Package Version:
+	package: dgrid; version: 0.5.0-dev
+	package: dforma; version: 1
+	package: dijit; version: 1.11.0-pre
+	package: xstyle; version: 0.2.1
+	package: dexist; version: 0.1
+	package: dojo; version: 1.11.0-pre
+	package: dstore; version: 1.0.0
+	package: put-selector; version: 0.3.5
+warn(216) dojo/has plugin resource could not be resolved during build-time.
+	plugin resource id: touch?../util/touch; reference module id: dgrid/extensions/DnD
+	plugin resource id: touch?./_DnD-touch-autoscroll; reference module id: dgrid/extensions/DnD
+	plugin resource id: touch?./util/touch; reference module id: dgrid/Selection
+	plugin resource id: touch?./util/touch; reference module id: dgrid/Tree
+	plugin resource id: dojo-bidi?./_BidiMixin; reference module id: dijit/_WidgetBase
+	plugin resource id: dom-addeventlistener?:./aspect; reference module id: dojo/on
+	plugin resource id: host-browser?dom-addeventlistener?:../on:; reference module id: dojo/request/watch
+warn(224) A plugin dependency was encountered but there was no build-time plugin resolver.
+	module: dgrid/extensions/DnD; plugin: xstyle/css
+	module: dgrid/List; plugin: xstyle/css
+	module: dgrid/extensions/CompoundColumns; plugin: xstyle/css
+	module: dgrid/extensions/ColumnHider; plugin: xstyle/css
+	module: dgrid/extensions/ColumnResizer; plugin: xstyle/css
+	module: dgrid/TouchScroll; plugin: xstyle/css
+	module: dgrid/ColumnSet; plugin: xstyle/css
+	module: dgrid/extensions/Pagination; plugin: xstyle/css
+	module: dgrid/extensions/ColumnReorder; plugin: xstyle/css
+	module: dijit/form/_RadioButtonMixin; plugin: dojo/query
+	module: dijit/Fieldset; plugin: dojo/query
+	module: dijit/Tree; plugin: dojo/query
+	module: dijit/RadioMenuItem; plugin: dojo/query
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request; plugin: dojo/request/default
+	module: dojo/request/registry; plugin: dojo/request/default
+Layer Contents:
+dexist/cb-layer:
+	dijit/form/nls/validate
+	dijit/form/TextBox
+	dijit/_TemplatedMixin
+	dijit/_CssStateMixin
+	dijit/DialogUnderlay
+	put-selector/put
+	dijit/place
+	dijit/_HasDropDown
+	dforma/_GroupMixin
+	dijit/_MenuBase
+	dforma/Group
+	dijit/focus
+	dojo/i18n
+	dijit/hccss
+	dijit/form/_ComboBoxMenuMixin
+	dojo/parser
+	dijit/form/_SearchMixin
+	dijit/form/ToggleButton
+	dojo/date/stamp
+	dojo/Stateful
+	dstore/Filter
+	dijit/form/_AutoCompleterMixin
+	dijit/form/MappedTextBox
+	dijit/form/ComboBoxMixin
+	dijit/form/_TextBoxMixin
+	dojo/hccss
+	dijit/main
+	dforma/Label
+	dstore/SimpleQuery
+	dstore/Promised
+	dijit/_OnDijitClickMixin
+	dojo/dnd/autoscroll
+	dojo/dnd/TimedMoveable
+	dojo/data/ObjectStore
+	dijit/form/_ListMouseMixin
+	dojo/cookie
+	dojo/cache
+	dijit/form/templates/DropDownBox.html
+	dexist/cb-layer
+	dstore/Request
+	dojo/promise/all
+	xstyle/has-class
+	dijit/form/templates/Button.html
+	dojo/_base/url
+	dojo/text
+	dijit/templates/MenuItem.html
+	dijit/form/templates/CheckBox.html
+	dijit/layout/LayoutContainer
+	dojo/uacss
+	dojo/string
+	dijit/templates/MenuSeparator.html
+	dijit/Tooltip
+	dijit/form/_FormValueMixin
+	dijit/form/_FormWidgetMixin
+	dijit/a11yclick
+	dijit/Destroyable
+	dexist/CollectionBrowser
+	dforma/Builder
+	dijit/layout/_ContentPaneResizeMixin
+	dijit/nls/loading
+	dojo/dnd/Moveable
+	dgrid/Grid
+	dojo/store/util/SimpleQueryEngine
+	dojo/cldr/nls/number
+	dgrid/util/misc
+	dijit/MenuItem
+	dijit/layout/_LayoutWidget
+	dstore/Cache
+	dijit/popup
+	dijit/_base/manager
+	dstore/Memory
+	dojo/dnd/Mover
+	dojo/request/default
+	dijit/BackgroundIframe
+	dijit/templates/Menu.html
+	dijit/form/Button
+	dijit/_WidgetBase
+	dijit/form/Form
+	dojo/store/Memory
+	dijit/templates/Tooltip.html
+	dforma/validate/us
+	dijit/Toolbar
+	dforma/validate/_base
+	dijit/layout/StackContainer
+	dojo/regexp
+	dijit/form/ComboBox
+	dijit/DropDownMenu
+	dijit/_AttachMixin
+	dijit/form/_FormMixin
+	dstore/QueryResults
+	dijit/form/_CheckBoxMixin
+	dijit/layout/ContentPane
+	dforma/util/string/toProperCase
+	dijit/form/templates/ValidationTextBox.html
+	dijit/_KeyNavContainer
+	dijit/layout/utils
+	dijit/_Contained
+	dgrid/List
+	dijit/form/templates/TextBox.html
+	dijit/form/DataList
+	dijit/templates/Dialog.html
+	dijit/form/CheckBox
+	dstore/Rest
+	dijit/_Container
+	dojo/html
+	dijit/form/ValidationTextBox
+	dgrid/OnDemandGrid
+	dojo/window
+	dojo/number
+	dijit/_FocusMixin
+	dgrid/Selection
+	dgrid/_StoreMixin
+	dijit/form/FilteringSelect
+	dojo/data/util/sorter
+	dijit/form/_ButtonMixin
+	dijit/registry
+	dgrid/Editor
+	dstore/QueryMethod
+	dijit/form/_FormSelectWidget
+	dijit/form/Select
+	dforma/nls/common
+	dforma/util/i18n
+	dijit/_KeyNavMixin
+	dojo/store/util/QueryResults
+	dijit/form/_ListBase
+	dijit/form/_FormWidget
+	dstore/Store
+	dojo/dnd/common
+	dijit/Viewport
+	dijit/MenuSeparator
+	dgrid/extensions/DijitRegistry
+	dijit/form/_ComboBoxMenu
+	xstyle/css
+	dforma/validate/web
+	dijit/Dialog
+	dforma/jsonschema
+	dgrid/OnDemandList
+	dforma/validate/regexp
+	dijit/a11y
+	dijit/form/_ToggleButtonMixin
+	dijit/_Widget
+	dojo/touch
+	dijit/form/templates/Select.html
+	dijit/form/nls/ComboBox
+	dojo/request
+	dijit/_DialogMixin
+	dijit/nls/common
+	dijit/form/_FormValueWidget
+	dgrid/Keyboard
+
+dojo/dojo:
+	dojo/_base/fx
+	dojo/dom-form
+	dojo/promise/tracer
+	dojo/errors/RequestError
+	dojo/_base/html
+	dojo/_base/kernel
+	dojo/io-query
+	dojo/_base/Deferred
+	dojo/NodeList-dom
+	dojo/query
+	dojo/has
+	dojo/json
+	dojo/_base/declare
+	dojo/dom
+	dojo/_base/browser
+	dojo/errors/RequestTimeoutError
+	dojo/dom-style
+	dojo/dom-geometry
+	dojo/dom-prop
+	dojo/when
+	dojo/dom-attr
+	dojo/dom-construct
+	dojo/request/xhr
+	dojo/keys
+	dojo/domReady
+	dojo/_base/lang
+	dojo/Evented
+	dojo/request/util
+	dojo/mouse
+	dojo/topic
+	dojo/_base/xhr
+	dojo/dojo
+	dojo/_base/unload
+	dojo/Deferred
+	dojo/_base/NodeList
+	dojo/_base/Color
+	dojo/promise/instrumentation
+	dojo/selector/_loader
+	dojo/promise/Promise
+	dojo/request/watch
+	dojo/selector/lite
+	dojo/on
+	dojo/_base/sniff
+	dojo/errors/create
+	dojo/_base/array
+	dojo/_base/json
+	dojo/_base/window
+	dojo/dom-class
+	dojo/_base/config
+	dojo/_base/event
+	dojo/main
+	dojo/sniff
+	dojo/request/handlers
+	dojo/ready
+	dojo/aspect
+	dojo/_base/connect
+	dojo/errors/CancelError
+
+
+
+Process finished normally
+	errors: 0
+	warnings: 26
+	build time: 33.535 seconds

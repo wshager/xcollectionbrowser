@@ -1,0 +1,3 @@
+//>>built
+define("dforma/util/string/cleanWhitespace",["dojo/_base/lang","dojo/dom-construct"],function(f,g){f.getObject("dforma.util.string",!0);var d=function(a){for(var c=0;c<a.childNodes.length;c++){var b=a.childNodes[c];3==b.nodeType&&!/\S/.test(b.nodeValue)&&(a.removeChild(b),c--);1==b.nodeType&&d(b)}return a},e=function(a){a=g.create("div",{innerHTML:a});return d(a).innerHTML};String.prototype.cleanWhitespace=function(){return e(this)};return dforma.util.string.cleanWhitespace=e});
+//# sourceMappingURL=cleanWhitespace.js.map
