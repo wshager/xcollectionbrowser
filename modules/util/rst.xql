@@ -83,21 +83,31 @@ declare function rst:process($path as xs:string, $directives as map, $query as i
 	return
 		if(name($response[1]) = "http:response") then
 			(: expect custom response :)
-			if($directives("from-controller")) then
-				(: parse http:response entry :)
-				(
-					if($response[1]/@status) then
-						response:set-status-code($response[1]/@status)
-					else
-						(),
-					for $header in $response[1]/http:header return 
-						response:set-header($header/@name,$header/@value)
-					,
-					remove($response,1)
-				)
-			else
-				(<rest:response>{$response[1]}</rest:response>,
-				remove($response,1))
+			let $http-response := $response[1]
+			let $result := remove($response,1)
+			return
+			    if($directives("from-controller")) then
+    				(: parse http:response entry :)
+    				(
+    					if($http-response/@status) then
+    						response:set-status-code($http-response/@status)
+    					else
+    						(),
+    					for $header in $http-response/http:header return 
+    						response:set-header($header/@name,$header/@value),
+    					if($result) then
+                            $result
+                        else
+                            element response {
+                                $http-response/@message,
+                                $http-response/message/*
+                            }
+    				)
+    			else
+    				(
+    				    <rest:response>{$http-response}</rest:response>,
+    				    $result
+    				)
 		else
 			$response
 };
@@ -165,28 +175,31 @@ declare %private function rst:to-plain-xml($node as element()) as item()* {
 		else if($name = "pair" and $node/@name) then
 			$node/@name
 		else if($name = "item") then
-			"json:value"
+		    "json:value"
 		else
 			$name
 	return
-		if($node[@type = "array"]) then
+	    if($node[@type = "array"]) then
+	       for $item in $node/node() return
 			element {$name} {
 				attribute {"json:array"} {"true"},
-				for $child in $node/node() return
-					if($child instance of element()) then
-						rst:to-plain-xml($child)
-					else
-						$child
+				rst:to-plain-xml($item)
 			}
-		else if($name="json:value" and empty($node/*)) then
-			(if($node/@type = ("number","boolean")) then
-				attribute {"json:literal"} {"true"}
-			else
-				(),
-			$node/string())
+		else if($name="json:value") then
+		    if(empty($node/*)) then
+    			(if($node/@type = ("number","boolean")) then
+    				attribute {"json:literal"} {"true"}
+    			else
+    				(),
+    			$node/string())
+    		else
+    		   for $item in $node/node() return
+					rst:to-plain-xml($item)
 		else
 			element {$name} {
-				if($node/@type = ("number","boolean")) then
+			    if($node/@type = "array") then
+			        attribute {"json:array"} {"true"}
+				else if($node/@type = ("number","boolean")) then
 					attribute {"json:literal"} {"true"}
 				else
 					(),
