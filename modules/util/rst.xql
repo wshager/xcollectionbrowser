@@ -99,8 +99,8 @@ declare function rst:process($path as xs:string, $directives as map, $query as i
                             $result
                         else
                             element response {
-                                $http-response/@message,
-                                $http-response/message/*
+                                $http-response/@message/string(),
+                                $http-response/message/string()
                             }
     				)
     			else
