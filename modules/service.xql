@@ -53,7 +53,9 @@ declare function service:query($collection as xs:string, $query-string as xs:str
 declare function service:put($collection as xs:string, $data as node(), $directives as map) {
     let $id := $data/id/string()
     return
-        if($id) then
+        if($id = "") then
+            <http:response status="404" message="No ID was provided with the request."/>
+        else if(sm:has-access(xs:anyURI($collection || "/" || $id),"w")) then
             let $uri := $collection || "/" || $id
             let $props := (
                 sm:chown($uri, $data/owner/string()),
@@ -63,7 +65,7 @@ declare function service:put($collection as xs:string, $data as node(), $directi
             (:xmldb:set-mime-type($resource, $data/internetMimeType):)
             return $data
         else
-            <http:response status="404" message="No ID was provided with the request."/>
+            <http:response status="403" message="Not allowed."/>
 };
 
 (: RPC functions :)
@@ -128,7 +130,7 @@ declare function service:delete-resources($target as xs:string, $resources as no
     } catch * {
         (
             <http:response status="500" message="{$err:description}" />,
-            <response id="{$id}" result="{$err:description}">
+            <response id="{$id}">
                 <error json:literal="true">true</error>
             </response>
         )
