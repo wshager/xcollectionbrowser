@@ -53,19 +53,21 @@ declare function service:query($collection as xs:string, $query-string as xs:str
 declare function service:put($collection as xs:string, $data as node(), $directives as map) {
     let $id := $data/id/string()
     return
-        if($id = "") then
-            <http:response status="404" message="No ID was provided with the request."/>
-        else if(sm:has-access(xs:anyURI($collection || "/" || $id),"w")) then
-            let $uri := $collection || "/" || $id
-            let $props := (
-                sm:chown($uri, $data/owner/string()),
-                sm:chgrp($uri, $data/group/string()),
-                sm:chmod($uri, service:permissions-from-data($data/permissions))
-            )
-            (:xmldb:set-mime-type($resource, $data/internetMimeType):)
-            return $data
+        if($id) then
+            let $uri := xs:anyURI($collection || "/" || $id)
+            return
+                if(sm:has-access($uri,"w")) then
+                    let $props := (
+                        sm:chown($uri, $data/owner/string()),
+                        sm:chgrp($uri, $data/group/string()),
+                        sm:chmod($uri, service:permissions-from-data($data/permissions))
+                    )
+                    (:xmldb:set-mime-type($resource, $data/internetMimeType):)
+                    return element root { $uri }
+                else
+                    <http:response status="403" message="Not allowed."/>
         else
-            <http:response status="403" message="Not allowed."/>
+            <http:response status="404" message="No ID was provided with the request."/>
 };
 
 (: RPC functions :)
