@@ -1,9 +1,3 @@
-.dexistCollectionBrowser {
-  font-family: Geneva, Arial, Helvetica, sans-serif;
-  width: 800px;
-  height: 600px;
-}
-
 .dexistCollectionBrowser .dijitContentPane {
 	overflow: hidden;
 	padding:0;

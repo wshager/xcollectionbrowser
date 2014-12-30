@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"load-css.js",
+"lineCount":2,
+"mappings":"A;AAAAA,MAAA,uCAA8C,QAAA,CAASC,CAAT,QACtC,SAAA,CAASC,CAAT,CAAcC,CAAd,EAENA,CAFM,CAEAA,CAFA,EAEOC,QAFP,KAIFC,EAAOF,CAAAG,qBAAA,QAAA,GACEL,EAAA,QAAcI,CAAd,CAAAE,KAAA,CAAyB,QAAA,CAASC,CAAT,QAC1BA,EAAAC,aAAAC,QAD0B,GAErBR,CAFqB,CAAzB,CALP,KAUFS,EAAOP,QAAAQ,cAAA,QACXD,EAAAE,aAAA,oBACAF,EAAAE,aAAA,mBACAF,EAAAE,aAAA,QAA0BX,CAA1B,CACAG,EAAAS,YAAA,CAAiBH,CAAjB,CAdM,CADsC,CAA9C;",
+"sources":["load-css.js.uncompressed.js"],
+"names":["define","query","path","doc","document","head","getElementsByTagName","some","elem","getAttribute","href","link","createElement","setAttribute","appendChild"]
+}

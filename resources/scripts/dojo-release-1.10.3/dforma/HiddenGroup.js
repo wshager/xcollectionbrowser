@@ -1,4 +1,0 @@
-//>>built
-define("dforma/HiddenGroup","dojo/_base/declare dojo/_base/lang dojo/dom-attr dojo/dom-class dijit/registry ./Group".split(" "),function(b,f,c,a,d,e){return b("dforma.HiddenGroup",[e],{_setLabelAttr:function(){},isHidden:function(){return a.contains(this.containerNode,"dijitHidden")},validate:function(){return this.isHidden()?!0:this.inherited(arguments)},getChildren:function(){var a=this.inherited(arguments);this.buttonNode.firstChild&&a.push(d.byNode(this.buttonNode.firstChild));return a},postCreate:function(){this.inherited(arguments);
-c.set(this.domNode,"hidden",!1);a.toggle(this.labelNode,"dijitHidden",!0);a.toggle(this.buttonNode,"dijitHidden",!1);a.toggle(this.containerNode,"dijitHidden",!0)}})});
-//# sourceMappingURL=HiddenGroup.js.map

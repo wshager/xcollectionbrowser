@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"cb-layer_zh-tw.js",
+"lineCount":5,
+"mappings":"A;AAAAA,MAAA,8BACA,mBADA,8GAGA,kBAHA,wHAKA,yBALA;eAOA,sBAPA,yBAOiD,6CAPjD,mGAOiM,iDAPjM,aAO+P,qBAP/P,QAO4R,6CAP5R,gDAOyW,gDAPzW,aAOsa,8CAPta;oGAO2jB,oBAP3jB,mDAOioB,8CAPjoB,8DASA,yBATA,qHAWA,mBAXA;;",
+"sources":["cb-layer_zh-tw.js.uncompressed.js"],
+"names":["define"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"cb-layer_pt-br.js",
+"lineCount":5,
+"mappings":"A;AAAAA,MAAA,8BACA,mBADA,qFAGA,kBAHA,8FAKA,yBALA,4LAOA,sBAPA;AAOiD,6CAPjD,mGAOiM,iDAPjM,aAO+P,qBAP/P,gBAO+R,6CAP/R,iCAO4W,gDAP5W,aAOya,8CAPza;iCAO8jB,oBAP9jB,2DAO4oB,8CAP5oB,yCASA,yBATA,mGAWA,mBAXA;;",
+"sources":["cb-layer_pt-br.js.uncompressed.js"],
+"names":["define"]
+}

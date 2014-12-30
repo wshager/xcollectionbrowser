@@ -1,3 +1,0 @@
-//>>built
-define("dstore/QueryResults",["dojo/_base/lang","dojo/when"],function(e,f){function g(a,b){return f(this,function(c){for(var d=0,h=c.length;d<h;d++)a.call(b,c[d],c)})}return function(a,b){var c=b&&"totalLength"in b;if(a.then){a=e.delegate(a);var d=a.then(function(a){var d=c?b.totalLength:a.totalLength||a.length;return a.totalLength=d});a.totalLength=c?b.totalLength:d;a.response=b&&b.response}else a.totalLength=c?b.totalLength:a.length;a.forEach=g;return a}});
-//# sourceMappingURL=QueryResults.js.map

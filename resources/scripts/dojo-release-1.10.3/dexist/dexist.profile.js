@@ -2,7 +2,7 @@ var list = {
 	"dexist/dexist.profile" : 1,
 	"dexist/package.json" : 1
 };
-var testResourceRe = /^dexist\/tests\//;
+var testResourceRe = /^dexist\/tests\/|readme.md/i;
 var profile = {
 	"releaseDir" : "release/dexist",
 	"basePath" : "../",
@@ -24,8 +24,6 @@ var profile = {
 		"async" : 1
 	},
 	"staticHasFeatures" : {
-		//"config-deferredInstrumentation" : 0,
-		//"config-dojo-loader-catches" : 0,
 		"config-tlmSiblingOfDojo" : 1,
 		"dojo-amd-factory-scan" : 1,
 		"dojo-combo-api" : 0,
@@ -74,7 +72,7 @@ var profile = {
 	        boot:true
 	    },
 		"dexist/cb-layer" : {
-			"include" : [ "dexist/CollectionBrowser"],
+			"include" : [ "dexist/CollectionBrowser","dforma/Grid"],
 			"boot":true
 		}
 	}

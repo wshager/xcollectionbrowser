@@ -1,0 +1,84 @@
+.dexistUploader form.file_upload .file_upload_body {
+  position: relative;
+  overflow: hidden;
+  direction: ltr;
+  cursor: pointer;
+  text-align: center;
+  color: #555;
+  font-weight: bold;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  width: 15em;
+  line-height: 2.5em;
+  border: 3px dashed orange;
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+}
+.dexistUploader form.file_upload .file_upload_body input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  border: 300px solid transparent;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  -o-transform: translate(-300px, -300px) scale(10);
+  -moz-transform: translate(-800px, 0) scale(10);
+  cursor: pointer;
+  height: 100%;
+}
+.dexistUploader form.file_upload .file_upload_body button {
+  display: none;
+}
+.dexistUploader form.file_upload .file_upload_label {
+  display: block;
+}
+.dexistUploader form.file_upload .file_upload_body:hover {
+  border: 3px dashed lawngreen;
+}
+.dexistUploader .overall-progress {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+.dexistUploader .overall-progress .bar {
+  height: 18px;
+  background: url(images/progressbar.gif);
+}
+.dexistUploader .overall-progress .progress-label {
+  position: absolute;
+  left: 10px;
+  top: 0;
+}
+.dexistUploader .queue {
+  display: block;
+  width: 100%;
+  height: 160px;
+  overflow: auto;
+  margin: 8px 0;
+  font-size: 85%;
+}
+.dexistUploader .queue .files {
+  width: 100%;
+  margin: 0;
+}
+.dexistUploader .queue .files tr td {
+  padding: 4px 6px;
+  text-align: right;
+  border-bottom: 1px solid #E0E0E0;
+}
+.dexistUploader .queue .files tr td.name {
+  min-width: 120px;
+  font-weight: bold;
+  text-align: left;
+}
+.dexistUploader .queue .files tr td.progress {
+  width: 180px;
+  margin: 8px auto;
+}
+.dexistUploader .queue .files tr td.progress .bar {
+  height: 18px;
+  background: url(images/progressbar.gif);
+}

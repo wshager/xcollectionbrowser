@@ -1,0 +1,18 @@
+<div>
+    <p>To upload: drop one or more files on this dialog or click on the button below.</p>
+    <form class="file_upload" action="${url}" method="POST" enctype="multipart/form-data">
+        <div class="file_upload_body">
+            <input type="file" name="uploadedfiles[]" multiple="multiple"/>
+            <input id="browsing-upload-collection" name="collection" value="${collection}" type="hidden"/>
+            <button>Upload</button>
+            <div class="file_upload_label">Upload</div>
+        </div>
+    </form>
+    <div class="overall-progress" style="opacity: 0">
+        <div class="bar" style="width: 0%;"></div>
+        <div class="progress-label">0%</div>
+    </div>
+    <div class="queue">
+        <table class="files"></table>
+    </div>
+</div>
