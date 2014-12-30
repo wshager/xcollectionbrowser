@@ -1,7 +1,7 @@
 xcollectionbrowser
 ==================
 
-Standalone Collection Browser for eXist-db 2.x
+Standalone Collection Browser for eXist-db 2.2
 
 To install in eXist-db:
 --------------------
@@ -17,9 +17,11 @@ To test, point your browser to http://localhost:8080/exist/apps/collectionbrowse
 New Features
 ==============
 
-The collection browser allows for sorting and paging of long lists.
+The collection browser allows for sorting and paging of long lists. 
+
+This component is built as a single, self-contained Dojo Toolkit widget and communicates with the server along Dojo's JSON CRUD and RPC guidelines ([RST](https://github.com/lagua/xrst)).
 
 TODO
 =====
 
-There's still work to do on Uploading and ACL.
+There's still work to do on Uploading and storing ACL.
