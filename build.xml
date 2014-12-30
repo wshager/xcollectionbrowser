@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="main" name="collectionbrowser">
 	<xmlproperty file="expath-pkg.xml"/>
-	<condition property="sh.ext" value="bat" else="sh"> 
-		<os family="windows" />
-	</condition>
 	<property environment="env"/>
 	<property name="project.version" value="${package(version)}"/>
 	<property name="project.app" value="collectionbrowser"/>
 	<property name="build.dir" value="build"/>
+	<!-- set path to dojo base dir (or set DOJO_HOME to dojo folder in base) -->
 	<property name="dojo.base" value="${env.DOJO_HOME}/.."/>
+	<property name="dojo.util" location="${dojo.base}/util" />
 	<property name="dojo.release" value="${dojo.base}/release/dexist"/>
 	<property name="dojo.target" value="./resources/scripts/dojo-release-1.10.3"/>
 	<target name="main" depends="build-dojo,copy-dojo,xar">
@@ -20,9 +19,17 @@
 	</target>
 	<target name="build-dojo">
 		<delete dir="${dojo.release}"/>
-		<exec dir="${dojo.base}/dexist" executable="../util/buildscripts/build.${sh.ext}">
-			<arg line="p=dexist.profile.js"/>
-		</exec>
+		<java fork="true" dir="${dojo.util}/buildscripts" classname="org.mozilla.javascript.tools.shell.Main">
+	        <classpath>
+	            <pathelement location="${dojo.util}/shrinksafe/js.jar" />
+	            <pathelement location="${dojo.util}/closureCompiler/compiler.jar"/>
+	            <pathelement path="${java.class.path}" />
+	        </classpath>
+	        <arg value="../../dojo/dojo.js"/>
+	        <arg value="baseUrl=../../dojo"/>
+	        <arg value="load=build"/>
+	        <arg value="profile=../../dexist/dexist.profile.js" />
+		</java>
 	</target>
 	<target name="copy-dojo">
 		<delete dir="${dojo.target}"/>
@@ -37,23 +44,23 @@
 		</copy>
 		<copy todir="${dojo.target}/dforma">
 			<fileset dir="${dojo.release}/dforma">
-				<include name="resources"/>
+				<include name="resources/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dojo.target}/dgrid">
 			<fileset dir="${dojo.release}/dgrid">
-				<include name="resources"/>
+				<include name="css/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dojo.target}/dijit">
 			<fileset dir="${dojo.release}/dijit">
-				<include name="themes"/>
+				<include name="themes/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dojo.target}/dojo">
 			<fileset dir="${dojo.release}/dojo">
 				<include name="dojo.js"/>
-				<include name="resources"/>
+				<include name="resources/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dojo.target}/xstyle">
