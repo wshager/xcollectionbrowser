@@ -1,11 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="xar" name="collectionbrowser">
-    <xmlproperty file="expath-pkg.xml"/>
-    <property name="project.version" value="${package(version)}"/>
-    <property name="project.app" value="collectionbrowser"/>
-    <property name="build.dir" value="build"/>
-    <target name="xar">
-        <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir},.project,build.bat"/>
-    </target>
+<project default="main" name="collectionbrowser">
+	<xmlproperty file="expath-pkg.xml"/>
+	<condition property="sh.ext" value="bat" else="sh"> 
+		<os family="windows" />
+	</condition>
+	<property environment="env"/>
+	<property name="project.version" value="${package(version)}"/>
+	<property name="project.app" value="collectionbrowser"/>
+	<property name="build.dir" value="build"/>
+	<property name="dojo.base" value="${env.DOJO_HOME}/.."/>
+	<property name="dojo.release" value="${dojo.base}/release/dexist"/>
+	<property name="dojo.target" value="./resources/scripts/dojo-release-1.10.3"/>
+	<target name="main" depends="build-dojo,copy-dojo,xar">
+		<echo message="Done creating package"/>
+	</target>
+	<target name="xar">
+		<mkdir dir="${build.dir}"/>
+		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*"/>
+	</target>
+	<target name="build-dojo">
+		<delete dir="${dojo.release}"/>
+		<exec dir="${dojo.base}/dexist" executable="../util/buildscripts/build.${sh.ext}">
+			<arg line="p=dexist.profile.js"/>
+		</exec>
+	</target>
+	<target name="copy-dojo">
+		<delete dir="${dojo.target}"/>
+		<copy todir="${dojo.target}/dexist">
+			<fileset dir="${dojo.release}/dexist">
+				<exclude name="README.md"/>
+				<exclude name="dexist.profile.nl"/>
+				<exclude name="package.json"/>
+				<exclude name="CollectionBrowser.*"/>
+				<exclude name="Uploader.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${dojo.target}/dforma">
+			<fileset dir="${dojo.release}/dforma">
+				<include name="resources"/>
+			</fileset>
+		</copy>
+		<copy todir="${dojo.target}/dgrid">
+			<fileset dir="${dojo.release}/dgrid">
+				<include name="resources"/>
+			</fileset>
+		</copy>
+		<copy todir="${dojo.target}/dijit">
+			<fileset dir="${dojo.release}/dijit">
+				<include name="themes"/>
+			</fileset>
+		</copy>
+		<copy todir="${dojo.target}/dojo">
+			<fileset dir="${dojo.release}/dojo">
+				<include name="dojo.js"/>
+				<include name="resources"/>
+			</fileset>
+		</copy>
+		<copy todir="${dojo.target}/xstyle">
+			<fileset dir="${dojo.release}/xstyle">
+				<include name="core/load-css.js"/>
+			</fileset>
+		</copy>
+	</target>
 </project>
