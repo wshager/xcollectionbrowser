@@ -1,13 +1,13 @@
 define('dexist/nls/cb-layer_ar',{
-'dijit/nls/loading':{"loadingState":"جاري التحميل...","errorState":"عفوا، حدث خطأ","_localized":{}}
+'dijit/form/nls/validate':{"invalidMessage":"القيمة التي تم ادخالها غير صحيحة.","rangeMessage":"هذه القيمة ليس بالمدى الصحيح.","_localized":{},"missingMessage":"يجب ادخال هذه القيمة."}
 ,
-'dijit/nls/common':{"buttonOk":"حسنا","buttonCancel":"الغاء","buttonSave":"حفظ","itemClose":"اغلاق","_localized":{}}
+'dijit/nls/loading':{"_localized":{},"loadingState":"جاري التحميل...","errorState":"عفوا، حدث خطأ"}
 ,
-'dijit/form/nls/validate':{"invalidMessage":"القيمة التي تم ادخالها غير صحيحة.","missingMessage":"يجب ادخال هذه القيمة.","rangeMessage":"هذه القيمة ليس بالمدى الصحيح.","_localized":{}}
+'dojo/cldr/nls/number':{"scientificFormat":"#E0","currencySpacing-afterCurrency-currencyMatch":"[:^S:]","infinity":"∞","superscriptingExponent":"×","list":";","percentSign":"%","minusSign":"-","currencySpacing-beforeCurrency-surroundingMatch":"[:digit:]","_localized":{},"decimalFormat-short":"000 ترليو","currencySpacing-afterCurrency-insertBetween":" ","nan":"NaN","plusSign":"+","currencySpacing-afterCurrency-surroundingMatch":"[:digit:]","currencyFormat":"¤#,##0.00;(¤#,##0.00)","currencySpacing-beforeCurrency-currencyMatch":"[:^S:]","perMille":"‰","group":",","percentFormat":"#,##0%","decimalFormat-long":"000 تريليون","decimalFormat":"#,##0.###","decimal":".","currencySpacing-beforeCurrency-insertBetween":" ","exponential":"E"}
 ,
-'dojo/cldr/nls/number':{"scientificFormat":"#E0","currencySpacing-afterCurrency-currencyMatch":"[:^S:]","infinity":"∞","superscriptingExponent":"×","list":";","percentSign":"%","minusSign":"‎-","currencySpacing-beforeCurrency-surroundingMatch":"[:digit:]","decimalFormat-short":"000 ترليو","currencySpacing-afterCurrency-insertBetween":" ","nan":"NaN","plusSign":"‎+","currencySpacing-afterCurrency-surroundingMatch":"[:digit:]","currencySpacing-beforeCurrency-currencyMatch":"[:^S:]","currencyFormat":"¤#,##0.00;(¤#,##0.00)","perMille":"‰","group":",","percentFormat":"#,##0%","decimalFormat-long":"000 تريليون","decimalFormat":"#,##0.###","decimal":".","currencySpacing-beforeCurrency-insertBetween":" ","exponential":"E","_localized":{}}
+'dforma/nls/common':{"buttonEditSelected":"Edit Selected","buttonCancel":"Cancel","buttonRemoveSelected":"Remove Selected","buttonAdd":"Add","buttonSave":"Save","buttonSubmit":"Submit","_localized":{},"itemClose":"Close","buttonRemove":"Remove","buttonOk":"OK"}
 ,
-'dijit/form/nls/ComboBox':{"previousMessage":"الاختيارات السابقة","nextMessage":"مزيد من الاختيارات","_localized":{}}
+'dijit/form/nls/ComboBox':{"previousMessage":"الاختيارات السابقة","_localized":{},"nextMessage":"مزيد من الاختيارات"}
 ,
-'dforma/nls/common':{"buttonOk":"OK","buttonCancel":"Cancel","buttonSubmit":"Submit","buttonSave":"Save","buttonAdd":"Add","buttonEditSelected":"Edit Selected","buttonRemoveSelected":"Remove Selected","buttonRemove":"Remove","itemClose":"Close","_localized":{}}
+'dijit/nls/common':{"buttonOk":"حسنا","buttonCancel":"الغاء","_localized":{},"buttonSave":"حفظ","itemClose":"اغلاق"}
 });

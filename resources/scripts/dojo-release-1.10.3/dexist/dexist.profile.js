@@ -53,7 +53,7 @@ var profile = {
 		"extend-dojo" : 1
 	},
 	"packages" : [ "dojo", "dijit", "dstore", "dgrid", "xstyle",
-			"put-selector", "dforma", "dexist" ],
+			"put-selector", "dforma", "dexist"],
 	"resourceTags" : {
 		"test":function(filename, mid){
 			return testResourceRe.test(mid);

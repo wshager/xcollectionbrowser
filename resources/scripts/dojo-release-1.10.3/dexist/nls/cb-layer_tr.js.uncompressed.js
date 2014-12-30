@@ -1,13 +1,13 @@
 define('dexist/nls/cb-layer_tr',{
-'dijit/nls/loading':{"loadingState":"Yükleniyor...","errorState":"Üzgünüz, bir hata oluştu","_localized":{}}
+'dijit/form/nls/validate':{"invalidMessage":"Girilen değer geçersiz.","rangeMessage":"Bu değer aralık dışında.","_localized":{},"missingMessage":"Bu değer gerekli."}
 ,
-'dijit/nls/common':{"buttonOk":"Tamam","buttonCancel":"İptal","buttonSave":"Kaydet","itemClose":"Kapat","_localized":{}}
+'dijit/nls/loading':{"_localized":{},"loadingState":"Yükleniyor...","errorState":"Üzgünüz, bir hata oluştu"}
 ,
-'dijit/form/nls/validate':{"invalidMessage":"Girilen değer geçersiz.","missingMessage":"Bu değer gerekli.","rangeMessage":"Bu değer aralık dışında.","_localized":{}}
+'dojo/cldr/nls/number':{"scientificFormat":"#E0","currencySpacing-afterCurrency-currencyMatch":"[:^S:]","infinity":"∞","superscriptingExponent":"×","list":";","percentSign":"%","minusSign":"-","currencySpacing-beforeCurrency-surroundingMatch":"[:digit:]","_localized":{},"decimalFormat-short":"000 Tn","currencySpacing-afterCurrency-insertBetween":" ","nan":"NaN","plusSign":"+","currencySpacing-afterCurrency-surroundingMatch":"[:digit:]","currencyFormat":"#,##0.00 ¤;(#,##0.00 ¤)","currencySpacing-beforeCurrency-currencyMatch":"[:^S:]","perMille":"‰","group":".","percentFormat":"%#,##0","decimalFormat-long":"000 trilyon","decimalFormat":"#,##0.###","decimal":",","currencySpacing-beforeCurrency-insertBetween":" ","exponential":"E"}
 ,
-'dojo/cldr/nls/number':{"scientificFormat":"#E0","currencySpacing-afterCurrency-currencyMatch":"[:^S:]","infinity":"∞","superscriptingExponent":"×","list":";","percentSign":"%","minusSign":"-","currencySpacing-beforeCurrency-surroundingMatch":"[:digit:]","decimalFormat-short":"000 Tn","currencySpacing-afterCurrency-insertBetween":" ","nan":"NaN","plusSign":"+","currencySpacing-afterCurrency-surroundingMatch":"[:digit:]","currencySpacing-beforeCurrency-currencyMatch":"[:^S:]","currencyFormat":"#,##0.00 ¤;(#,##0.00 ¤)","perMille":"‰","group":".","percentFormat":"%#,##0","decimalFormat-long":"000 trilyon","decimalFormat":"#,##0.###","decimal":",","currencySpacing-beforeCurrency-insertBetween":" ","exponential":"E","_localized":{}}
+'dforma/nls/common':{"buttonEditSelected":"Edit Selected","buttonCancel":"Cancel","buttonRemoveSelected":"Remove Selected","buttonAdd":"Add","buttonSave":"Save","buttonSubmit":"Submit","_localized":{},"itemClose":"Close","buttonRemove":"Remove","buttonOk":"OK"}
 ,
-'dijit/form/nls/ComboBox':{"previousMessage":"Önceki seçenekler","nextMessage":"Diğer seçenekler","_localized":{}}
+'dijit/form/nls/ComboBox':{"previousMessage":"Önceki seçenekler","_localized":{},"nextMessage":"Diğer seçenekler"}
 ,
-'dforma/nls/common':{"buttonOk":"OK","buttonCancel":"Cancel","buttonSubmit":"Submit","buttonSave":"Save","buttonAdd":"Add","buttonEditSelected":"Edit Selected","buttonRemoveSelected":"Remove Selected","buttonRemove":"Remove","itemClose":"Close","_localized":{}}
+'dijit/nls/common':{"buttonOk":"Tamam","buttonCancel":"İptal","_localized":{},"buttonSave":"Kaydet","itemClose":"Kapat"}
 });
