@@ -143,6 +143,15 @@ declare function service:delete-resources($target as xs:string, $resources as no
 declare
 	%private
 function service:permissions-from-data($permissions) {
+	string-join(
+		for $type in ("User", "Group", "Other")
+			return service:rwx-from-data($permissions[id = $type])
+	)
+};
+
+declare
+	%private
+function service:rwx-from-data($permissions) {
 	let $perms := map {
 		"read" := "r",
 		"write" := "w",
@@ -150,15 +159,14 @@ function service:permissions-from-data($permissions) {
 	}
 	return
 		string-join(
-			for $type in ("User", "Group", "Other")
-				for $perm in ("read", "write", "execute")
-					let $param := $permissions[id = $type]/*[name() = $perm]
-					return
-						if($param = "true") then
-							$perms($perm)
-						else
-							"-",
-					""
+			for $perm in ("read", "write", "execute")
+				let $param := $permissions/*[name() = $perm]
+				return
+					if($param = "true") then
+						$perms($perm)
+					else
+						"-",
+				""
 		)
 };
 
