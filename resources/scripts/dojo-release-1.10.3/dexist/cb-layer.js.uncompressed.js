@@ -28406,6 +28406,10 @@ define([
 									name:"acl",
 									type:"grid",
 									style:"height:200px",
+									controller:{
+										type:"select",
+										name:"target"
+									},
 									columns:[{
 										label: "Target",
 										field: "target",
@@ -28415,8 +28419,8 @@ define([
 										field: "who", 
 										width: "30%"
 									},{
-										label: "Access", 
-										field: "access", 
+										label: "Access Type",
+										field: "access_type", 
 										width: "20%"
 									},{
 										label: "Read", 
@@ -28433,7 +28437,60 @@ define([
 										field: "execute", 
 										width: "10%", 
 										editor: "checkbox"
-									}]
+									}],
+									schema:{
+										items:[{
+											id:"USER",
+											properties:{
+												who:{
+													title:"Subject",
+													type:"string",
+													required:true
+												},
+												access_type:{
+													title:"Access Type",
+													type:"string",
+													format:"radiogroup",
+													"enum":["ALLOWED","DENIED"],
+													required:true
+												},
+												read:{
+													type:"boolean"
+												},
+												write:{
+													type:"boolean"
+												},
+												execute:{
+													type:"boolean"
+												}
+											}
+										},{
+											id:"GROUP",
+											properties:{
+												who:{
+													title:"Subject",
+													type:"string",
+													required:true
+												},
+												access_type:{
+													title:"Access Type",
+													type:"string",
+													format:"radiogroup",
+													"enum":["ALLOWED","DENIED"],
+													required:true
+												},
+												read:{
+													type:"boolean"
+												},
+												write:{
+													type:"boolean"
+												},
+												execute:{
+													type:"boolean"
+												}
+											}
+										}]
+									}
 								}]
 							}).then(lang.hitch(this,function(widgets){
 								this.form.set("value",item);
@@ -28988,7 +29045,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 					}
 				break;
 				case "radiogroup":
-					cc.labelAttr = "title";
+					if(!cc.labelAttr) cc.labelAttr = "title";
 				break;
 				case "currency":
 					cc.value = parseInt(c.value,10);
@@ -29042,6 +29099,14 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 							domClass.toggle(this.domNode,"dijitHidden",true);
 							parent.layout();
 							var data = this.get("value");
+							// checkboxes
+							var columns=c.columns ? c.columns : [];
+							array.forEach(columns,function(c){
+								var k = c.field;
+								if(c.editor=="checkbox" && data[k] instanceof Array) {
+									data[k] = data[k][0];
+								}
+							});
 							this.parentform.save(data,{
 								id:this.data.id,
 								overwrite:true
@@ -29073,27 +29138,28 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 					});
 					cc.onEdit = function(id,options){
 						options = options || {};
-						var data = this.store.get(id);
-						domClass.toggle(this.domNode,"dijitHidden",true);
-						domClass.toggle(parent.buttonNode,"dijitHidden",true);
-						domClass.toggle(parent.hintNode,"dijitHidden",true);
-						domClass.toggle(this.subform.domNode,"dijitHidden",false);
-						this.subform.rebuild({
-							id:id,
-							options:options,
-							// TODO: create type for items instanceof array
-							controls:[jsonschema.schemasToController(c.schema.items,data,{
-								selectFirst:true,
-								controller:{
-									name:c.controller.name,
-									type:c.controller.type,
-									title:c.controller.title
+						this.store.get(id).then(lang.hitch(this,function(data){
+							domClass.toggle(this.domNode,"dijitHidden",true);
+							domClass.toggle(parent.buttonNode,"dijitHidden",true);
+							domClass.toggle(parent.hintNode,"dijitHidden",true);
+							domClass.toggle(this.subform.domNode,"dijitHidden",false);
+							this.subform.rebuild({
+								id:id,
+								options:options,
+								// TODO: create type for items instanceof array
+								controls:[jsonschema.schemasToController(c.schema.items,data,{
+									selectFirst:true,
+									controller:{
+										name:c.controller.name,
+										type:c.controller.type,
+										title:c.controller.title
+									}
+								})],
+								submit:{
+									label:common.buttonSave
 								}
-							})],
-							submit:{
-								label:common.buttonSave
-							}
-						});
+							});
+						}));
 					};
 				break;
 				case "group":
@@ -44378,11 +44444,13 @@ define([
 			// override to set initial data
 		},
 		_add:function(){
-			this.onAdd(id);
-			var id = this.store.add(lang.clone(this.defaultInstance));
-			this.newdata = true;
-			this.grid.select(id);
-			this.onEdit(id);
+			this.store.add(lang.clone(this.defaultInstance)).then(lang.hitch(this,function(data){
+				var id = data.id;
+				this.onAdd(id);
+				this.newdata = true;
+				this.grid.select(id);
+				this.onEdit(id);
+			}));
 		},
 		onEdit:function(id,options){
 			// override to edit
@@ -44390,18 +44458,23 @@ define([
 		save:function(id,options){
 			this.newdata = false;
 			this.store.put(id,options);
+			this.grid.refresh();
 		},
 		editSelected:function(){
+			if(this.grid.selection.length>1) return; 
 			for(var id in this.grid.selection) {
-				if(this.grid.selection[id]) this.onEdit(id,{
-					overwrite:true
-				});
+				if(this.grid.selection[id]) {
+					this.onEdit(id,{
+						overwrite:true
+					});
+				}
 			}
 		},
 		removeSelected:function(){
 			for(var id in this.grid.selection) {
 				if(this.grid.selection[id]) this.store.remove(id);
 			}
+			this.grid.refresh();
 		}
 	});
 });
@@ -47243,6 +47316,10 @@ define([
 				var type;
 				if(prop.type=="boolean") {
 					type = "checkbox";
+					if(data && data.hasOwnProperty(k) && data[k] instanceof Array){
+						// TODO add checkboxgroup
+						data[k] = data[k][0];
+					}
 				} else if(prop.type=="integer") {
 					type = "spinner";
 				} else if(prop.type=="number") {
@@ -47306,6 +47383,7 @@ define([
 				}
 				if(type=="select" || type=="radiogroup") {
 					c.options = [];
+					c.labelAttr = "id";
 					if(prop.hasOwnProperty("enum")) {
 						array.forEach(prop["enum"],function(op) {
 							c.options.push({id:op});
