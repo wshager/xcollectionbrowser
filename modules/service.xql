@@ -63,7 +63,7 @@ declare function service:put($collection as xs:string, $data as node(), $directi
 						sm:chmod($uri, service:permissions-from-data($data/permissions))
 					)
 					(:xmldb:set-mime-type($resource, $data/internetMimeType):)
-					return element root { $uri }
+					return $data
 				else
 					<http:response status="403" message="Not allowed."/>
 		else
