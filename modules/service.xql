@@ -302,7 +302,7 @@ function service:get-acl($id as xs:string, $acl-id as xs:string) as element(json
 					<id>{$ace/string(@index)}</id>
 					<target>{$ace/string(@target)}</target>
 					<who>{$ace/string(@who)}</who>
-					<access>{$ace/string(@access_type)}</access>
+					<access_type>{$ace/string(@access_type)}</access_type>
 					<read json:literal="true">{$ace/contains(@mode, "r")}</read>
 					<write json:literal="true">{$ace/contains(@mode, "w")}</write>
 					<execute json:literal="true">{$ace/contains(@mode, "x")}</execute>
