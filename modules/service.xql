@@ -60,7 +60,8 @@ declare function service:put($collection as xs:string, $data as node(), $directi
 					let $props := (
 						sm:chown($uri, $data/owner/string()),
 						sm:chgrp($uri, $data/group/string()),
-						sm:chmod($uri, service:permissions-from-data($data/permissions))
+						sm:chmod($uri, service:permissions-from-data($data/permissions)),
+						service:save-acl($uri,$data/acl)
 					)
 					(:xmldb:set-mime-type($resource, $data/internetMimeType):)
 					return $data
@@ -333,3 +334,27 @@ declare %private function service:list-collection-contents($collection as xs:str
 	)
 };
 
+declare %private function service:save-acl($uri as xs:anyURI,$data as node()*) {
+	let $permissions := sm:get-permissions($uri)/sm:permission
+	let $acl := $permissions/sm:acl/sm:ace
+	(: remove deleted :)
+	let $del := for $ace in $acl
+		let $index := $ace/@index/string()
+		return
+			if($index != $data/id/string()) then
+				sm:remove-ace($uri, $index)
+			else
+				()
+	for $ace in $data
+		let $index := $ace/id/string()
+		return
+			if($index = $acl/@index/string()) then
+				(: update :)
+				sm:modify-ace($uri, $index, $ace/access_type="ALLOWED", service:rwx-from-data($ace))
+			else if($ace/target="USER") then
+				sm:insert-user-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", service:rwx-from-data($ace))
+			else if($ace/target="GROUP") then
+				sm:insert-group-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", service:rwx-from-data($ace))
+		   else
+			   ()
+};
