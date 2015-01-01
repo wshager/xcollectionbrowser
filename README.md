@@ -14,7 +14,7 @@ To test, point your browser to http://localhost:8080/exist/apps/collectionbrowse
 
 --------
 
-If you want to use the collection browser from your app, add the dojo scripts and CSS to your page:
+If you want to use the collection browser from your app, add the dojo scripts and CSS to your page, where 'resources' should be replaced with the path to /exist/apps/collectionbrowser/resources from your current setup:
 ```html
 <link rel="stylesheet" href="resources/scripts/dojo-release-1.10.3/dijit/themes/claro/claro.css"/>
 <script src="resources/scripts/dojo-release-1.10.3/dojo/dojo.js" data-dojo-config="async:true,locale:'en-us'"/>
