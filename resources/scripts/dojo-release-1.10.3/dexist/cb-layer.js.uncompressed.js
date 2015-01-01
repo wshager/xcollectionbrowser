@@ -24397,6 +24397,234 @@ define([
 });
 
 },
+'dojo/store/JsonRest':function(){
+define(["../_base/xhr", "../_base/lang", "../json", "../_base/declare", "./util/QueryResults" /*=====, "./api/Store" =====*/
+], function(xhr, lang, JSON, declare, QueryResults /*=====, Store =====*/){
+
+// No base class, but for purposes of documentation, the base class is dojo/store/api/Store
+var base = null;
+/*===== base = Store; =====*/
+
+/*=====
+var __HeaderOptions = {
+		// headers: Object?
+		//		Additional headers to send along with the request.
+	},
+	__PutDirectives = declare(Store.PutDirectives, __HeaderOptions),
+	__QueryOptions = declare(Store.QueryOptions, __HeaderOptions);
+=====*/
+
+return declare("dojo.store.JsonRest", base, {
+	// summary:
+	//		This is a basic store for RESTful communicating with a server through JSON
+	//		formatted data. It implements dojo/store/api/Store.
+
+	constructor: function(options){
+		// summary:
+		//		This is a basic store for RESTful communicating with a server through JSON
+		//		formatted data.
+		// options: dojo/store/JsonRest
+		//		This provides any configuration information that will be mixed into the store
+		this.headers = {};
+		declare.safeMixin(this, options);
+	},
+
+	// headers: Object
+	//		Additional headers to pass in all requests to the server. These can be overridden
+	//		by passing additional headers to calls to the store.
+	headers: {},
+
+	// target: String
+	//		The target base URL to use for all requests to the server. This string will be
+	//		prepended to the id to generate the URL (relative or absolute) for requests
+	//		sent to the server
+	target: "",
+
+	// idProperty: String
+	//		Indicates the property to use as the identity property. The values of this
+	//		property should be unique.
+	idProperty: "id",
+
+	// rangeParam: String
+	//		Use a query parameter for the requested range. If this is omitted, than the
+	//		Range header will be used. Independent of this, the X-Range header is always set.
+
+	// sortParam: String
+	//		The query parameter to used for holding sort information. If this is omitted, than
+	//		the sort information is included in a functional query token to avoid colliding
+	//		with the set of name/value pairs.
+
+	// ascendingPrefix: String
+	//		The prefix to apply to sort attribute names that are ascending
+	ascendingPrefix: "+",
+
+	// descendingPrefix: String
+	//		The prefix to apply to sort attribute names that are ascending
+	descendingPrefix: "-",
+	 
+	_getTarget: function(id){
+		// summary:
+		//		If the target has no trailing '/', then append it.
+		// id: Number
+		//		The identity of the requested target
+		var target = this.target;
+		if(typeof id != "undefined"){
+			if(target.charAt(target.length-1) == '/'){
+				target += id;
+			}else{
+				target += '/' + id;
+			}
+		}
+		return target;
+	},
+					
+	get: function(id, options){
+		// summary:
+		//		Retrieves an object by its identity. This will trigger a GET request to the server using
+		//		the url `this.target + id`.
+		// id: Number
+		//		The identity to use to lookup the object
+		// options: Object?
+		//		HTTP headers. For consistency with other methods, if a `headers` key exists on this object, it will be
+		//		used to provide HTTP headers instead.
+		// returns: Object
+		//		The object in the store that matches the given id.
+		options = options || {};
+		var headers = lang.mixin({ Accept: this.accepts }, this.headers, options.headers || options);
+		return xhr("GET", {
+			url: this._getTarget(id),
+			handleAs: "json",
+			headers: headers
+		});
+	},
+
+	// accepts: String
+	//		Defines the Accept header to use on HTTP requests
+	accepts: "application/javascript, application/json",
+
+	getIdentity: function(object){
+		// summary:
+		//		Returns an object's identity
+		// object: Object
+		//		The object to get the identity from
+		// returns: Number
+		return object[this.idProperty];
+	},
+
+	put: function(object, options){
+		// summary:
+		//		Stores an object. This will trigger a PUT request to the server
+		//		if the object has an id, otherwise it will trigger a POST request.
+		// object: Object
+		//		The object to store.
+		// options: __PutDirectives?
+		//		Additional metadata for storing the data.  Includes an "id"
+		//		property if a specific id is to be used.
+		// returns: dojo/_base/Deferred
+		options = options || {};
+		var id = ("id" in options) ? options.id : this.getIdentity(object);
+		var hasId = typeof id != "undefined";
+		return xhr(hasId && !options.incremental ? "PUT" : "POST", {
+				url: this._getTarget(id),
+				postData: JSON.stringify(object),
+				handleAs: "json",
+				headers: lang.mixin({
+					"Content-Type": "application/json",
+					Accept: this.accepts,
+					"If-Match": options.overwrite === true ? "*" : null,
+					"If-None-Match": options.overwrite === false ? "*" : null
+				}, this.headers, options.headers)
+			});
+	},
+
+	add: function(object, options){
+		// summary:
+		//		Adds an object. This will trigger a PUT request to the server
+		//		if the object has an id, otherwise it will trigger a POST request.
+		// object: Object
+		//		The object to store.
+		// options: __PutDirectives?
+		//		Additional metadata for storing the data.  Includes an "id"
+		//		property if a specific id is to be used.
+		options = options || {};
+		options.overwrite = false;
+		return this.put(object, options);
+	},
+
+	remove: function(id, options){
+		// summary:
+		//		Deletes an object by its identity. This will trigger a DELETE request to the server.
+		// id: Number
+		//		The identity to use to delete the object
+		// options: __HeaderOptions?
+		//		HTTP headers.
+		options = options || {};
+		return xhr("DELETE", {
+			url: this._getTarget(id),
+			headers: lang.mixin({}, this.headers, options.headers)
+		});
+	},
+
+	query: function(query, options){
+		// summary:
+		//		Queries the store for objects. This will trigger a GET request to the server, with the
+		//		query added as a query string.
+		// query: Object
+		//		The query to use for retrieving objects from the store.
+		// options: __QueryOptions?
+		//		The optional arguments to apply to the resultset.
+		// returns: dojo/store/api/Store.QueryResults
+		//		The results of the query, extended with iterative methods.
+		options = options || {};
+
+		var headers = lang.mixin({ Accept: this.accepts }, this.headers, options.headers);
+
+		var hasQuestionMark = this.target.indexOf("?") > -1;
+		if(query && typeof query == "object"){
+			query = xhr.objectToQuery(query);
+			query = query ? (hasQuestionMark ? "&" : "?") + query: "";
+		}
+		if(options.start >= 0 || options.count >= 0){
+			headers["X-Range"] = "items=" + (options.start || '0') + '-' +
+				(("count" in options && options.count != Infinity) ?
+					(options.count + (options.start || 0) - 1) : '');
+			if(this.rangeParam){
+				query += (query || hasQuestionMark ? "&" : "?") + this.rangeParam + "=" + headers["X-Range"];
+				hasQuestionMark = true;
+			}else{
+				headers.Range = headers["X-Range"];
+			}
+		}
+		if(options && options.sort){
+			var sortParam = this.sortParam;
+			query += (query || hasQuestionMark ? "&" : "?") + (sortParam ? sortParam + '=' : "sort(");
+			for(var i = 0; i<options.sort.length; i++){
+				var sort = options.sort[i];
+				query += (i > 0 ? "," : "") + (sort.descending ? this.descendingPrefix : this.ascendingPrefix) + encodeURIComponent(sort.attribute);
+			}
+			if(!sortParam){
+				query += ")";
+			}
+		}
+		var results = xhr("GET", {
+			url: this.target + (query || ""),
+			handleAs: "json",
+			headers: headers
+		});
+		results.total = results.then(function(){
+			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
+			if (!range){
+				// At least Chrome drops the Content-Range header from cached replies.
+				range = results.ioArgs.xhr.getResponseHeader("X-Content-Range");
+			}
+			return range && (range = range.match(/\/(.*)/)) && +range[1];
+		});
+		return QueryResults(results);
+	}
+});
+
+});
+},
 'dojo/hccss':function(){
 define([
 	"require",			// require, require.toUrl
@@ -24948,553 +25176,6 @@ define(["../_base/declare", "./Moveable" /*=====, "./Mover" =====*/], function(d
 			}
 		}
 	});
-});
-
-},
-'dojo/data/ObjectStore':function(){
-define(["../_base/lang", "../Evented", "../_base/declare", "../_base/Deferred", "../_base/array", 
-	"../_base/connect", "../regexp"
-], function(lang, Evented, declare, Deferred, array, connect, regexp){
-
-// module:
-//		dojo/data/ObjectStore
-
-function convertRegex(character){
-	return character == '*' ? '.*' : character == '?' ? '.' : character; 
-}
-return declare("dojo.data.ObjectStore", [Evented],{
-		// summary:
-		//		A Dojo Data implementation that wraps Dojo object stores for backwards
-		//		compatibility.
-
-		objectStore: null,
-		constructor: function(options){
-			// options:
-			//		The configuration information to pass into the data store.
-			//
-			//		- options.objectStore:
-			//
-			//		The object store to use as the source provider for this data store
-			
-			this._dirtyObjects = [];
-			if(options.labelAttribute){
-				// accept the old labelAttribute to make it easier to switch from old data stores
-				options.labelProperty = options.labelAttribute; 
-			}
-			lang.mixin(this, options);
-		},
-		labelProperty: "label",
-
-		getValue: function(/*Object*/ item, /*String*/property, /*value?*/defaultValue){
-			// summary:
-			//		Gets the value of an item's 'property'
-			// item:
-			//		The item to get the value from
-			// property:
-			//		property to look up value for
-			// defaultValue:
-			//		the default value
-
-			return typeof item.get === "function" ? item.get(property) :
-				property in item ?
-					item[property] : defaultValue;
-		},
-		getValues: function(item, property){
-			// summary:
-			//		Gets the value of an item's 'property' and returns
-			//		it. If this value is an array it is just returned,
-			//		if not, the value is added to an array and that is returned.
-			// item: Object
-			// property: String
-			//		property to look up value for
-
-			var val = this.getValue(item,property);
-			return val instanceof Array ? val : val === undefined ? [] : [val];
-		},
-
-		getAttributes: function(item){
-			// summary:
-			//		Gets the available attributes of an item's 'property' and returns
-			//		it as an array.
-			// item: Object
-
-			var res = [];
-			for(var i in item){
-				if(item.hasOwnProperty(i) && !(i.charAt(0) == '_' && i.charAt(1) == '_')){
-					res.push(i);
-				}
-			}
-			return res;
-		},
-
-		hasAttribute: function(item,attribute){
-			// summary:
-			//		Checks to see if item has attribute
-			// item: Object
-			//		The item to check
-			// attribute: String
-			//		The attribute to check
-			return attribute in item;
-		},
-
-		containsValue: function(item, attribute, value){
-			// summary:
-			//		Checks to see if 'item' has 'value' at 'attribute'
-			// item: Object
-			//		The item to check
-			// attribute: String
-			//		The attribute to check
-			// value: Anything
-			//		The value to look for
-			return array.indexOf(this.getValues(item,attribute),value) > -1;
-		},
-
-
-		isItem: function(item){
-			// summary:
-			//		Checks to see if the argument is an item
-			// item: Object
-			//		The item to check
-
-			// we have no way of determining if it belongs, we just have object returned from
-			// service queries
-			return (typeof item == 'object') && item && !(item instanceof Date);
-		},
-
-		isItemLoaded: function(item){
-			// summary:
-			//		Checks to see if the item is loaded.
-			// item: Object
-			//		The item to check
-
-			return item && typeof item.load !== "function";
-		},
-
-		loadItem: function(args){
-			// summary:
-			//		Loads an item and calls the callback handler. Note, that this will call the callback
-			//		handler even if the item is loaded. Consequently, you can use loadItem to ensure
-			//		that an item is loaded is situations when the item may or may not be loaded yet.
-			//		If you access a value directly through property access, you can use this to load
-			//		a lazy value as well (doesn't need to be an item).
-			// args: Object
-			//		See dojo/data/api/Read.fetch()
-			// example:
-			//	|	store.loadItem({
-			//	|		item: item, // this item may or may not be loaded
-			//	|		onItem: function(item){
-			//	|			// do something with the item
-			//	|		}
-			//	|	});
-
-			var item;
-			if(typeof args.item.load === "function"){
-				Deferred.when(args.item.load(), function(result){
-					item = result; // in synchronous mode this can allow loadItem to return the value
-					var func = result instanceof Error ? args.onError : args.onItem;
-					if(func){
-						func.call(args.scope, result);
-					}
-				});
-			}else if(args.onItem){
-				// even if it is already loaded, we will use call the callback, this makes it easier to
-				// use when it is not known if the item is loaded (you can always safely call loadItem).
-				args.onItem.call(args.scope, args.item);
-			}
-			return item;
-		},
-		close: function(request){
-			// summary:
-			// 		See dojo/data/api/Read.close()
-			return request && request.abort && request.abort();
-		},
-		fetch: function(args){
-			// summary:
-			//		See dojo/data/api/Read.fetch()
-
-			args = lang.delegate(args, args && args.queryOptions);
-			var self = this;
-			var scope = args.scope || self;
-			var query = args.query;
-			if(typeof query == "object"){ // can be null, but that is ignore by for-in
-				query = lang.delegate(query); // don't modify the original
-				for(var i in query){
-					// find any strings and convert them to regular expressions for wildcard support
-					var required = query[i];
-					if(typeof required == "string"){
-						query[i] = RegExp("^" + regexp.escapeString(required, "*?\\").replace(/\\.|\*|\?/g, convertRegex) + "$", args.ignoreCase ? "mi" : "m");
-						query[i].toString = (function(original){
-							return function(){
-								return original;
-							};
-						})(required);
-					}
-				}
-			}
-
-			var results = this.objectStore.query(query, args);
-			Deferred.when(results.total, function(totalCount){
-				Deferred.when(results, function(results){
-					if(args.onBegin){
-						args.onBegin.call(scope, totalCount || results.length, args);
-					}
-					if(args.onItem){
-						for(var i=0; i<results.length;i++){
-							args.onItem.call(scope, results[i], args);
-						}
-					}
-					if(args.onComplete){
-						args.onComplete.call(scope, args.onItem ? null : results, args);
-					}
-					return results;
-				}, errorHandler);
-			}, errorHandler);
-			function errorHandler(error){
-				if(args.onError){
-					args.onError.call(scope, error, args);
-				}
-			}
-			args.abort = function(){
-				// abort the request
-				if(results.cancel){
-					results.cancel();
-				}
-			};
-			if(results.observe){
-				if(this.observing){
-					// if we were previously observing, cancel the last time to avoid multiple notifications. Just the best we can do for the impedance mismatch between APIs
-					this.observing.cancel();
-				}
-				this.observing = results.observe(function(object, removedFrom, insertedInto){
-					if(array.indexOf(self._dirtyObjects, object) == -1){
-						if(removedFrom == -1){
-							self.onNew(object);
-						}
-						else if(insertedInto == -1){
-							self.onDelete(object);
-						}
-						else{
-							for(var i in object){
-								if(i != self.objectStore.idProperty){
-									self.onSet(object, i, null, object[i]);
-								}
-							}
-						}
-					}
-				}, true);
-			}
-			this.onFetch(results);
-			args.store = this;
-			return args;
-		},
-		getFeatures: function(){
-			// summary:
-			//		return the store feature set
-
-			return {
-				"dojo.data.api.Read": !!this.objectStore.get,
-				"dojo.data.api.Identity": true,
-				"dojo.data.api.Write": !!this.objectStore.put,
-				"dojo.data.api.Notification": true
-			};
-		},
-
-		getLabel: function(/* dojo/data/api/Item */ item){
-			// summary:
-			//		See dojo/data/api/Read.getLabel()
-			if(this.isItem(item)){
-				return this.getValue(item,this.labelProperty); //String
-			}
-			return undefined; //undefined
-		},
-
-		getLabelAttributes: function(/* dojo/data/api/Item */ item){
-			// summary:
-			//		See dojo/data/api/Read.getLabelAttributes()
-			return [this.labelProperty]; //array
-		},
-
-		//Identity API Support
-
-
-		getIdentity: function(item){
-			// summary:
-			//		returns the identity of the given item
-			//		See dojo/data/api/Read.getIdentity()
-			return this.objectStore.getIdentity ? this.objectStore.getIdentity(item) : item[this.objectStore.idProperty || "id"];
-		},
-
-		getIdentityAttributes: function(item){
-			// summary:
-			//		returns the attributes which are used to make up the
-			//		identity of an item.	Basically returns this.objectStore.idProperty
-			//		See dojo/data/api/Read.getIdentityAttributes()
-
-			return [this.objectStore.idProperty];
-		},
-
-		fetchItemByIdentity: function(args){
-			// summary:
-			//		fetch an item by its identity, by looking in our index of what we have loaded
-			var item;
-			Deferred.when(this.objectStore.get(args.identity),
-				function(result){
-					item = result;
-					args.onItem.call(args.scope, result);
-				},
-				function(error){
-					args.onError.call(args.scope, error);
-				}
-			);
-			return item;
-		},
-
-		newItem: function(data, parentInfo){
-			// summary:
-			//		adds a new item to the store at the specified point.
-			//		Takes two parameters, data, and options.
-			// data: Object
-			//		The data to be added in as an item.
-			// data: Object
-			//		See dojo/data/api/Write.newItem()
-					
-			if(parentInfo){
-				// get the previous value or any empty array
-				var values = this.getValue(parentInfo.parent,parentInfo.attribute,[]);
-				// set the new value
-				values = values.concat([data]);
-				data.__parent = values;
-				this.setValue(parentInfo.parent, parentInfo.attribute, values);
-			}
-			this._dirtyObjects.push({object:data, save: true});
-			this.onNew(data);
-			return data;
-		},
-		deleteItem: function(item){
-			// summary:
-			//		deletes item and any references to that item from the store.
-			// item:
-			//		item to delete
-
-			// If the desire is to delete only one reference, unsetAttribute or
-			// setValue is the way to go.
-			this.changing(item, true);
-
-			this.onDelete(item);
-		},
-		setValue: function(item, attribute, value){
-			// summary:
-			//		sets 'attribute' on 'item' to 'value'
-			//		See dojo/data/api/Write.setValue()
-			
-			var old = item[attribute];
-			this.changing(item);
-			item[attribute]=value;
-			this.onSet(item,attribute,old,value);
-		},
-		setValues: function(item, attribute, values){
-			// summary:
-			//		sets 'attribute' on 'item' to 'value' value
-			//		must be an array.
-			//		See dojo/data/api/Write.setValues()
-
-			if(!lang.isArray(values)){
-				throw new Error("setValues expects to be passed an Array object as its value");
-			}
-			this.setValue(item,attribute,values);
-		},
-
-		unsetAttribute: function(item, attribute){
-			// summary:
-			//		unsets 'attribute' on 'item'
-			//		See dojo/data/api/Write.unsetAttribute()
-
-			this.changing(item);
-			var old = item[attribute];
-			delete item[attribute];
-			this.onSet(item,attribute,old,undefined);
-		},
-
-		changing: function(object,_deleting){
-			// summary:
-			//		adds an object to the list of dirty objects.  This object
-			//		contains a reference to the object itself as well as a
-			//		cloned and trimmed version of old object for use with
-			//		revert.
-			// object: Object
-			//		Indicates that the given object is changing and should be marked as 
-			// 		dirty for the next save
-			// _deleting: [private] Boolean
-			
-			object.__isDirty = true;
-			//if an object is already in the list of dirty objects, don't add it again
-			//or it will overwrite the premodification data set.
-			for(var i=0; i<this._dirtyObjects.length; i++){
-				var dirty = this._dirtyObjects[i];
-				if(object==dirty.object){
-					if(_deleting){
-						// we are deleting, no object is an indicator of deletiong
-						dirty.object = false;
-						if(!this._saveNotNeeded){
-							dirty.save = true;
-						}
-					}
-					return;
-				}
-			}
-			var old = object instanceof Array ? [] : {};
-			for(i in object){
-				if(object.hasOwnProperty(i)){
-					old[i] = object[i];
-				}
-			}
-			this._dirtyObjects.push({object: !_deleting && object, old: old, save: !this._saveNotNeeded});
-		},
-
-		save: function(kwArgs){
-			// summary:
-			//		Saves the dirty data using object store provider. See dojo/data/api/Write for API.
-			// kwArgs:
-			//		- kwArgs.global:
-			//		  This will cause the save to commit the dirty data for all
-			//		  ObjectStores as a single transaction.
-			//
-			//		- kwArgs.revertOnError:
-			//		  This will cause the changes to be reverted if there is an
-			//		  error on the save. By default a revert is executed unless
-			//		  a value of false is provide for this parameter.
-			//
-			//		- kwArgs.onError:
-			//		  Called when an error occurs in the commit
-			//
-			//		- kwArgs.onComplete:
-			//		  Called when an the save/commit is completed
-
-			kwArgs = kwArgs || {};
-			var result, actions = [];
-			var savingObjects = [];
-			var self = this;
-			var dirtyObjects = this._dirtyObjects;
-			var left = dirtyObjects.length;// this is how many changes are remaining to be received from the server
-			try{
-				connect.connect(kwArgs,"onError",function(){
-					if(kwArgs.revertOnError !== false){
-						var postCommitDirtyObjects = dirtyObjects;
-						dirtyObjects = savingObjects;
-						self.revert(); // revert if there was an error
-						self._dirtyObjects = postCommitDirtyObjects;
-					}
-					else{
-						self._dirtyObjects = dirtyObjects.concat(savingObjects);
-					}
-				});
-				if(this.objectStore.transaction){
-					var transaction = this.objectStore.transaction();
-				}
-				for(var i = 0; i < dirtyObjects.length; i++){
-					var dirty = dirtyObjects[i];
-					var object = dirty.object;
-					var old = dirty.old;
-					delete object.__isDirty;
-					if(object){
-						result = this.objectStore.put(object, {overwrite: !!old});
-					}
-					else if(typeof old != "undefined"){
-						result = this.objectStore.remove(this.getIdentity(old));
-					}
-					savingObjects.push(dirty);
-					dirtyObjects.splice(i--,1);
-					Deferred.when(result, function(value){
-						if(!(--left)){
-							if(kwArgs.onComplete){
-								kwArgs.onComplete.call(kwArgs.scope, actions);
-							}
-						}
-					},function(value){
-
-						// on an error we want to revert, first we want to separate any changes that were made since the commit
-						left = -1; // first make sure that success isn't called
-						kwArgs.onError.call(kwArgs.scope, value);
-					});
-
-				}
-				if(transaction){
-					transaction.commit();
-				}
-			}catch(e){
-				kwArgs.onError.call(kwArgs.scope, value);
-			}
-		},
-
-		revert: function(){
-			// summary:
-			//		returns any modified data to its original state prior to a save();
-
-			var dirtyObjects = this._dirtyObjects;
-			for(var i = dirtyObjects.length; i > 0;){
-				i--;
-				var dirty = dirtyObjects[i];
-				var object = dirty.object;
-				var old = dirty.old;
-				if(object && old){
-					// changed
-					for(var j in old){
-						if(old.hasOwnProperty(j) && object[j] !== old[j]){
-							this.onSet(object, j, object[j], old[j]);
-							object[j] = old[j];
-						}
-					}
-					for(j in object){
-						if(!old.hasOwnProperty(j)){
-							this.onSet(object, j, object[j]);
-							delete object[j];
-						}
-					}
-				}else if(!old){
-					// was an addition, remove it
-					this.onDelete(object);
-				}else{
-					// was a deletion, we will add it back
-					this.onNew(old);
-				}
-				delete (object || old).__isDirty;
-				dirtyObjects.splice(i, 1);
-			}
-
-		},
-		isDirty: function(item){
-			// summary:
-			//		returns true if the item is marked as dirty or true if there are any dirty items
-			// item: Object
-			//		The item to check
-			if(!item){
-				return !!this._dirtyObjects.length;
-			}
-			return item.__isDirty;
-		},
-
-		// Notification Support
-
-		onSet: function(){
-			// summary:
-			// 		See dojo/data/api/Notification.onSet()
-		},
-		onNew: function(){
-			// summary:
-			// 		See dojo/data/api/Notification.onNew()
-		},
-		onDelete:	function(){
-			// summary:
-			// 		See dojo/data/api/Notification.onDelete()
-		},
-		// an extra to get result sets
-		onFetch: function(results){
-			// summary:
-			// 		Called when a fetch occurs			
-		}
-
-	}
-);
 });
 
 },
@@ -28029,10 +27710,10 @@ define([
 	"dojo/on",
 	"dojo/query",
 	"dojo/request",
-	"dojo/data/ObjectStore",
 	"dstore/Memory",
 	"dstore/Cache",
 	"dstore/Rest",
+	"dstore/legacy/DstoreAdapter",
 	"dijit/registry",
 	"dijit/layout/ContentPane",
 	"dijit/layout/LayoutContainer",
@@ -28053,7 +27734,7 @@ define([
 	"dojo/_base/sniff"
 ],
 	function(declare, lang, array, has, dom, domConstruct, domStyle, domGeometry, domForm, 
-			on, query, request, ObjectStore, Memory, Cache, Rest, 
+			on, query, request, Memory, Cache, Rest, DstoreAdapter,
 			registry, ContentPane, LayoutContainer, StackContainer, Toolbar, Dialog, Button, CheckBox, Select,  
 			OnDemandGrid, Editor, Keyboard, Selection, DijitRegistry, Builder, loadCss,Uploader) {
 		
@@ -28162,7 +27843,7 @@ define([
 		return declare("dexist.CollectionBrowser", [StackContainer], {
 			store: null,
 			grid: null,
-			target:"db/",
+			target:"",
 			collection: "/db",
 			uploadUrl:"/dashboard/plugins/browsing/upload.xql",
 			clipboard: null,
@@ -28207,7 +27888,7 @@ define([
 				// json data store
 				this.store = new Rest({
 					useRangeHeaders:true,
-					target:this.target,
+					target:this.target+"db/",
 					rpc:function(id,method,params,callId){
 						var callId = callId || "call-id";
 						return request.post(this.target+id,{
@@ -28368,12 +28049,20 @@ define([
 									readOnly:true
 								},{
 									name:"owner",
-									type:"text",
-									trim:true
+									type:"select",
+									pageSize:"25",
+									store:new DstoreAdapter(new Rest({
+										useRangeHeaders:true,
+										target:this.target+"user/"
+									}))
 								},{
 									name:"group",
-									type:"text",
-									trim:true
+									type:"select",
+									pageSize:"25",
+									store:new DstoreAdapter(new Rest({
+										useRangeHeaders:true,
+										target:this.target+"group/"
+									}))
 								},{
 									name:"permissions",
 									type:"grid",
@@ -28399,6 +28088,9 @@ define([
 										editor: "checkbox"
 									},{
 										label: "Special",
+										field: "specialLabel"
+									},{
+										label: "",
 										field: "special",
 										editor: "checkbox"
 									}]
@@ -28444,7 +28136,11 @@ define([
 											properties:{
 												who:{
 													title:"Subject",
-													type:"string",
+													type:"array",
+													format:"select",
+													items: {
+														$ref:this.target+"user/"
+													},
 													required:true
 												},
 												access_type:{
@@ -28469,7 +28165,11 @@ define([
 											properties:{
 												who:{
 													title:"Subject",
-													type:"string",
+													type:"array",
+													format:"select",
+													items: {
+														$ref:this.target+"group/"
+													},
 													required:true
 												},
 												access_type:{
@@ -28747,6 +28447,7 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/store/Memory",
+	"dojo/store/JsonRest",
 	"./_GroupMixin",
 	"./Group",
 	"./Label",
@@ -28763,7 +28464,7 @@ define([
 	"dforma/validate/web",
 	"dforma/validate/us",
 	"dojo/i18n!./nls/common"
-],function(require,declare,lang,array,aspect,Deferred,when,all,keys,number,domConstruct,domClass,Memory,_GroupMixin,Group,Label,jsonschema,i18n,Dialog,Form,_FormValueWidget,Button,FilteringSelect,ComboBox,TextBox,toProperCase){
+],function(require,declare,lang,array,aspect,Deferred,when,all,keys,number,domConstruct,domClass,Memory,JsonRest,_GroupMixin,Group,Label,jsonschema,i18n,Dialog,Form,_FormValueWidget,Button,FilteringSelect,ComboBox,TextBox,toProperCase){
 
 var common = i18n.load("dforma","common");
 
@@ -28774,6 +28475,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 	controllerWidget:null,
 	data:null,
 	store:null,
+	refProperty:"$ref",
 	cancellable:false,
 	submittable:true,
 	hideOptional:false,
@@ -29185,12 +28887,20 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 				case "select":
 				case "combo":
 					cc = lang.mixin({
-						store: new Memory({
-							data:c.options
-						}),
 						searchAttr:c.searchAttr || "id",
 						autoComplete:true
 					},cc);
+					if(!cc.store) {
+						if(cc.options && c.options.length) {
+							cc.store = new Memory({
+								data:c.options
+							});
+						} else if(cc.schema.items && cc.schema.items.hasOwnProperty(self.refProperty)) {
+							cc.store = new JsonRest({
+								target:cc.schema.items[self.refProperty]
+							});
+						}
+					}
 				break;
 				case "switch":
 				break;
@@ -37885,6 +37595,184 @@ define([
 });
 
 },
+'dstore/legacy/DstoreAdapter':function(){
+define([
+	'dojo/_base/declare',
+	'dojo/_base/array',
+	'dojo/store/util/QueryResults'
+	/*=====, "dstore/api/Store" =====*/
+], function (declare, arrayUtil, QueryResults /*=====, Store =====*/) {
+// module:
+//		An adapter mixin that makes a dstore store object look like a legacy Dojo object store.
+
+	function passthrough(data) {
+		return data;
+	}
+
+	// No base class, but for purposes of documentation, the base class is dstore/api/Store
+	var base = null;
+	/*===== base = Store; =====*/
+
+	var adapterPrototype = {
+
+		// store:
+		//		The dstore store that is wrapped as a Dojo object store
+		store: null,
+
+		constructor: function (store) {
+			this.store = store;
+
+			if (store._getQuerierFactory('filter') || store._getQuerierFactory('sort')) {
+				this.queryEngine = function (query, options) {
+					options = options || {};
+
+					var filterQuerierFactory = store._getQuerierFactory('filter');
+					var filter = filterQuerierFactory ? filterQuerierFactory(query) : passthrough;
+
+					var sortQuerierFactory = store._getQuerierFactory('sort');
+					var sort = passthrough;
+					if (sortQuerierFactory) {
+						sort = sortQuerierFactory(arrayUtil.map(options.sort, function (criteria) {
+							return {
+								property: criteria.attribute,
+								descending: criteria.descending
+							};
+						}));
+					}
+
+					var range = passthrough;
+					if (!isNaN(options.start) || !isNaN(options.count)) {
+						range = function (data) {
+							var start = options.start || 0,
+								count = options.count || Infinity;
+
+							var results = data.slice(start, start + count);
+							results.total = data.length;
+							return results;
+						};
+					}
+
+					return function (data) {
+						return range(sort(filter(data)));
+					};
+				};
+			}
+			var objectStore = this;
+			// we call notify on events to mimic the old dojo/store/Trackable
+			store.on('add,update,delete', function (event) {
+				var type = event.type;
+				var target = event.target;
+				objectStore.notify(
+					(type === 'add' || type === 'update') ? target : undefined,
+					(type === 'delete' || type === 'update') ?
+						('id' in event ? event.id : store.getIdentity(target)) : undefined);
+			});
+		},
+
+		query: function (query, options) {
+			// summary:
+			//		Queries the store for objects. This does not alter the store, but returns a
+			//		set of data from the store.
+			// query: String|Object|Function
+			//		The query to use for retrieving objects from the store.
+			// options: dstore/api/Store.QueryOptions
+			//		The optional arguments to apply to the resultset.
+			// returns: dstore/api/Store.QueryResults
+			//		The results of the query, extended with iterative methods.
+			//
+			// example:
+			//		Given the following store:
+			//
+			//	...find all items where "prime" is true:
+			//
+			//	|	store.query({ prime: true }).forEach(function(object){
+			//	|		// handle each object
+			//	|	});
+			options = options || {};
+
+			var results = this.store.filter(query);
+			var queryResults;
+
+			// Apply sorting
+			var sort = options.sort;
+			if (sort) {
+				if (Object.prototype.toString.call(sort) === '[object Array]') {
+					var sortOptions;
+					while ((sortOptions = sort.pop())) {
+						results = results.sort(sortOptions.attribute, sortOptions.descending);
+					}
+				} else {
+					results = results.sort(sort);
+				}
+			}
+
+ 			var tracked;
+			if (results.track && !results.tracking) {
+				// if it is trackable, always track, so that observe can
+				// work properly.
+				results = results.track();
+				tracked = true;
+			}
+			if ('start' in options) {
+				// Apply a range
+				var start = options.start || 0;
+				// object stores support sync results, so try that if available
+				queryResults = results[results.fetchRangeSync ? 'fetchRangeSync' : 'fetchRange']({
+					start: start,
+					end: options.count ? (start + options.count) : Infinity
+				});
+				queryResults.total = queryResults.totalLength;
+			}
+			queryResults = queryResults || new QueryResults(results[results.fetchSync ? 'fetchSync' : 'fetch']());
+			queryResults.observe = function (callback, includeObjectUpdates) {
+				// translate observe to event listeners
+				function convertUndefined(value) {
+					if (value === undefined && tracked) {
+						return -1;
+					}
+					return value;
+				}
+				var addHandle = results.on('add', function (event) {
+					callback(event.target, -1, convertUndefined(event.index));
+				});
+				var updateHandle = results.on('update', function (event) {
+					if (includeObjectUpdates || event.previousIndex !== event.index || !isFinite(event.index)) {
+						callback(event.target, convertUndefined(event.previousIndex), convertUndefined(event.index));
+					}
+				});
+				var removeHandle = results.on('delete', function (event) {
+					callback(event.target, convertUndefined(event.previousIndex), -1);
+				});
+				var handle = {
+					remove: function () {
+						addHandle.remove();
+						updateHandle.remove();
+						removeHandle.remove();
+					}
+				};
+				handle.cancel = handle.remove;
+				return handle;
+			};
+			return queryResults;
+		},
+		notify: function () {
+
+		}
+	};
+
+	var delegatedMethods = [ 'get', 'put', 'add', 'remove', 'getIdentity' ];
+	arrayUtil.forEach(delegatedMethods, function (methodName) {
+		adapterPrototype[methodName] = function () {
+			var store = this.store;
+			// try sync first, since dojo object stores support that directly
+			return (store[methodName + 'Sync'] || store[methodName]).apply(store, arguments);
+		};
+	});
+
+	return declare(base, adapterPrototype);
+});
+
+},
 'dijit/_Container':function(){
 define([
 	"dojo/_base/array", // array.forEach array.indexOf
@@ -46411,6 +46299,70 @@ define([
 });
 
 },
+'xstyle/css':function(){
+define(["require"], function(moduleRequire){
+"use strict";
+/*
+ * AMD css! plugin
+ * This plugin will load and wait for css files.  This could be handy when
+ * loading css files as part of a layer or as a way to apply a run-time theme. This
+ * module checks to see if the CSS is already loaded before incurring the cost
+ * of loading the full CSS loader codebase
+ */
+ 	function testElementStyle(tag, id, property){
+ 		// test an element's style
+		var docElement = document.documentElement;
+		var testDiv = docElement.insertBefore(document.createElement(tag), docElement.firstChild);
+		testDiv.id = id;
+		var styleValue = (testDiv.currentStyle || getComputedStyle(testDiv, null))[property];
+		docElement.removeChild(testDiv);
+ 		return styleValue;
+ 	} 
+ 	return {
+		load: function(resourceDef, require, callback, config) {
+			var url = require.toUrl(resourceDef);
+			var cachedCss = require.cache && require.cache['url:' + url];
+			if(cachedCss){
+				// we have CSS cached inline in the build
+				if(cachedCss.xCss){
+					var parser = cachedCss.parser;
+					var xCss =cachedCss.xCss;
+					cachedCss = cachedCss.cssText;
+				}
+				moduleRequire(['./util/createStyleSheet'],function(createStyleSheet){
+					createStyleSheet(cachedCss);
+				});
+				if(xCss){
+					//require([parsed], callback);
+				}
+				return checkForParser();
+			}
+			function checkForParser(){
+				var parser = testElementStyle('x-parse', null, 'content');
+				if(parser && parser != 'none'){
+					// TODO: wait for parser to load
+					require([eval(parser)], callback);
+				}else{
+					callback();
+				}
+			}
+			
+			// if there is an id test available, see if the referenced rule is already loaded,
+			// and if so we can completely avoid any dynamic CSS loading. If it is
+			// not present, we need to use the dynamic CSS loader.
+			var displayStyle = testElementStyle('div', resourceDef.replace(/\//g,'-').replace(/\..*/,'') + "-loaded", 'display');
+			if(displayStyle == "none"){
+				return checkForParser();
+			}
+			// use dynamic loader
+			moduleRequire(["./core/load-css"], function(load){
+				load(url, checkForParser);
+			});
+		}
+	};
+});
+
+},
 'dforma/validate/web':function(){
 define(["./_base", "./regexp"], function(validate, xregexp){
 
@@ -46501,70 +46453,6 @@ validate.getEmailAddressList = function(value, flags) {
 };
 
 return validate;
-});
-
-},
-'xstyle/css':function(){
-define(["require"], function(moduleRequire){
-"use strict";
-/*
- * AMD css! plugin
- * This plugin will load and wait for css files.  This could be handy when
- * loading css files as part of a layer or as a way to apply a run-time theme. This
- * module checks to see if the CSS is already loaded before incurring the cost
- * of loading the full CSS loader codebase
- */
- 	function testElementStyle(tag, id, property){
- 		// test an element's style
-		var docElement = document.documentElement;
-		var testDiv = docElement.insertBefore(document.createElement(tag), docElement.firstChild);
-		testDiv.id = id;
-		var styleValue = (testDiv.currentStyle || getComputedStyle(testDiv, null))[property];
-		docElement.removeChild(testDiv);
- 		return styleValue;
- 	} 
- 	return {
-		load: function(resourceDef, require, callback, config) {
-			var url = require.toUrl(resourceDef);
-			var cachedCss = require.cache && require.cache['url:' + url];
-			if(cachedCss){
-				// we have CSS cached inline in the build
-				if(cachedCss.xCss){
-					var parser = cachedCss.parser;
-					var xCss =cachedCss.xCss;
-					cachedCss = cachedCss.cssText;
-				}
-				moduleRequire(['./util/createStyleSheet'],function(createStyleSheet){
-					createStyleSheet(cachedCss);
-				});
-				if(xCss){
-					//require([parsed], callback);
-				}
-				return checkForParser();
-			}
-			function checkForParser(){
-				var parser = testElementStyle('x-parse', null, 'content');
-				if(parser && parser != 'none'){
-					// TODO: wait for parser to load
-					require([eval(parser)], callback);
-				}else{
-					callback();
-				}
-			}
-			
-			// if there is an id test available, see if the referenced rule is already loaded,
-			// and if so we can completely avoid any dynamic CSS loading. If it is
-			// not present, we need to use the dynamic CSS loader.
-			var displayStyle = testElementStyle('div', resourceDef.replace(/\//g,'-').replace(/\..*/,'') + "-loaded", 'display');
-			if(displayStyle == "none"){
-				return checkForParser();
-			}
-			// use dynamic loader
-			moduleRequire(["./core/load-css"], function(load){
-				load(url, checkForParser);
-			});
-		}
-	};
 });
 
 },
