@@ -14,7 +14,7 @@ To test, point your browser to http://localhost:8080/exist/apps/collectionbrowse
 
 --------
 
-If you want to use the collection browser from your app, add the dojo scripts to your page, and add this javascript snippet:
+If you want to use the collection browser from your app, add the dojo scripts and CSS to your page, and add this javascript snippet:
 
 ```javascript
 require(["dexist/cb-layer"],function(){
@@ -30,6 +30,8 @@ require(["dexist/cb-layer"],function(){
 		});
 });
 ```
+
+/Important note/: currently you have to force Dojo locale to 'en-us' in Windows.
 
 --------
 
