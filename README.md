@@ -19,7 +19,7 @@ If you want to use the collection browser from your app, add the dojo scripts an
 <link rel="stylesheet" href="resources/scripts/dojo-release-1.10.3/dijit/themes/claro/claro.css"/>
 <script src="resources/scripts/dojo-release-1.10.3/dojo/dojo.js" data-dojo-config="async:true,locale:'en-us'"/>
 ```
-and add this javascript snippet:
+Then you have to add this javascript snippet:
 
 ```javascript
 require(["dexist/cb-layer"],function(){
