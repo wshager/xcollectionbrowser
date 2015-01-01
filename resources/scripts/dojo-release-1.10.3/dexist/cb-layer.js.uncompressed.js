@@ -18181,6 +18181,53 @@ return widget;
 });
 
 },
+'dforma/RadioGroup':function(){
+define([
+        "dojo/_base/declare",
+        "dojo/_base/lang",
+        "dojo/_base/array",
+        "dojo/dom-construct",
+        "dijit/form/_FormValueWidget",
+        "dijit/form/RadioButton"
+    ], function (declare, lang, array, domConstruct, _FormValueWidget,RadioButton) {
+
+    return declare("dforma.RadioGroup",[_FormValueWidget], {
+    	options:null,
+    	labelAttr:"label",
+    	baseClass:"dformaRadioGroup",
+    	templateString:"<div data-dojo-attach-point=\"containerNode,focusNode\"></div>",
+    	buildRendering:function(){
+    		this.inherited(arguments);
+    		array.forEach(this.options,function(_,i){
+    			new RadioButton(lang.mixin(_,{
+    				checked:this.value ? _.id==this.value : i===0
+    			})).placeAt(this.containerNode);
+    			domConstruct.create("label",{
+    				"for":_.id,
+    				innerHTML:_[this.labelAttr]
+    			},this.containerNode);
+    		},this);
+    	},
+    	validate:function(){
+    		// TODO signal empty selection?
+    		if(this.required) {
+	    		var selectedRadio = this.getChildren().filter(function(w){
+	                return w.get("checked");
+	            });
+	    		return selectedRadio.length>0;
+    		} else {
+    			return true;
+    		}
+		},
+        _getValueAttr : function() {
+            var selectedRadio = this.getChildren().filter(function(w){
+                return w.get("checked");
+            }).pop();
+            return selectedRadio ? selectedRadio.id : null;
+        }
+    });
+});
+},
 'dforma/_GroupMixin':function(){
 define([
 	"dojo/_base/declare",
@@ -24683,6 +24730,25 @@ define([
 });
 
 },
+'dijit/form/RadioButton':function(){
+define([
+	"dojo/_base/declare", // declare
+	"./CheckBox",
+	"./_RadioButtonMixin"
+], function(declare, CheckBox, _RadioButtonMixin){
+
+	// module:
+	//		dijit/form/RadioButton
+
+	return declare("dijit.form.RadioButton", [CheckBox, _RadioButtonMixin], {
+		// summary:
+		//		Same as an HTML radio, but with fancy styling.
+
+		baseClass: "dijitRadio"
+	});
+});
+
+},
 'dijit/main':function(){
 define([
 	"dojo/_base/kernel"
@@ -25109,6 +25175,83 @@ exports.autoScrollNodes = function(e){
 
 return exports;
 
+});
+
+},
+'dijit/form/_RadioButtonMixin':function(){
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr", // domAttr.set
+	"dojo/_base/lang", // lang.hitch
+	"dojo/query!css2", // query
+	"../registry"    // registry.getEnclosingWidget
+], function(array, declare, domAttr, lang, query, registry){
+
+	// module:
+	//		dijit/form/_RadioButtonMixin
+
+	return declare("dijit.form._RadioButtonMixin", null, {
+		// summary:
+		//		Mixin to provide widget functionality for an HTML radio button
+
+		// type: [private] String
+		//		type attribute on `<input>` node.
+		//		Users should not change this value.
+		type: "radio",
+
+		_getRelatedWidgets: function(){
+			// Private function needed to help iterate over all radio buttons in a group.
+			var ary = [];
+			query("input[type=radio]", this.focusNode.form || this.ownerDocument).forEach(// can't use name= since query doesn't support [] in the name
+				lang.hitch(this, function(inputNode){
+					if(inputNode.name == this.name && inputNode.form == this.focusNode.form){
+						var widget = registry.getEnclosingWidget(inputNode);
+						if(widget){
+							ary.push(widget);
+						}
+					}
+				})
+			);
+			return ary;
+		},
+
+		_setCheckedAttr: function(/*Boolean*/ value){
+			// If I am being checked then have to deselect currently checked radio button
+			this.inherited(arguments);
+			if(!this._created){
+				return;
+			}
+			if(value){
+				array.forEach(this._getRelatedWidgets(), lang.hitch(this, function(widget){
+					if(widget != this && widget.checked){
+						widget.set('checked', false);
+					}
+				}));
+			}
+		},
+
+		_getSubmitValue: function(/*String*/ value){
+			return value == null ? "on" : value;
+		},
+
+		_onClick: function(/*Event*/ e){
+			if(this.checked || this.disabled){ // nothing to do
+				e.stopPropagation();
+				e.preventDefault();
+				return false;
+			}
+			if(this.readOnly){ // ignored by some browsers so we have to resync the DOM elements with widget values
+				e.stopPropagation();
+				e.preventDefault();
+				array.forEach(this._getRelatedWidgets(), lang.hitch(this, function(widget){
+					domAttr.set(this.focusNode || this.domNode, 'checked', widget.checked);
+				}));
+				return false;
+			}
+			return this.inherited(arguments);
+		}
+	});
 });
 
 },
@@ -28059,11 +28202,12 @@ define([
 	"dojo/query",
 	"dojo/request",
 	"dojo/date/locale",
+	
 	"dstore/Memory",
 	"dstore/Cache",
 	"dstore/Rest",
 	"dstore/legacy/DstoreAdapter",
-	"dijit/registry",
+	
 	"dijit/layout/ContentPane",
 	"dijit/layout/LayoutContainer",
 	"dijit/layout/StackContainer",
@@ -28072,20 +28216,28 @@ define([
 	"dijit/form/Button",
 	"dijit/form/CheckBox",
 	"dijit/form/Select",
+	
 	"dgrid/OnDemandGrid",
 	"dgrid/Editor",
 	"dgrid/Keyboard",
 	"dgrid/Selection",
 	"dgrid/extensions/DijitRegistry",
+	
 	"dforma/Builder",
+	"dforma/Grid",
+	"dforma/DateTimeTextBox",
+	"dforma/RadioGroup",
+	
 	"./util/load-css",
 	"./Uploader",
 	"dojo/_base/sniff"
 ],
-	function(declare, lang, array, has, dom, domConstruct, domStyle, domGeometry, locale, 
-			on, query, request, Memory, Cache, Rest, DstoreAdapter,
-			registry, ContentPane, LayoutContainer, StackContainer, Toolbar, Dialog, Button, CheckBox, Select,  
-			OnDemandGrid, Editor, Keyboard, Selection, DijitRegistry, Builder, loadCss,Uploader) {
+	function(declare, lang, array, has, dom, domConstruct, domStyle, domGeometry, on, query, request, locale,  
+			Memory, Cache, Rest, DstoreAdapter,
+			ContentPane, LayoutContainer, StackContainer, Toolbar, Dialog, Button, CheckBox, Select,  
+			OnDemandGrid, Editor, Keyboard, Selection, DijitRegistry, 
+			Builder, Grid, DateTimeTextBox, RadioGroup,
+			loadCss, Uploader) {
 		
 		var util = {
 			confirm: function(title, message, callback) {
@@ -28305,11 +28457,7 @@ define([
 						this.updateBreadcrumb();
 						this.grid.set("collection",this.store.filter({collection:this.collection}));
 					} else {
-						if(ev.altKey) {
-							this.openResource(item.id);
-						} else {
-							this.onSelectResource(item.id,item);
-						}
+						this.onSelectResource(item.id,item,ev);
 					}
 				}));
 				this.grid.on("dgrid-select", function(ev){
@@ -28317,24 +28465,6 @@ define([
 						return _.data;
 					});
 				});
-				/*on(this.grid, "keyUp", function(e) {
-					if (self.grid.edit.isEditing()) {
-						return;
-					}
-					if (!e.shiftKey && !e.altKey && !e.ctrlKey) {
-						e.stopImmediatePropagation();
-						e.preventDefault();
-						var idx = self.grid.focus.rowIndex;
-						switch (e.which) {
-							case 13: // enter
-								self.changeCollection(idx);
-								break;
-							case 8: // backspace
-								self.changeCollection(0);
-								break;
-						}
-					}
-				});*/
 
 				var tools = [{
 					id:"reload",
@@ -28374,10 +28504,8 @@ define([
 					});
 					this.tools[_.id] = bt;
 					this.toolbar.addChild(bt);
-				},this)
-				
+				},this);
 
-				/* on(this.tools["properties"], "click", lang.hitch(this, "properties")); */
 				this.tools["properties"].on("click", lang.hitch(this,function(ev) {
 					if(selection.length && selection.length > 0) {
 						this.store.get(selection[0].id).then(lang.hitch(this,function(item){
@@ -28427,7 +28555,6 @@ define([
 									add:false,
 									edit:false,
 									remove:false,
-									style:"height:200px",
 									selectionMode:"none",
 									columns: [{
 										label: "Permission",
@@ -28455,7 +28582,6 @@ define([
 								},{
 									name:"acl",
 									type:"grid",
-									style:"height:200px",
 									controller:{
 										type:"select",
 										name:"target"
@@ -28577,12 +28703,7 @@ define([
 				on(this.tools["paste"], "click", lang.hitch(this,"pasteResources"));
 				on(this.tools["reload"], "click", lang.hitch(this, function(){ this.refresh()}));
 				on(this.tools["reindex"], "click", lang.hitch(this, "reindex"));
-				/*on(this.tools["edit"], "click", lang.hitch(this, function(ev) {
-					var items = this.grid.selection.getSelected();
-					if(items.length && items.length > 0 && !items[0].isCollection) {
-						this.openResource(items[0].id);
-					}
-				}));*/
+
 				this.addChild(this.browsingPage);
 				this.addChild(this.propertiesPage);
 				this.grid.startup();
@@ -28635,26 +28756,6 @@ define([
 				}
 				return null;
 			},
-
-			/*applyProperties: function(dlg, resources) {
-				var self = this;
-				var form = dom.byId("browsing-dialog-form");
-				var params = domForm.toObject(form);
-				params.resources = resources;
-				request.post("/dashboard/plugins/browsing/properties/",{
-					data: params,
-					handleAs: "json"
-				}).then(function(data) {
-					self.refresh();
-					if (data.status == "ok") {
-						registry.byId("browsing-dialog").hide();
-					} else {
-						util.message("Changing Properties Failed!", "Could not change properties on all resources!");
-					}
-				},function() {
-					util.message("Server Error", "An error occurred while communicating to the server!");
-				});
-			},*/
 
 			refresh: function(collection) {
 				if(collection) {
@@ -28753,8 +28854,8 @@ define([
 				});
 			},
 			
-			onSelectResource:function(path){
-				//override!
+			onSelectResource:function(id,item,evt){
+				this.openResource("/db/"+id);
 			},
 			
 			openResource: function(path) {
@@ -29142,6 +29243,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 					// create bound subform
 					if(!cc.store) cc.store = parent.store;
 					cc.subform = new Builder({
+						label:cc.label,
 						cancellable:true,
 						cancel: function(){
 							domClass.toggle(this.parentform.domNode,"dijitHidden",false);
@@ -29176,6 +29278,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 							});
 						}
 					});
+					domClass.toggle(cc.subform.domNode,"dijitHidden",true);
 					var validate = lang.hitch(cc.subform,cc.subform.validate);
 					cc.subform.validate = function(){
 						if(!this.data) return true;
@@ -47222,6 +47325,24 @@ define([
 	return Viewport;
 });
 
+},
+'dforma/DateTimeTextBox':function(){
+define([
+	"dojo/_base/declare",
+	"dojo/date/locale",
+	"dijit/form/MappedTextBox"
+],function(declare,locale,MappedTextBox){
+	return declare("dforma.DateTimeTextBox",[MappedTextBox],{
+		selector:"date",
+		datePattern:"MMMM dd yyyy HH:mm:ss",
+		format:function(value){
+			return locale.format(new Date(value),this);
+		},
+		parse:function(value){
+			return locale.parse(value,this);
+		}
+	});
+});
 },
 'dijit/MenuSeparator':function(){
 define([

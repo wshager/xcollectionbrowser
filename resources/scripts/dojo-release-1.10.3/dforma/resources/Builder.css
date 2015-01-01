@@ -23,8 +23,13 @@
 }
 
 .dformaBuilderLabel {
+	font-weight:bold;
+	margin:5px;
 }
-.dijitReset.dformaListLabel {
+.dformaGrid {
+	margin:6px;
+}
+.dijitReset.dformaGridLabel {
 	font-weight: bold;
 	padding: 5px 0;
 }
@@ -56,6 +61,6 @@
 	width:400px;
 }
 .dformaBuilderForm .dgrid {
-	max-width:500px;
-	max-height:200px;
+	width:500px;
+	height:200px;
 }
