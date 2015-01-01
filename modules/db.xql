@@ -337,26 +337,13 @@ declare %private function db:list-collection-contents($collection as xs:string) 
 };
 
 declare %private function db:save-acl($uri as xs:anyURI,$data as node()*) {
-	let $permissions := sm:get-permissions($uri)/sm:permission
-	let $acl := $permissions/sm:acl/sm:ace
-	(: remove deleted :)
-	let $del := for $ace in $acl
-		let $index := $ace/@index/string()
-		return
-			if($index != $data/id/string()) then
-				sm:remove-ace($uri, $index)
-			else
-				()
-	for $ace in $data
-		let $index := $ace/id/string()
-		return
-			if($index = $acl/@index/string()) then
-				(: update :)
-				sm:modify-ace($uri, $index, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
-			else if($ace/target="USER") then
-				sm:insert-user-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
-			else if($ace/target="GROUP") then
-				sm:insert-group-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
-		   else
-			   ()
+	(: clear and re-insert all :)
+	let $del := sm:clear-acl($uri)
+	for $ace in $data return
+		if($ace/target="USER") then
+			sm:insert-user-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
+		else if($ace/target="GROUP") then
+			sm:insert-group-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
+		else
+		   ()
 };
