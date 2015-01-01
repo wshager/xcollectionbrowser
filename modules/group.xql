@@ -15,7 +15,7 @@ declare function group:get($collection as xs:string, $id as xs:string, $directiv
 
 declare function group:query($collection as xs:string, $query-string as xs:string, $directives as map) {
 	let $result :=
-		for $group in sm:get-groups() return
+		for $group in sm:list-groups() return
 			element json:value {
 				attribute json:array { "true" },
 				element id { $group }
