@@ -15,7 +15,7 @@
 	</target>
 	<target name="xar">
 		<mkdir dir="${build.dir}"/>
-		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir} .project"/>
+		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/* .project"/>
 	</target>
 	<target name="build-dojo">
 		<delete dir="${dojo.release}"/>
