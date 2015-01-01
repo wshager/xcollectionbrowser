@@ -26,9 +26,9 @@ require(["dexist/cb-layer"],function(){
 	require(["dexist/CollectionBrowser"],function(CollectionBrowser){
 		var cb = new CollectionBrowser({
 			target:"/exist/apps/collectionbrowser",// depending on your setup
-		        onSelectResource:function(id,item,evt){
-		          // use this method to determine what will happen when a document is selected (double-click)
-		        }
+			onSelectResource:function(id,item,evt){
+				// use this method to determine what will happen when a document is selected (double-click)
+			}
 		});
 		cb.placeAt("someDiv");
 		cb.startup();
