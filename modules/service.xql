@@ -8,7 +8,7 @@ declare namespace json="http://www.json.org";
 
 (: standard crud functions :)
 declare function service:get($collection as xs:string, $id as xs:string, $directives as map) {
-	let $is-collection := count(service:list-collection-contents($collection || "/" || $id)) > 1
+	let $is-collection := xmldb:collection-available($collection || "/" || $id)
 	return
 		service:resource-xml($collection || "/" || $id, true(), $is-collection)
 };
