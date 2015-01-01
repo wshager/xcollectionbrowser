@@ -14,7 +14,7 @@ To test, point your browser to http://localhost:8080/exist/apps/collectionbrowse
 
 --------
 
-If you want to use the collection browser from your app, add the dojo scripts and CSS to your page, where 'resources' should be replaced with the path to /exist/apps/collectionbrowser/resources from your current setup:
+If you want to use the collection browser from your app, add the dojo scripts and CSS to your page, where 'resources' should be replaced with the path to /exist/apps/collectionbrowser/resources from your current setup, and 'claro' may be replaced with the theme of your choice:
 ```html
 <link rel="stylesheet" href="resources/scripts/dojo-release-1.10.3/dijit/themes/claro/claro.css"/>
 <script src="resources/scripts/dojo-release-1.10.3/dojo/dojo.js" data-dojo-config="async:true,locale:'en-us'"/>
@@ -35,6 +35,8 @@ require(["dexist/cb-layer"],function(){
 	});
 });
 ```
+Note that the dijit theme class also needs to be set on the HTML body element.
+
 You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojotoolkit.org/reference-guide/dijit/Dialog.html).
 
 **Important note**: currently you have to force Dojo locale to a region code (e.g. 'en-us') in Windows.
