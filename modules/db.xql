@@ -178,15 +178,15 @@ function db:resource-xml($path as xs:string, $single as xs:boolean, $is-collecti
 	$resource := replace($path, ".*/(.*)", "$1"),
 	$created := 
 		if($is-collection) then
-			format-dateTime(xmldb:created($path), "[MNn] [D00] [Y0000] [H00]:[m00]:[s00]")
+			xmldb:created($path)
 		else
-			format-dateTime(xmldb:created($collection, $resource), "[MNn] [D00] [Y0000] [H00]:[m00]:[s00]")
+			xmldb:created($collection, $resource)
 	   ,
 	$last-modified :=
 				if($is-collection) then
 					$created
 				else
-					format-dateTime(xmldb:last-modified($collection, $resource), "[MNn] [D00] [Y0000] [H00]:[m00]:[s00]")
+					xmldb:last-modified($collection, $resource)
 				,
 	$internet-media-type :=
 		if($is-collection) then
