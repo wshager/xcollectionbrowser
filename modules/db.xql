@@ -1,30 +1,29 @@
 xquery version "3.0";
 
-module namespace service="http://exist-db.org/apps/collectionbrowser/service";
+module namespace db="http://exist-db.org/apps/collectionbrowser/db";
 
 import module namespace rql="http://lagua.nl/lib/rql" at "util/rql.xql";
 import module namespace sm="http://exist-db.org/xquery/securitymanager";
 declare namespace json="http://www.json.org";
 
 (: standard crud functions :)
-declare function service:get($collection as xs:string, $id as xs:string, $directives as map) {
+declare function db:get($collection as xs:string, $id as xs:string, $directives as map) {
 	let $is-collection := xmldb:collection-available($collection || "/" || $id)
 	return
-		service:resource-xml($collection || "/" || $id, true(), $is-collection)
+		db:resource-xml($collection || "/" || $id, true(), $is-collection)
 };
 
-declare function service:query($collection as xs:string, $query-string as xs:string, $directives as map) {
+declare function db:query($collection as xs:string, $query-string as xs:string, $directives as map) {
 	let $rqlquery := rql:parse($query-string)
 	let $parent := util:unescape-uri(rql:get-element-by-property($rqlquery,"collection"),"utf-8")
 	let $resources := 
-		for $resource in service:list-collection-contents($parent) return
+		for $resource in db:list-collection-contents($parent) return
 			let $path := $parent || "/" || $resource
 			let $is-collection := local-name($resource) eq "collection"
 			return
-				service:resource-xml($path, false(), $is-collection)
+				db:resource-xml($path, false(), $is-collection)
 	let $totalcount := count($resources)
 	let $rqlxq := rql:to-xq($rqlquery)
-	let $sort := $rqlxq("sort")
 	let $limit := 
 		if($rqlxq("limit")) then
 			$rqlxq("limit")
@@ -50,7 +49,7 @@ declare function service:query($collection as xs:string, $query-string as xs:str
 	)
 };
 
-declare function service:put($collection as xs:string, $data as node(), $directives as map) {
+declare function db:put($collection as xs:string, $data as node(), $directives as map) {
 	let $id := $data/id/string()
 	return
 		if($id) then
@@ -60,8 +59,8 @@ declare function service:put($collection as xs:string, $data as node(), $directi
 					let $props := (
 						sm:chown($uri, $data/owner/string()),
 						sm:chgrp($uri, $data/group/string()),
-						sm:chmod($uri, service:permissions-from-data($data/permissions)),
-						service:save-acl($uri,$data/acl)
+						sm:chmod($uri, db:permissions-from-data($data/permissions)),
+						db:save-acl($uri,$data/acl)
 					)
 					(:xmldb:set-mime-type($resource, $data/internetMimeType):)
 					return $data
@@ -72,7 +71,7 @@ declare function service:put($collection as xs:string, $data as node(), $directi
 };
 
 (: RPC functions :)
-declare function service:create-collection($target as xs:string, $create as node(), $id as xs:string, $directives as map) {
+declare function db:create-collection($target as xs:string, $create as node(), $id as xs:string, $directives as map) {
 	let $create := $create/string()
 	let $log := util:log("DEBUG", ("creating collection ", $create))
 	return
@@ -98,15 +97,15 @@ declare function service:create-collection($target as xs:string, $create as node
 			)
 };
 
-declare function service:move-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
-	service:copyOrMove($target, $resources/json:value/string(), "move", $id)
+declare function db:move-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
+	db:copyOrMove($target, $resources/json:value/string(), "move", $id)
 };
 
-declare function service:copy-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
-	service:copyOrMove($target, $resources/json:value/string(), "copy", $id)
+declare function db:copy-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
+	db:copyOrMove($target, $resources/json:value/string(), "copy", $id)
 };
 
-declare function service:reindex($target as xs:string, $id as xs:string, $directives as map) {
+declare function db:reindex($target as xs:string, $id as xs:string, $directives as map) {
 	let $reindex := xmldb:reindex($target)
 	return
 		element response { 
@@ -116,7 +115,7 @@ declare function service:reindex($target as xs:string, $id as xs:string, $direct
 		}
 };
 
-declare function service:delete-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
+declare function db:delete-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
 	try {
 		for $item in $resources/string()
 			let $resource := "/db/" || $item
@@ -143,16 +142,16 @@ declare function service:delete-resources($target as xs:string, $resources as no
 (: private functions :)
 declare
 	%private
-function service:permissions-from-data($permissions) {
+function db:permissions-from-data($permissions) {
 	string-join(
 		for $type in ("User", "Group", "Other")
-			return service:rwx-from-data($permissions[id = $type])
+			return db:rwx-from-data($permissions[id = $type])
 	)
 };
 
 declare
 	%private
-function service:rwx-from-data($permissions) {
+function db:rwx-from-data($permissions) {
 	let $perms := map {
 		"read" := "r",
 		"write" := "w",
@@ -173,7 +172,7 @@ function service:rwx-from-data($permissions) {
 
 declare
 	%private
-function service:resource-xml($path as xs:string, $single as xs:boolean, $is-collection as xs:boolean) as element(json:value) {
+function db:resource-xml($path as xs:string, $single as xs:boolean, $is-collection as xs:boolean) as element(json:value) {
 	let $permission := sm:get-permissions(xs:anyURI($path))/sm:permission,
 	$collection := replace($path, "(.*)/.*", "$1"),
 	$resource := replace($path, ".*/(.*)", "$1"),
@@ -218,10 +217,10 @@ function service:resource-xml($path as xs:string, $single as xs:boolean, $is-col
 			{
 				if($single) then
 					(element permissions {
-						service:get-permissions($path,"")
+						db:get-permissions($path,"")
 					},
 					element acl {
-						service:get-acl($path,"")
+						db:get-acl($path,"")
 					})
 				else
 					()
@@ -231,7 +230,7 @@ function service:resource-xml($path as xs:string, $single as xs:boolean, $is-col
 
 declare
 	%private
-function service:permissions-classes-xml($permission as element(sm:permission)) as element(class)+ {
+function db:permissions-classes-xml($permission as element(sm:permission)) as element(class)+ {
 	let $chars := for $ch in string-to-codepoints($permission/@mode)
 		return codepoints-to-string($ch)
 	return
@@ -242,6 +241,7 @@ function service:permissions-classes-xml($permission as element(sm:permission)) 
 			<write json:literal="true">{$chars[2] = "w"}</write>
 			<execute json:literal="true">{$chars[3] = ("x", "s")}</execute>
 			<special json:literal="true">{$chars[3] = ("s", "S")}</special>
+			<specialLabel>SetUID</specialLabel>
 		</class>,
 		<class>
 			<id>Group</id>
@@ -249,6 +249,7 @@ function service:permissions-classes-xml($permission as element(sm:permission)) 
 			<write json:literal="true">{$chars[5] = "w"}</write>
 			<execute json:literal="true">{$chars[6] = ("x", "s")}</execute>
 			<special json:literal="true">{$chars[6] = ("s", "S")}</special>
+			<specialLabel>SetGID</specialLabel>
 		</class>,
 		<class>
 			<id>Other</id>
@@ -256,11 +257,12 @@ function service:permissions-classes-xml($permission as element(sm:permission)) 
 			<write json:literal="true">{$chars[8] = "w"}</write>
 			<execute json:literal="true">{$chars[9] = ("x", "t")}</execute>
 			<special json:literal="true">{$chars[9] = ("t", "T")}</special>
+			<specialLabel>Sticky</specialLabel>
 		</class>
 	)
 };
 
-declare %private function service:copyOrMove($target as xs:string, $sources as xs:string*, $action as xs:string, $id as xs:string) {
+declare %private function db:copyOrMove($target as xs:string, $sources as xs:string*, $action as xs:string, $id as xs:string) {
 	if(sm:has-access($target,"w")) then (
 		for $source in $sources
 		let $source := "/db/" || $source
@@ -290,10 +292,10 @@ declare %private function service:copyOrMove($target as xs:string, $sources as x
 
 declare
 	%private
-function service:get-permissions($id as xs:string, $class as xs:string) as element(json:value)* {
+function db:get-permissions($id as xs:string, $class as xs:string) as element(json:value)* {
 	let $permissions := sm:get-permissions(xs:anyURI($id))/sm:permission
 	return
-		for $c in service:permissions-classes-xml($permissions)[if(string-length($class) eq 0)then true() else id = $class] return
+		for $c in db:permissions-classes-xml($permissions)[if(string-length($class) eq 0)then true() else id = $class] return
 			<json:value json:array="true">{
 				$c/child::element()
 			}</json:value>
@@ -301,7 +303,7 @@ function service:get-permissions($id as xs:string, $class as xs:string) as eleme
 
 declare
 	%private
-function service:get-acl($id as xs:string, $acl-id as xs:string) as element(json:value)* {
+function db:get-acl($id as xs:string, $acl-id as xs:string) as element(json:value)* {
 	let $permissions := sm:get-permissions(xs:anyURI($id))/sm:permission
 	let $acl := $permissions/sm:acl/sm:ace[if(string-length($acl-id) eq 0)then true() else @index eq $acl-id]
 	return
@@ -320,7 +322,7 @@ function service:get-acl($id as xs:string, $acl-id as xs:string) as element(json
 			<json:value json:array="true"/>
 };
 
-declare %private function service:list-collection-contents($collection as xs:string) {
+declare %private function db:list-collection-contents($collection as xs:string) {
 	(
 		for $child in xmldb:get-child-collections($collection)
 		order by $child ascending
@@ -334,7 +336,7 @@ declare %private function service:list-collection-contents($collection as xs:str
 	)
 };
 
-declare %private function service:save-acl($uri as xs:anyURI,$data as node()*) {
+declare %private function db:save-acl($uri as xs:anyURI,$data as node()*) {
 	let $permissions := sm:get-permissions($uri)/sm:permission
 	let $acl := $permissions/sm:acl/sm:ace
 	(: remove deleted :)
@@ -350,11 +352,11 @@ declare %private function service:save-acl($uri as xs:anyURI,$data as node()*) {
 		return
 			if($index = $acl/@index/string()) then
 				(: update :)
-				sm:modify-ace($uri, $index, $ace/access_type="ALLOWED", service:rwx-from-data($ace))
+				sm:modify-ace($uri, $index, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
 			else if($ace/target="USER") then
-				sm:insert-user-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", service:rwx-from-data($ace))
+				sm:insert-user-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
 			else if($ace/target="GROUP") then
-				sm:insert-group-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", service:rwx-from-data($ace))
+				sm:insert-group-ace($uri, 0, $ace/who, $ace/access_type="ALLOWED", db:rwx-from-data($ace))
 		   else
 			   ()
 };
