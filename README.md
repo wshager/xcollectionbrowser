@@ -31,7 +31,7 @@ require(["dexist/cb-layer"],function(){
 });
 ```
 
-/Important note/: currently you have to force Dojo locale to 'en-us' in Windows.
+*Important note*: currently you have to force Dojo locale to 'en-us' in Windows.
 
 --------
 
