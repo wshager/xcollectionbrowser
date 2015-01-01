@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="main" name="collectionbrowser">
+<project default="xar" name="collectionbrowser">
 	<xmlproperty file="expath-pkg.xml"/>
 	<property environment="env"/>
 	<property name="project.version" value="${package(version)}"/>
@@ -15,7 +15,7 @@
 	</target>
 	<target name="xar">
 		<mkdir dir="${build.dir}"/>
-		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/* .project"/>
+		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir} .project"/>
 	</target>
 	<target name="build-dojo">
 		<delete dir="${dojo.release}"/>
