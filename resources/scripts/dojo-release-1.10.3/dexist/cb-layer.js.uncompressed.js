@@ -47316,10 +47316,6 @@ define([
 				var type;
 				if(prop.type=="boolean") {
 					type = "checkbox";
-					if(data && data.hasOwnProperty(k) && data[k] instanceof Array){
-						// TODO add checkboxgroup
-						data[k] = data[k][0];
-					}
 				} else if(prop.type=="integer") {
 					type = "spinner";
 				} else if(prop.type=="number") {
