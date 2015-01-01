@@ -34,6 +34,8 @@ require(["dexist/cb-layer"],function(){
 		cb.startup();
 	});
 });
+
+You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojotoolkit.org/reference-guide/dijit/Dialog.html).
 ```
 
 **Important note**: currently you have to force Dojo locale to 'en-us' in Windows.
