@@ -83,6 +83,11 @@
 
 .dformaLabelNode {
 	min-width:9em;
+	padding:0;
+}
+
+.dformaLabelForCheckbox .dformaLabelNode {
+	min-width:4em;
 }
 
 .dexistCollectionBrowser .dformaGrid-permissions {
