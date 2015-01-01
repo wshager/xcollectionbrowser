@@ -37,7 +37,7 @@ require(["dexist/cb-layer"],function(){
 ```
 You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojotoolkit.org/reference-guide/dijit/Dialog.html).
 
-**Important note**: currently you have to force Dojo locale to 'en-us' in Windows.
+**Important note**: currently you have to force Dojo locale to a region code (e.g. 'en-us') in Windows.
 
 --------
 
