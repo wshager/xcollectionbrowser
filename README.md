@@ -16,7 +16,9 @@ To test, point your browser to http://localhost:8080/exist/apps/collectionbrowse
 
 If you want to use the collection browser from your app, add the dojo scripts and CSS to your page, where 'resources' should be replaced with the path to /exist/apps/collectionbrowser/resources from your current setup, and 'claro' may be replaced with the theme of your choice:
 ```html
+<link rel="stylesheet" href="resources/scripts/dojo-release-1.10.3/dojo/resources/dojo.css"/>
 <link rel="stylesheet" href="resources/scripts/dojo-release-1.10.3/dijit/themes/claro/claro.css"/>
+<link rel="stylesheet" href="resources/scripts/dojo-release-1.10.3/dgrid/css/skins/claro.css"/>
 <script src="resources/scripts/dojo-release-1.10.3/dojo/dojo.js" data-dojo-config="async:true,locale:'en-us'"/>
 ```
 Then add this javascript snippet:
@@ -41,6 +43,8 @@ You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojot
 
 **Important note**: currently you have to force Dojo locale to a region code (e.g. 'en-us') in Windows.
 
+You can find the source code for the client and its API on https://github.com/wshager/dexist. Please report client issues there as well.
+
 --------
 
 
@@ -50,10 +54,7 @@ New Features
 * Allows for sorting and paging of long lists.
 * Editing ACL is fixed.
 * You can embed the component anywhere.
+* Display as icon tiles
+* Remember last visited collection and preferences
 
 This component is built as a single, self-contained Dojo Toolkit widget and communicates with the server along Dojo's JSON CRUD and RPC guidelines ([RST](https://github.com/lagua/xrst)).
-
-TODO
-=====
-
-Add folder/file icons/preview.
