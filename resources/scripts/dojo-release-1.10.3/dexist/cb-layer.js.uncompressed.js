@@ -27729,6 +27729,7 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
+	"dojo/dom-form",
 	"dojo/on",
 	"dojo/query",
 	"dojo/request",
@@ -27766,7 +27767,7 @@ define([
 	"./Uploader",
 	"dojo/_base/sniff"
 ],
-	function(declare, lang, array, has, dom, domConstruct, domClass, domGeometry, on, query, request, locale, cookie, 
+	function(declare, lang, array, has, dom, domConstruct, domClass, domGeometry, domForm, on, query, request, locale, cookie, 
 			Memory, Cache, Rest, DstoreAdapter,
 			ContentPane, LayoutContainer, StackContainer, Toolbar, ToolbarSeparator, Dialog, Button, CheckBox, FilteringSelect,  
 			OnDemandGrid, OnDemandList, Editor, Keyboard, Selection, DijitRegistry, 
