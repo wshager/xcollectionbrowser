@@ -28563,7 +28563,7 @@ define([
 			},
 			openResource: function(path) {
 				var exide = window.open("", "eXide");
-				if (exide && !exide.closed) {
+				if(exide && !exide.closed) {
 					
 					// check if eXide is really available or it's an empty page
 					var app = exide.eXide;
@@ -28582,10 +28582,13 @@ define([
 						window.eXide_onload = function() {
 							exide.eXide.app.findDocument(path);
 						};
-						// empty page
-						var href = window.location.href;
-						href = href.substring(0, href.indexOf("/dashboard")) + "/eXide/index.html";
-						exide.location = href;
+						// open eXide relative to this page
+						var href = location.href+"../eXide/index.html";
+						request(href).then(function(){
+							exide.location = href;
+						},function(){
+							util.message("Open Resource", "eXide is not available on the expected location.");
+						});
 					}
 				} else {
 					util.message("Open Resource", "Failed to start eXide in new window.");
