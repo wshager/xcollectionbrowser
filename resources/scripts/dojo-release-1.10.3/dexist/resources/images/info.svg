@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="14px" height="14px" viewBox="0 0 14 14" enable-background="new 0 0 14 14" xml:space="preserve">
+<font horiz-adv-x="2048">
+<!-- Segoe is a trademark of the Microsoft group of companies. -->
+<!-- Copyright: Copyright 2015 Adobe System Incorporated. All rights reserved. -->
+<font-face font-family="SegoeUIEmoji" units-per-em="2048" underline-position="-178" underline-thickness="119"/>
+<missing-glyph horiz-adv-x="1322" d="M166,0l0,1398l990,0l0,-1398M314,148l694,0l0,1102l-694,0z"/>
+<glyph unicode="&#x2139;" horiz-adv-x="1691" d="M845,1411C914,1411 980,1402 1044,1384C1107,1366 1167,1341 1222,1309C1277,1276 1328,1237 1374,1192C1419,1146 1458,1095 1491,1039C1523,983 1548,923 1566,860C1583,797 1592,730 1592,661C1592,592 1583,526 1566,463C1548,400 1523,340 1491,285C1458,229 1419,178 1374,133C1328,88 1277,49 1222,16C1167,-17 1107,-42 1044,-59C980,-77 914,-86 845,-86C776,-86 710,-77 647,-59C583,-42 523,-17 468,16C413,49 362,88 317,133C271,178 232,229 200,285C167,340 142,400 124,463C106,526 97,592 97,661C97,730 106,797 124,860C142,923 167,983 200,1039C232,1095 271,1146 317,1192C362,1237 413,1276 468,1309C523,1341 583,1366 647,1384C710,1402 776,1411 845,1411M948,255l0,613l-185,0l0,-613M857,956C891,956 918,966 939,987C960,1008 970,1034 970,1067C970,1100 960,1126 939,1146C918,1165 891,1175 857,1175C824,1175 797,1165 776,1146C755,1126 744,1100 744,1067C744,1052 747,1037 753,1024C758,1011 766,999 776,989C786,978 798,970 812,965C825,959 840,956 857,956z"/>
+</font>
+
+	<text transform="matrix(1 0 0 1 -0.375 13.0898)" font-family="'SegoeUIEmoji'" font-size="18">ℹ</text>
+</svg>
