@@ -172,7 +172,7 @@ function db:rwx-from-data($permissions) {
 
 declare
 	%private
-function db:resource-xml($path as xs:string, $single as xs:boolean, $is-collection as xs:boolean) as element(json:value) {
+function db:resource-xml($path as xs:string, $single as xs:boolean, $is-collection as xs:boolean) as element(json:value)? {
 	let $permission := sm:get-permissions(xs:anyURI($path))/sm:permission,
 	$collection := replace($path, "(.*)/.*", "$1"),
 	$resource := replace($path, ".*/(.*)", "$1"),
@@ -194,8 +194,25 @@ function db:resource-xml($path as xs:string, $single as xs:boolean, $is-collecti
 		else
 			xmldb:get-mime-type(xs:anyURI($path))
 		,
-	$can-write := sm:has-access($path,"w")
+	$can-write := sm:has-access($path,"w"),
+	$thumbnail :=
+		if($internet-media-type = "image/svg+xml") then
+			$path
+		else if(starts-with($internet-media-type,"image")) then
+			let $thumb := $collection || "/.thumbs/" || $resource
+			return
+				if(util:binary-doc-available($thumb)) then
+					$collection || "/.thumbs/" || $resource
+				else if(matches($resource,"\.(jpg|gif|png)$") and (xmldb:size($collection,$resource) div 1024) < 512) then
+					$path
+				else
+					()
+		else
+			()
 	return
+		if(ends-with($collection,"/.thumbs") or $resource = ".thumbs") then
+			()
+		else
 		<json:value>
 			{
 				if($single) then
@@ -213,6 +230,7 @@ function db:resource-xml($path as xs:string, $single as xs:boolean, $is-collecti
 			<lastModified>{$last-modified}</lastModified>
 			<writable json:literal="true">{$can-write}</writable>
 			<collection>{$collection}</collection>
+			<thumbnail>{$thumbnail}</thumbnail>
 			<isCollection json:literal="true">{$is-collection}</isCollection>
 			{
 				if($single) then
