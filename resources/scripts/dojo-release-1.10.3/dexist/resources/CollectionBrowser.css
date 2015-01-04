@@ -83,7 +83,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100px;
-    word-wrap: break-word;
+    /*word-wrap: break-word;*/
 }
 
 .dexistCollectionBrowser .browsingList.thumbnailx1 .dgrid-row {
@@ -193,12 +193,8 @@
 	right: 0;
 }
 
-.dexistCollectionBrowser .browsingGrid.thumbnailx1 .field-internetMediaType {
-	width:20px;
-}
-
-.dexistCollectionBrowser .browsingGrid.thumbnailx2 .field-internetMediaType {
-	width:36px;
+.dexistCollectionBrowser .browsingGrid .field-internetMediaType {
+	width:44px;
 }
 
 .dexistCollectionBrowser .browsingGrid.thumbnailx4 .field-internetMediaType {
@@ -257,9 +253,12 @@
 .dexistCollectionBrowser .dijitToolbar .dijitButtonDisabled .dijitButtonNode {
 	opacity:.5;
 }
+.dexistCollectionBrowser .dijitToolbar .dformaLabel {
+	margin:0;
+}
 .dexistCollectionBrowser .dijitToolbar .dformaLabelNode {
 	min-width:2em;
-	margin:0 .5em;
+	margin:0 .4em;
 }
 .dexistCollectionBrowser .dijitToolbar .dformaLabelNode:after {
 	content:"▸";
