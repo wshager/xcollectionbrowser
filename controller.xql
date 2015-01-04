@@ -53,6 +53,10 @@ else if(matches($exist:path, "^/(db|user|group)")) then
 		"module-location" := $config:app-root || "/modules/" || $service || ".xql",
 		"range" := request:get-header("range")
 	})
+else if(matches($exist:path, "^/thumb/.*\.(jpg|svg|png|gif)$")) then
+	<dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+		<forward url="{replace($exist:path,"^/thumb/","/../../")}"/>
+	</dispatch>
 else
 	<dispatch xmlns="http://exist.sourceforge.net/NS/exist">
 		<cache-control cache="yes"/>
