@@ -57,6 +57,10 @@ else if(matches($exist:path, "^/thumb/.*\.(jpg|svg|png|gif)$")) then
 	<dispatch xmlns="http://exist.sourceforge.net/NS/exist">
 		<forward url="{replace($exist:path,"^/thumb/","/../../")}"/>
 	</dispatch>
+else if(matches($exist:path, "^/upload")) then
+	<dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+		<forward url="{$exist:controller}/modules/upload.xql"/>
+	</dispatch>
 else
 	<dispatch xmlns="http://exist.sourceforge.net/NS/exist">
 		<cache-control cache="yes"/>
