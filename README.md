@@ -41,6 +41,8 @@ You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojot
 
 **Important note**: currently you have to force Dojo locale to a region code (e.g. 'en-us') in Windows.
 
+You can find the source code for the client on https://github.com/wshager/dexist. Please report client issues there as well.
+
 --------
 
 
@@ -50,10 +52,7 @@ New Features
 * Allows for sorting and paging of long lists.
 * Editing ACL is fixed.
 * You can embed the component anywhere.
+* Display as icon tiles
+* Remember last visited collection and preferences
 
 This component is built as a single, self-contained Dojo Toolkit widget and communicates with the server along Dojo's JSON CRUD and RPC guidelines ([RST](https://github.com/lagua/xrst)).
-
-TODO
-=====
-
-Add folder/file icons/preview.
