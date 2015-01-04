@@ -20950,8 +20950,8 @@ define([
 			}
 			return this.inherited(arguments)[0];
 		},
-		find: function(){
-			return query.apply(this,arguments);
+		find: function(val){
+			return query(val,this[0]);
 		},
 		each: function(){
 			var args = Array.prototype.slice.call(arguments);
@@ -27888,7 +27888,6 @@ define([
 			grid: null,
 			target:"",
 			collection: "/db",
-			uploadUrl:"/dashboard/plugins/browsing/upload.xql",
 			clipboard: null,
 			clipboardCut: false,
 			editor: null,
@@ -28244,7 +28243,7 @@ define([
 				});
 				this.uploader = new Uploader({
 					collection:this.collection,
-					url:this.uploadUrl,
+					url:this.target+"upload/",
 					onDone:function(){
 						self.refresh();
 					}

@@ -110,8 +110,8 @@ define("dexist/util/$", [
 			}
 			return this.inherited(arguments)[0];
 		},
-		find: function(){
-			return query.apply(this,arguments);
+		find: function(val){
+			return query(val,this[0]);
 		},
 		each: function(){
 			var args = Array.prototype.slice.call(arguments);
