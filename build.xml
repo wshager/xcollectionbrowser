@@ -15,7 +15,7 @@
 	</target>
 	<target name="xar">
 		<mkdir dir="${build.dir}"/>
-		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/* .project .settings"/>
+		<zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/** .project .settings/**"/>
 	</target>
 	<target name="build-dojo">
 		<delete dir="${dojo.release}"/>
@@ -55,17 +55,20 @@
 		<copy todir="${dojo.target}/dijit">
 			<fileset dir="${dojo.release}/dijit">
 				<include name="themes/**"/>
+				<include name="icons/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dojo.target}/dojo">
 			<fileset dir="${dojo.release}/dojo">
 				<include name="dojo.js"/>
+				<include name="dojo.js.map"/>
 				<include name="resources/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dojo.target}/xstyle">
 			<fileset dir="${dojo.release}/xstyle">
 				<include name="core/load-css.js"/>
+				<include name="core/load-css.js.map"/>
 			</fileset>
 		</copy>
 	</target>
