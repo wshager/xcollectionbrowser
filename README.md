@@ -3,7 +3,8 @@ xcollectionbrowser
 
 Standalone Collection Browser for eXist-db 2.2
 
-**You can find the source code for the client and its API on https://github.com/wshager/dexist. Please report client issues there as well.**
+**You can find the source code for the client and its API on https://github.com/wshager/dexist.**
+**Please report client issues there as well.**
 
 
 To install in eXist-db:
