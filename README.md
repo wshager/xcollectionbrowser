@@ -45,6 +45,8 @@ You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojot
 
 **You can find the source code for the client and its API on https://github.com/wshager/dexist. Please report client issues there as well.**
 
+--------
+
 ### Thumbnails
 Image previews will be shown for files smaller then 512kb. If you have large images in a collection, you can easily create thumbnails for that collection using the xquery image module. The thumbnails will be read from a .thumbs subcollection, while that collection itself will not be shown in the browser. To create thumbnails in xquery:
 
@@ -54,6 +56,7 @@ declare namespace image="http://exist-db.org/xquery/image";
 image:thumbnail("/db/my/images", ".thumbs", (), ())
 ```
 Note that the image module must be enabled in your conf.xml.
+
 -------
 
 New Features
