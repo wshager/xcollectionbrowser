@@ -3,6 +3,9 @@ xcollectionbrowser
 
 Standalone Collection Browser for eXist-db 2.2
 
+**You can find the source code for the client and its API on https://github.com/wshager/dexist. Please report client issues there as well.**
+
+
 To install in eXist-db:
 --------------------
 
@@ -42,8 +45,6 @@ Note that the dijit theme class also needs to be set on the HTML body element.
 You may want to place the widget in a dialog, e.g. a dijit [Dialog](http://dojotoolkit.org/reference-guide/dijit/Dialog.html).
 
 **Important note**: currently you have to force Dojo locale to a region code (e.g. 'en-us') in Windows.
-
-**You can find the source code for the client and its API on https://github.com/wshager/dexist. Please report client issues there as well.**
 
 --------
 
