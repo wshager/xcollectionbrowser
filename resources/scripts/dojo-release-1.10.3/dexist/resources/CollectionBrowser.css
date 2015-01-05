@@ -23,23 +23,23 @@
 .dexistCollectionBrowser .browsingGrid .dgrid-header .field-internetMediaType:after{
 	content:"Internet Media Type";
 	background-color: #fff;
-    border: 1px solid #333;
-    height: 1.5em;
-    margin-top:2em;
-    padding-top:3px;
-    position: fixed;
-    z-index:9999;
-    text-align: center;
-    width: 9em;
-    font-family:Arial,sans-serif;
-    font-weight:normal;
-    opacity:0;
-    transition: 0s opacity 0s;
-    pointer-events: none;
+	border: 1px solid #333;
+	height: 1.5em;
+	margin-top:2em;
+	padding-top:3px;
+	position: fixed;
+	z-index:9999;
+	text-align: center;
+	width: 9em;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	opacity:0;
+	transition: 0s opacity 0s;
+	pointer-events: none;
 }
 .dexistCollectionBrowser .browsingGrid .dgrid-header .field-internetMediaType:hover:after{
-    opacity:1;
-    transition: 0s opacity 0.5s;
+	opacity:1;
+	transition: 0s opacity 0.5s;
 }
 .dexistCollectionBrowser .browsingGrid .dgrid-header .field-internetMediaType:active:after{
 	opacity:0;
@@ -65,10 +65,10 @@
 }
 
 .dexistCollectionBrowser .browsingList .dgrid-row {
-    display: inline-table;
-    height: 100px;
-    padding: 5px;
-    text-align: center;
+	display: inline-table;
+	height: 100px;
+	padding: 5px;
+	text-align: center;
 }
 .dexistCollectionBrowser .browsingList .dgrid-row .tile-row {
 	display:table-row;
@@ -78,12 +78,12 @@
 	vertical-align:bottom;
 }
 .dexistCollectionBrowser .browsingList .dgrid-row .tile-text {
-    display: block;
-    max-height: 5em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100px;
-    word-wrap: break-word;
+	display: block;
+	max-height: 5em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 100px;
+	word-wrap: break-word;
 }
 
 .dexistCollectionBrowser .browsingList.thumbnailx1 .dgrid-row {
@@ -224,25 +224,38 @@
 	max-width:128px;
 	max-height:128px;
 }
-
 .dexistCollectionBrowser .breadcrumb {
-  height: 16px;
-  padding: 4px;
+    min-height:20px;
 }
-
+.dexistCollectionBrowser .breadcrumb a {
+	font-size:110%;
+	display:inline-block;
+	border-right:1px solid #ccc;
+	background-color:#e9f2fe;
+	padding: 4px 2px;
+}
+.dexistCollectionBrowser .breadcrumb a {
+	display:inline-block;
+	padding: 4px 6px 4px;
+}
 .dexistCollectionBrowser .breadcrumb a:hover {
 	color:#aa8899;
 	cursor:pointer;
+	background-color:#cee6fa;
 	text-decoration: underline;
 }
 
 .dexistCollectionBrowser .breadcrumb a:before {
-	content:"▸";
+	content:"▶";
+	position:relative;
+	font-size:8px;
+	top:-2.5px;
+	margin-right:2px;
 	display:inline-block;
-	margin-left:0.1em;
 }
 
 .dexistCollectionBrowser .dijitToolbar {
+    font-size:90%;
 }
 .dexistCollectionBrowser .dijitToolbar .dijitIcon {
 	width:16px;
@@ -260,7 +273,11 @@
 	margin:0 .4em;
 }
 .dexistCollectionBrowser .dijitToolbar .dformaLabelNode:after {
-	content:"▸";
+	content:"▶";
+	position:relative;
+	font-size:8px;
+	top:-.5px;
+	margin-right:2px;
 	display:inline-block;
 }
 .dexistCollectionBrowser .dijitToolbar .dformaLabelNode:hover {

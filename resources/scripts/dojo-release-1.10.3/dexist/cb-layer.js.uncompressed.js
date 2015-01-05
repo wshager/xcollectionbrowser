@@ -19387,6 +19387,149 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 });
 
 },
+'dgrid/util/touch':function(){
+define([
+	'dojo/on',
+	'dojo/query'
+], function (on, query) {
+	// This module exposes useful functions for working with touch devices.
+
+	var util = {
+		// Overridable defaults related to extension events defined below.
+		tapRadius: 10,
+		dbltapTime: 250,
+
+		selector: function (selector, eventType, children) {
+			// summary:
+			//		Reimplementation of on.selector, taking an iOS quirk into account
+			return function (target, listener) {
+				var bubble = eventType.bubble;
+				if (bubble) {
+					// the event type doesn't naturally bubble, but has a bubbling form, use that
+					eventType = bubble;
+				}
+				else if (children !== false) {
+					// for normal bubbling events we default to allowing children of the selector
+					children = true;
+				}
+				return on(target, eventType, function (event) {
+					var eventTarget = event.target;
+
+					// iOS tends to report the text node an event was fired on, rather than
+					// the top-level element; this may end up causing errors in selector engines
+					if (eventTarget.nodeType === 3) {
+						eventTarget = eventTarget.parentNode;
+					}
+
+					// there is a selector, so make sure it matches
+					while (!query.matches(eventTarget, selector, target)) {
+						if (eventTarget === target || !children || !(eventTarget = eventTarget.parentNode)) {
+							return;
+						}
+					}
+					return listener.call(eventTarget, event);
+				});
+			};
+		},
+
+		countCurrentTouches: function (evt, node) {
+			// summary:
+			//		Given a touch event and a DOM node, counts how many current touches
+			//		presently lie within that node.  Useful in cases where an accurate
+			//		count is needed but tracking changedTouches won't suffice because
+			//		other handlers stop events from bubbling high enough.
+
+			if (!('touches' in evt)) {
+				// Not a touch event (perhaps called from a mouse event on a
+				// platform supporting touch events)
+				return -1;
+			}
+
+			var i, numTouches, touch;
+			for (i = 0, numTouches = 0; (touch = evt.touches[i]); ++i) {
+				if (node.contains(touch.target)) {
+					++numTouches;
+				}
+			}
+			return numTouches;
+		}
+	};
+
+	function handleTapStart(target, listener, evt, prevent) {
+		// Common function for handling tap detection.
+		// The passed listener will only be fired when and if a touchend is fired
+		// which confirms the overall gesture resembled a tap.
+
+		if (evt.targetTouches.length > 1) {
+			return; // ignore multitouch
+		}
+
+		var start = evt.changedTouches[0],
+			startX = start.screenX,
+			startY = start.screenY;
+
+		prevent && evt.preventDefault();
+
+		var endListener = on(target, 'touchend', function (evt) {
+			var end = evt.changedTouches[0];
+			if (!evt.targetTouches.length) {
+				// only call listener if this really seems like a tap
+				if (Math.abs(end.screenX - startX) < util.tapRadius &&
+						Math.abs(end.screenY - startY) < util.tapRadius) {
+					prevent && evt.preventDefault();
+					listener.call(this, evt);
+				}
+				endListener.remove();
+			}
+		});
+	}
+
+	function tap(target, listener) {
+		// Function usable by dojo/on as a synthetic tap event.
+		return on(target, 'touchstart', function (evt) {
+			handleTapStart(target, listener, evt);
+		});
+	}
+
+	function dbltap(target, listener) {
+		// Function usable by dojo/on as a synthetic double-tap event.
+		var first, timeout;
+
+		return on(target, 'touchstart', function (evt) {
+			if (!first) {
+				// first potential tap: detect as usual, but with specific logic
+				handleTapStart(target, function (evt) {
+					first = evt.changedTouches[0];
+					timeout = setTimeout(function () {
+						first = timeout = null;
+					}, util.dbltapTime);
+				}, evt);
+			}
+			else {
+				handleTapStart(target, function (evt) {
+					// bail out if first was cleared between 2nd touchstart and touchend
+					if (!first) {
+						return;
+					}
+					var second = evt.changedTouches[0];
+					// only call listener if both taps occurred near the same place
+					if (Math.abs(second.screenX - first.screenX) < util.tapRadius &&
+							Math.abs(second.screenY - first.screenY) < util.tapRadius) {
+						timeout && clearTimeout(timeout);
+						first = timeout = null;
+						listener.call(this, evt);
+					}
+				}, evt, true);
+			}
+		});
+	}
+
+	util.tap = tap;
+	util.dbltap = dbltap;
+
+	return util;
+});
+},
 'dijit/hccss':function(){
 define(["dojo/dom-class", "dojo/hccss", "dojo/domReady", "dojo/_base/window"], function(domClass, has, domReady, win){
 
@@ -27756,6 +27899,7 @@ define([
 	"dgrid/Editor",
 	"dgrid/Keyboard",
 	"dgrid/Selection",
+	"dgrid/util/touch",
 	"dgrid/extensions/DijitRegistry",
 	
 	"dforma/Builder",
@@ -27770,7 +27914,7 @@ define([
 	function(declare, lang, array, has, dom, domConstruct, domClass, domGeometry, domForm, on, query, request, locale, cookie, 
 			Memory, Cache, Rest, DstoreAdapter,
 			ContentPane, LayoutContainer, StackContainer, Toolbar, ToolbarSeparator, Dialog, Button, CheckBox, FilteringSelect,  
-			OnDemandGrid, OnDemandList, Editor, Keyboard, Selection, DijitRegistry, 
+			OnDemandGrid, OnDemandList, Editor, Keyboard, Selection, touchUtil, DijitRegistry, 
 			Builder, Grid, DateTimeTextBox, RadioGroup,
 			loadCss, Uploader) {
 		
@@ -27893,9 +28037,9 @@ define([
 			clipboardCut: false,
 			editor: null,
 			tools:null,
-			thumbnailSize:2,
+			thumbnailSize:has("touch") ? 4 : 2,
 			sort:"+internetMediaType",
-			display:"details",
+			display:has("touch") ? "tiles" : "details",
 			persist:true,
 			baseClass:"dexistCollectionBrowser",
 			updateBreadcrumb:function() {
@@ -27935,17 +28079,14 @@ define([
 				this.grid.on('dgrid-refresh-complete',lang.hitch(this,function() {
 					this.resize();
 					var p = dijit.getEnclosingWidget(this.domNode.parentNode);
-					if(p) p.resize();
-				}));						
-				this.grid.on(".dgrid-row:dblclick", lang.hitch(this,function(ev) {
-					var row = this.grid.row(ev);
-					var item = row.data;
-					if(item.isCollection) {
-						this.refresh("/db/"+item.id);
-					} else {
-						this.onSelectResource(item.id,item,ev);
+					if(p) {
+						setTimeout(function(){
+							p.resize();
+						},250);
 					}
-				}));
+				}));						
+				this.grid.on(".dgrid-row:dblclick", lang.hitch(this,"_gridDblClick"));
+				this.grid.on(touchUtil.selector(".dgrid-row", touchUtil.dbltap), lang.hitch(this,"_gridDblClick"));
 				this.grid.on("dgrid-select", lang.hitch(this,function(ev){
 					selection = array.map(ev.rows,function(_){
 						return _.data;
@@ -27960,6 +28101,15 @@ define([
 				}));
 				domClass.add(this.grid.domNode,"thumbnailx"+this.thumbnailSize);
 				this.grid.startup();
+			},
+			_gridDblClick:function(ev) {
+				var row = this.grid.row(ev);
+				var item = row.data;
+				if(item.isCollection) {
+					this.refresh("/db/"+item.id);
+				} else {
+					this.onSelectResource(item.id,item,ev);
+				}
 			},
 			_destroyGrid:function(){
 				this.browsingPage.removeChild(this.grid);
@@ -45762,6 +45912,70 @@ define([
 });
 
 },
+'xstyle/css':function(){
+define(["require"], function(moduleRequire){
+"use strict";
+/*
+ * AMD css! plugin
+ * This plugin will load and wait for css files.  This could be handy when
+ * loading css files as part of a layer or as a way to apply a run-time theme. This
+ * module checks to see if the CSS is already loaded before incurring the cost
+ * of loading the full CSS loader codebase
+ */
+ 	function testElementStyle(tag, id, property){
+ 		// test an element's style
+		var docElement = document.documentElement;
+		var testDiv = docElement.insertBefore(document.createElement(tag), docElement.firstChild);
+		testDiv.id = id;
+		var styleValue = (testDiv.currentStyle || getComputedStyle(testDiv, null))[property];
+		docElement.removeChild(testDiv);
+ 		return styleValue;
+ 	} 
+ 	return {
+		load: function(resourceDef, require, callback, config) {
+			var url = require.toUrl(resourceDef);
+			var cachedCss = require.cache && require.cache['url:' + url];
+			if(cachedCss){
+				// we have CSS cached inline in the build
+				if(cachedCss.xCss){
+					var parser = cachedCss.parser;
+					var xCss =cachedCss.xCss;
+					cachedCss = cachedCss.cssText;
+				}
+				moduleRequire(['./util/createStyleSheet'],function(createStyleSheet){
+					createStyleSheet(cachedCss);
+				});
+				if(xCss){
+					//require([parsed], callback);
+				}
+				return checkForParser();
+			}
+			function checkForParser(){
+				var parser = testElementStyle('x-parse', null, 'content');
+				if(parser && parser != 'none'){
+					// TODO: wait for parser to load
+					require([eval(parser)], callback);
+				}else{
+					callback();
+				}
+			}
+			
+			// if there is an id test available, see if the referenced rule is already loaded,
+			// and if so we can completely avoid any dynamic CSS loading. If it is
+			// not present, we need to use the dynamic CSS loader.
+			var displayStyle = testElementStyle('div', resourceDef.replace(/\//g,'-').replace(/\..*/,'') + "-loaded", 'display');
+			if(displayStyle == "none"){
+				return checkForParser();
+			}
+			// use dynamic loader
+			moduleRequire(["./core/load-css"], function(load){
+				load(url, checkForParser);
+			});
+		}
+	};
+});
+
+},
 'dforma/validate/web':function(){
 define(["./_base", "./regexp"], function(validate, xregexp){
 
@@ -45852,70 +46066,6 @@ validate.getEmailAddressList = function(value, flags) {
 };
 
 return validate;
-});
-
-},
-'xstyle/css':function(){
-define(["require"], function(moduleRequire){
-"use strict";
-/*
- * AMD css! plugin
- * This plugin will load and wait for css files.  This could be handy when
- * loading css files as part of a layer or as a way to apply a run-time theme. This
- * module checks to see if the CSS is already loaded before incurring the cost
- * of loading the full CSS loader codebase
- */
- 	function testElementStyle(tag, id, property){
- 		// test an element's style
-		var docElement = document.documentElement;
-		var testDiv = docElement.insertBefore(document.createElement(tag), docElement.firstChild);
-		testDiv.id = id;
-		var styleValue = (testDiv.currentStyle || getComputedStyle(testDiv, null))[property];
-		docElement.removeChild(testDiv);
- 		return styleValue;
- 	} 
- 	return {
-		load: function(resourceDef, require, callback, config) {
-			var url = require.toUrl(resourceDef);
-			var cachedCss = require.cache && require.cache['url:' + url];
-			if(cachedCss){
-				// we have CSS cached inline in the build
-				if(cachedCss.xCss){
-					var parser = cachedCss.parser;
-					var xCss =cachedCss.xCss;
-					cachedCss = cachedCss.cssText;
-				}
-				moduleRequire(['./util/createStyleSheet'],function(createStyleSheet){
-					createStyleSheet(cachedCss);
-				});
-				if(xCss){
-					//require([parsed], callback);
-				}
-				return checkForParser();
-			}
-			function checkForParser(){
-				var parser = testElementStyle('x-parse', null, 'content');
-				if(parser && parser != 'none'){
-					// TODO: wait for parser to load
-					require([eval(parser)], callback);
-				}else{
-					callback();
-				}
-			}
-			
-			// if there is an id test available, see if the referenced rule is already loaded,
-			// and if so we can completely avoid any dynamic CSS loading. If it is
-			// not present, we need to use the dynamic CSS loader.
-			var displayStyle = testElementStyle('div', resourceDef.replace(/\//g,'-').replace(/\..*/,'') + "-loaded", 'display');
-			if(displayStyle == "none"){
-				return checkForParser();
-			}
-			// use dynamic loader
-			moduleRequire(["./core/load-css"], function(load){
-				load(url, checkForParser);
-			});
-		}
-	};
 });
 
 },
