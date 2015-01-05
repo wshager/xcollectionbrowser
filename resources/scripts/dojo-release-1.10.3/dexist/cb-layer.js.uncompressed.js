@@ -28076,15 +28076,15 @@ define([
 			},
 			_connectGrid:function(){
 				this.browsingPage.addChild(this.grid);
-				this.grid.on('dgrid-refresh-complete',lang.hitch(this,function() {
-					this.resize();
-					var p = dijit.getEnclosingWidget(this.domNode.parentNode);
-					if(p) {
-						setTimeout(function(){
+				this.grid.on('dgrid-refresh-complete',lang.hitch(this,function(){
+					setTimeout(lang.hitch(this,function() {
+						this.resize();
+						var p = dijit.getEnclosingWidget(this.domNode.parentNode);
+						if(p) {
 							p.resize();
-						},250);
-					}
-				}));						
+						}
+					}),250);
+				}));	
 				this.grid.on(".dgrid-row:dblclick", lang.hitch(this,"_gridDblClick"));
 				this.grid.on(touchUtil.selector(".dgrid-row", touchUtil.dbltap), lang.hitch(this,"_gridDblClick"));
 				this.grid.on("dgrid-select", lang.hitch(this,function(ev){
