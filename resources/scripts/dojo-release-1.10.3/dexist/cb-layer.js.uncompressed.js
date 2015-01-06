@@ -12381,7 +12381,7 @@ has.add("dom-qsa", !!querySelectorAll);
 // this is a simple query engine. It has handles basic selectors, and for simple
 // common selectors is extremely fast
 var liteEngine = function(selector, root){
-// summary:
+	// summary:
 	//		A small lightweight query selector engine that implements CSS2.1 selectors
 	//		minus pseudo-classes and the sibling combinator, plus CSS3 attribute selectors
 
@@ -16534,7 +16534,7 @@ define([], forDocument = function(doc, newFragmentFasterHeuristic){
 	//		To create a simple div with a class name of "foo":
 	//		|	put("div.foo");
 	fragmentFasterHeuristic = newFragmentFasterHeuristic || fragmentFasterHeuristic;
-	var selectorParse = /(?:\s*([-+ ,<>]))?\s*(\.|!\.?|#)?([-\w%$|]+)?(?:\[([^\]=]+)=?['"]?([^\]'"]*)['"]?\])?/g,
+	var selectorParse = /(?:\s*([-+ ,<>]))?\s*(\.|!\.?|#)?([-\w\u00A0-\uFFFF%$|]+)?(?:\[([^\]=]+)=?['"]?([^\]'"]*)['"]?\])?/g,
 		undefined, namespaceIndex, namespaces = false,
 		doc = doc || document,
 		ieCreateElement = typeof doc.createElement == "object"; // telltale sign of the old IE behavior with createElement that does not support later addition of name 
@@ -22211,6 +22211,7 @@ define(['dojo/_base/declare'], function (declare) {
 		lte: filterCreator('lte'),
 		gt: filterCreator('gt'),
 		gte: filterCreator('gte'),
+		contains: filterCreator('contains'),
 		'in': filterCreator('in'),
 		match: filterCreator('match')
 	});
@@ -24493,7 +24494,8 @@ define([
 			return value === required;
 		},
 		'in': function(value, required) {
-			return arrayUtil.indexOf(required, value) > -1;
+			// allow for a collection of data
+			return arrayUtil.indexOf(required.data || required, value) > -1;
 		},
 		ne: function (value, required) {
 			return value !== required;
@@ -24512,6 +24514,18 @@ define([
 		},
 		match: function (value, required, object) {
 			return required.test(value, object);
+		},
+		contains: function (value, required, object, key) {
+			var collection = this;
+			return arrayUtil.every(required.data || required, function (requiredValue) {
+				if (typeof requiredValue === 'object' && requiredValue.type) {
+					var comparator = collection._getFilterComparator(requiredValue.type);
+					return arrayUtil.some(value, function (item) {
+						return comparator.call(collection, item, requiredValue.args[1], object, key);
+					});
+				}
+				return arrayUtil.indexOf(value, requiredValue) > -1;
+			});
 		}
 	};
 
@@ -24533,9 +24547,14 @@ define([
 					// it is a comparator
 					var firstArg = args[0];
 					var secondArg = args[1];
+					if (secondArg && secondArg.fetchSync) {
+						// if it is a collection, fetch the contents (for `in` and `contains` operators)
+						secondArg = secondArg.fetchSync();
+					}
 					return function (object) {
 						// get the value for the property and compare to expected value
-						return comparator(queryAccessors && object.get ? object.get(firstArg) : object[firstArg], secondArg, object);
+						return comparator.call(collection,
+							queryAccessors && object.get ? object.get(firstArg) : object[firstArg], secondArg, object, firstArg);
 					};
 				}
 				switch (type) {
@@ -24590,7 +24609,28 @@ define([
 			return comparators[type] || this.inherited(arguments);
 		},
 
+		_createSelectQuerier: function (properties) {
+			return function (data) {
+				var l = properties.length;
+				return arrayUtil.map(data, properties instanceof Array ?
+					// array of properties
+					function (object) {
+						var selectedObject = {};
+						for (var i = 0; i < l; i++) {
+							var property = properties[i];
+							selectedObject[property] = object[property];
+						}
+						return selectedObject;
+					} :
+					// single property
+					function (object) {
+						return object[properties];
+					});
+			};
+		}
+
 		/* jshint ignore:start */
+		,
 		_createSortQuerier: function (sorted) {
 			return function (data) {
 				data = data.slice();
@@ -24610,7 +24650,7 @@ define([
 
 							comparison = aValue === bValue
 								? 0
-								: (!!descending === (aValue === null || aValue > bValue) ? -1 : 1);
+								: (!!descending === (aValue === null || aValue > bValue && bValue !== null) ? -1 : 1);
 						}
 
 						if (comparison !== 0) {
@@ -25232,6 +25272,8 @@ define([
 			// options: dstore/JsonRest
 			//		This provides any configuration information that will be mixed into the store
 			this.headers || (this.headers = {});
+
+			this._targetContainsQueryString = this.target.lastIndexOf('?') >= 0;
 		},
 
 		// headers: Object
@@ -25253,6 +25295,9 @@ define([
 		//		prepended to the id to generate the URL (relative or absolute) for requests
 		//		sent to the server
 		target: '',
+
+		// _targetContainsQueryString: Boolean
+		//		A flag indicating whether the target contains a query string
 
 		// sortParam: String
 		//		The query parameter to used for holding sort information. If this is omitted, than
@@ -25332,7 +25377,7 @@ define([
 			}
 
 			if (queryParams.length > 0) {
-				requestUrl += '?' + queryParams.join('&');
+				requestUrl += (this._targetContainsQueryString ? '&' : '?') + queryParams.join('&');
 			}
 
 			var response = request(requestUrl, {
@@ -26545,7 +26590,7 @@ define([
 			this._set("connectId", newId);
 		},
 
-		addTarget: function(/*OomNode|String*/ node){
+		addTarget: function(/*DomNode|String*/ node){
 			// summary:
 			//		Attach tooltip to specified node if it's not already connected
 
@@ -28080,7 +28125,7 @@ define([
 					setTimeout(lang.hitch(this,function() {
 						if(this.persist){
 							// selection may be set from cookie
-							var resources = cookie("dexistSelection").split(",");
+							var resources = (""+cookie("dexistSelection")).split(",");
 							if(resources.length) {
 								this.setSelected(resources);
 								// properties page may be selected
@@ -35585,7 +35630,7 @@ define(['dojo/_base/lang', 'dojo/when'], function (lang, when) {
 	function forEach(callback, instance) {
 		return when(this, function(data) {
 			for (var i = 0, l = data.length; i < l; i++){
-				callback.call(instance, data[i], data);
+				callback.call(instance, data[i], i, data);
 			}
 		});
 	}
@@ -35601,7 +35646,9 @@ define(['dojo/_base/lang', 'dojo/when'], function (lang, when) {
 						data.totalLength || data.length;
 				// make it available on the resolved data
 				data.totalLength = totalLength;
-				return totalLength;
+				// don't return the totalLength promise unless we need to, to avoid
+				// triggering a lazy promise
+				return !hasTotalLength && totalLength;
 			});
 			// make the totalLength available on the promise (whether through the options or the enventual
 			// access to the resolved data)
@@ -39830,30 +39877,28 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 
 		text: function(/*String*/value){
 			// summary:
-			//		allows setting the text value of each node in the NodeList,
-			//		if there is a value passed in, otherwise, returns the text value for all the
+			//		Allows setting the text value of each node in the NodeList,
+			//		if there is a value passed in.  Otherwise, returns the text value for all the
 			//		nodes in the NodeList in one string.
 			// example:
-			//		assume a DOM created by this markup:
+			//		Assume a DOM created by this markup:
 			//	|	<div id="foo"></div>
 			//	|	<div id="bar"></div>
 			//		This code inserts "Hello World" into both divs:
-			//	|	require(["dojo/query", "dojo/NodeList-manipulate"
-			//	|	], function(query){
+			//	|	require(["dojo/query", "dojo/NodeList-manipulate"], function(query){
 			//	|		query("div").text("Hello World");
 			//	| 	});
 			// example:
-			//		assume a DOM created by this markup:
+			//		Assume a DOM created by this markup:
 			//	|	<div id="foo"><p>Hello Mars <span>today</span></p></div>
 			//	|	<div id="bar"><p>Hello World</p></div>
-			//		This code returns "Hello Mars today":
-			//	|	require(["dojo/query", "dojo/NodeList-manipulate"
-			//	|	], function(query){
-			//	|		var message = query("div").text();
+			//		This code writes "Hello Mars todayHello World" to the console:
+			//	|	require(["dojo/query", "dojo/NodeList-manipulate"], function(query){
+			//	|		console.log(query("div").text());
 			//	| 	});
 			// returns:
-			//		if no value is passed, the result is String, the text value of the first node.
-			//		If a value is passed, the return is this dojo/NodeList
+			//		If no value is passed, the result is String: the text value of the nodes.
+			//		If a value is passed, the return is this dojo/NodeList.
 			if(arguments.length){
 				for(var i = 0, node; node = this[i]; i++){
 					if(node.nodeType == 1){
@@ -39872,7 +39917,7 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 
 		val: function(/*String||Array*/value){
 			// summary:
-			//		If a value is passed, allows seting the value property of form elements in this
+			//		If a value is passed, allows setting the value property of form elements in this
 			//		NodeList, or properly selecting/checking the right value for radio/checkbox/select
 			//		elements. If no value is passed, the value of the first node in this NodeList
 			//		is returned.
@@ -44977,8 +45022,8 @@ define([
 		forEach: function (callback, thisObject) {
 			var collection = this;
 			return when(this.fetch(), function (data) {
-				for (var i = 0, l = data.length; i < l; i++) {
-					callback.call(thisObject, data[i], i, collection);
+				for (var i = 0, item; (item = data[i]) !== undefined; i++) {
+					callback.call(thisObject, item, i, collection);
 				}
 				return data;
 			});
@@ -45133,6 +45178,10 @@ define([
 			}
 		}),
 
+		select: new QueryMethod({
+			type: 'select'
+		}),
+
 		_getQuerierFactory: function (type) {
 			var uppercaseType = type[0].toUpperCase() + type.substr(1);
 			return this['_create' + uppercaseType + 'Querier'];
@@ -45261,7 +45310,6 @@ define([
 			//		- add - A new object was added
 			//		- update - An object was updated
 			//		- delete - An object was deleted
-			//		- refresh - The entire collection has been changed, and the listener should reiterate over the results
 			// listener: Function
 			//		The listener function is called when objects in the query results are modified
 			//		to affect the query result. The listener function is called with a single event object argument:
@@ -45939,7 +45987,8 @@ define(["require"], function(moduleRequire){
 "use strict";
 /*
  * AMD css! plugin
- * This plugin will load and wait for css files.  This could be handy when
+ * This plugin will load and wait for css files. This allows JavaScript resources to 
+ * fully there dependencies on stylesheets. This can also be used when
  * loading css files as part of a layer or as a way to apply a run-time theme. This
  * module checks to see if the CSS is already loaded before incurring the cost
  * of loading the full CSS loader codebase
@@ -45956,6 +46005,14 @@ define(["require"], function(moduleRequire){
  	return {
 		load: function(resourceDef, require, callback, config) {
 			var url = require.toUrl(resourceDef);
+			var options;
+			if(url.match(/!$/)){
+				// a final ! can be used to indicate not to wait for the stylesheet to load
+				options = {
+					wait: false
+				};
+				url = url.slice(0, -1);
+			}
 			var cachedCss = require.cache && require.cache['url:' + url];
 			if(cachedCss){
 				// we have CSS cached inline in the build
@@ -45964,21 +46021,30 @@ define(["require"], function(moduleRequire){
 					var xCss =cachedCss.xCss;
 					cachedCss = cachedCss.cssText;
 				}
-				moduleRequire(['./util/createStyleSheet'],function(createStyleSheet){
-					createStyleSheet(cachedCss);
+				moduleRequire(['./core/load-css'],function(load){
+					checkForParser(load.insertCss(cachedCss));
 				});
 				if(xCss){
 					//require([parsed], callback);
 				}
-				return checkForParser();
+				return;
 			}
-			function checkForParser(){
+			function checkForParser(styleSheetElement){
 				var parser = testElementStyle('x-parse', null, 'content');
+				var sheet = styleSheetElement && 
+					(styleSheetElement.sheet || styleSheetElement.styleSheet);
 				if(parser && parser != 'none'){
 					// TODO: wait for parser to load
-					require([eval(parser)], callback);
+					require([eval(parser)], function(parser){
+						if(styleSheetElement){
+							parser.process(styleSheetElement, callback);
+						}else{
+							parser.processAll();
+							callback(sheet);
+						}
+					});
 				}else{
-					callback();
+					callback(sheet);
 				}
 			}
 			
@@ -45991,7 +46057,7 @@ define(["require"], function(moduleRequire){
 			}
 			// use dynamic loader
 			moduleRequire(["./core/load-css"], function(load){
-				load(url, checkForParser);
+				load(url, checkForParser, options);
 			});
 		}
 	};
@@ -46502,12 +46568,14 @@ define([
 								delete this._singleChildOriginalStyle;
 							}
 						}
-						array.forEach([this.domNode, this.containerNode, this.titleBar], function(node){
-							domStyle.set(node, {
-								position: "static",
-								width: "auto",
-								height: "auto"
-							});
+						array.forEach([this.domNode, this.containerNode, this.titleBar, this.actionBarNode], function(node){
+							if(node){	// because titleBar may not be defined
+								domStyle.set(node, {
+									position: "static",
+									width: "auto",
+									height: "auto"
+								});
+							}
 						});
 						this.domNode.style.position = "absolute";
 					}
@@ -46536,10 +46604,18 @@ define([
 					domGeometry.setMarginBox(this.domNode, dim);
 
 					// And then size this.containerNode
-					var contentDim = utils.marginBox2contentBox(this.domNode, dim),
-						centerSize = {domNode: this.containerNode, region: "center"};
-					utils.layoutChildren(this.domNode, contentDim,
-						[ {domNode: this.titleBar, region: "top"}, centerSize ]);
+					var layoutNodes = [];
+					if(this.titleBar){
+						layoutNodes.push({domNode: this.titleBar, region: "top"});
+					}
+					if(this.actionBarNode){
+						layoutNodes.push({domNode: this.actionBarNode, region: "bottom"});
+					}
+					var centerSize = {domNode: this.containerNode, region: "center"};
+					layoutNodes.push(centerSize);
+
+					var contentDim = utils.marginBox2contentBox(this.domNode, dim);
+					utils.layoutChildren(this.domNode, contentDim, layoutNodes);
 
 					// And then if this.containerNode has a single layout widget child, size it too.
 					// Otherwise, make this.containerNode show a scrollbar if it's overflowing.
@@ -47040,6 +47116,13 @@ define([
 			);
 		},
 
+		destroy: function () {
+			this.inherited(arguments);
+			if (this._refreshTimeout) {
+				clearTimeout(this._refreshTimeout);
+			}
+		},
+
 		renderQuery: function (query, options) {
 			// summary:
 			//		Creates a preload node for rendering a query into, and executes the query
@@ -47210,12 +47293,13 @@ define([
 				}).then(function () {
 					// Emit on a separate turn to enable event to be used consistently for
 					// initial render, regardless of whether the backing store is async
-					setTimeout(function () {
+					self._refreshTimeout = setTimeout(function () {
 						on.emit(self.domNode, 'dgrid-refresh-complete', {
 							bubbles: true,
 							cancelable: false,
 							grid: self
 						});
+						self._refreshTimeout = null;
 					}, 0);
 				});
 			}
@@ -51200,7 +51284,7 @@ define([
 'url:dijit/form/templates/CheckBox.html':"<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\r\n\t><input\r\n\t \t${!nameAttrSetting} type=\"${type}\" role=\"${type}\" aria-checked=\"false\" ${checkedAttrSetting}\r\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\r\n\t\tdata-dojo-attach-point=\"focusNode\"\r\n\t \tdata-dojo-attach-event=\"ondijitclick:_onClick\"\r\n/></div>\r\n",
 'url:dijit/form/templates/Button.html':"<span class=\"dijit dijitReset dijitInline\" role=\"presentation\"\r\n\t><span class=\"dijitReset dijitInline dijitButtonNode\"\r\n\t\tdata-dojo-attach-event=\"ondijitclick:__onClick\" role=\"presentation\"\r\n\t\t><span class=\"dijitReset dijitStretch dijitButtonContents\"\r\n\t\t\tdata-dojo-attach-point=\"titleNode,focusNode\"\r\n\t\t\trole=\"button\" aria-labelledby=\"${id}_label\"\r\n\t\t\t><span class=\"dijitReset dijitInline dijitIcon\" data-dojo-attach-point=\"iconNode\"></span\r\n\t\t\t><span class=\"dijitReset dijitToggleButtonIconChar\">&#x25CF;</span\r\n\t\t\t><span class=\"dijitReset dijitInline dijitButtonText\"\r\n\t\t\t\tid=\"${id}_label\"\r\n\t\t\t\tdata-dojo-attach-point=\"containerNode\"\r\n\t\t\t></span\r\n\t\t></span\r\n\t></span\r\n\t><input ${!nameAttrSetting} type=\"${type}\" value=\"${value}\" class=\"dijitOffScreen\"\r\n\t\tdata-dojo-attach-event=\"onclick:_onClick\"\r\n\t\ttabIndex=\"-1\" role=\"presentation\" aria-hidden=\"true\" data-dojo-attach-point=\"valueNode\"\r\n/></span>\r\n",
 'url:dijit/form/templates/ValidationTextBox.html':"<div class=\"dijit dijitReset dijitInline dijitLeft\"\r\n\tid=\"widget_${id}\" role=\"presentation\"\r\n\t><div class='dijitReset dijitValidationContainer'\r\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\r\n\t/></div\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class=\"dijitReset dijitInputInner\" data-dojo-attach-point='textbox,focusNode' autocomplete=\"off\"\r\n\t\t\t${!nameAttrSetting} type='${type}'\r\n\t/></div\r\n></div>\r\n",
-'url:dexist/templates/Uploader.html':"<div>\n    <p>To upload: drop one or more files on this dialog or click on the button below.</p>\n    <form class=\"file_upload\" action=\"${url}\" method=\"POST\" enctype=\"multipart/form-data\">\n        <div class=\"file_upload_body\">\n            <input type=\"file\" name=\"uploadedfiles[]\" multiple=\"multiple\"/>\n            <input id=\"browsing-upload-collection\" name=\"collection\" value=\"${collection}\" type=\"hidden\"/>\n            <button>Upload</button>\n            <div class=\"file_upload_label\">Upload</div>\n        </div>\n    </form>\n    <div class=\"overall-progress\" style=\"opacity: 0\">\n        <div class=\"bar\" style=\"width: 0%;\"></div>\n        <div class=\"progress-label\">0%</div>\n    </div>\n    <div class=\"queue\">\n        <table class=\"files\"></table>\n    </div>\n</div>",
+'url:dexist/templates/Uploader.html':"<div>\r\n    <p>To upload: drop one or more files on this dialog or click on the button below.</p>\r\n    <form class=\"file_upload\" action=\"${url}\" method=\"POST\" enctype=\"multipart/form-data\">\r\n        <div class=\"file_upload_body\">\r\n            <input type=\"file\" name=\"uploadedfiles[]\" multiple=\"multiple\"/>\r\n            <input id=\"browsing-upload-collection\" name=\"collection\" value=\"${collection}\" type=\"hidden\"/>\r\n            <button>Upload</button>\r\n            <div class=\"file_upload_label\">Upload</div>\r\n        </div>\r\n    </form>\r\n    <div class=\"overall-progress\" style=\"opacity: 0\">\r\n        <div class=\"bar\" style=\"width: 0%;\"></div>\r\n        <div class=\"progress-label\">0%</div>\r\n    </div>\r\n    <div class=\"queue\">\r\n        <table class=\"files\"></table>\r\n    </div>\r\n</div>",
 'url:dijit/form/templates/TextBox.html':"<div class=\"dijit dijitReset dijitInline dijitLeft\" id=\"widget_${id}\" role=\"presentation\"\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class=\"dijitReset dijitInputInner\" data-dojo-attach-point='textbox,focusNode' autocomplete=\"off\"\r\n\t\t\t${!nameAttrSetting} type='${type}'\r\n\t/></div\r\n></div>\r\n",
 '*now':function(r){r(['dojo/i18n!*preload*dexist/nls/cb-layer*["ar","ca","cs","da","de","el","en-gb","en-us","es-es","fi-fi","fr-fr","he-il","hu","it-it","ja-jp","ko-kr","nl-nl","nb","pl","pt-br","pt-pt","ru","sk","sl","sv","th","tr","zh-tw","zh-cn","ROOT"]']);}
 }});
