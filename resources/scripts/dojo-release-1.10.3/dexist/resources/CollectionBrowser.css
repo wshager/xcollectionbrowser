@@ -194,7 +194,7 @@
 }
 
 .dexistCollectionBrowser .browsingGrid .field-internetMediaType {
-	width:44px;
+	width:46px;
 }
 
 .dexistCollectionBrowser .browsingGrid.thumbnailx4 .field-internetMediaType {
@@ -225,7 +225,7 @@
 	max-height:128px;
 }
 .dexistCollectionBrowser .breadcrumb {
-    min-height:20px;
+	height:24px;
 }
 .dexistCollectionBrowser .breadcrumb a {
 	font-size:110%;
@@ -250,12 +250,12 @@
 	position:relative;
 	font-size:8px;
 	top:-2.5px;
-	margin-right:2px;
+	margin:0 2px;
 	display:inline-block;
 }
 
 .dexistCollectionBrowser .dijitToolbar {
-    font-size:90%;
+	font-size:90%;
 }
 .dexistCollectionBrowser .dijitToolbar .dijitIcon {
 	width:16px;
@@ -264,6 +264,9 @@
 }
 .dexistCollectionBrowser .dijitToolbar .dijitButtonDisabled .dijitButtonNode {
 	opacity:.5;
+}
+.dexistCollectionBrowser .dformaBuilder {
+	overflow:auto;
 }
 .dexistCollectionBrowser .dijitToolbar .dformaLabel {
 	margin:0;
@@ -277,7 +280,7 @@
 	position:relative;
 	font-size:8px;
 	top:-.5px;
-	margin-right:2px;
+	margin:0 2px;
 	display:inline-block;
 }
 .dexistCollectionBrowser .dijitToolbar .dformaLabelNode:hover {

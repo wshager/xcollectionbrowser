@@ -28078,6 +28078,17 @@ define([
 				this.browsingPage.addChild(this.grid);
 				this.grid.on('dgrid-refresh-complete',lang.hitch(this,function(){
 					setTimeout(lang.hitch(this,function() {
+						if(this.persist){
+							// selection may be set from cookie
+							var resources = cookie("dexistSelection").split(",");
+							if(resources.length) {
+								this.setSelected(resources);
+								// properties page may be selected
+								if(this.propertiesPage.selected){
+									this._buildPropertiesForm();
+								}
+							}
+						}
 						this.resize();
 						var p = dijit.getEnclosingWidget(this.domNode.parentNode);
 						if(p) {
@@ -28087,20 +28098,24 @@ define([
 				}));	
 				this.grid.on(".dgrid-row:dblclick", lang.hitch(this,"_gridDblClick"));
 				this.grid.on(touchUtil.selector(".dgrid-row", touchUtil.dbltap), lang.hitch(this,"_gridDblClick"));
-				this.grid.on("dgrid-select", lang.hitch(this,function(ev){
-					selection = array.map(ev.rows,function(_){
-						return _.data;
-					});
-					this.updateToolbar(selection.length);
-				}));
-				this.grid.on("dgrid-deselect", lang.hitch(this,function(ev){
-					selection = array.map(ev.rows,function(_){
-						return _.data;
-					});
-					this.updateToolbar(selection.length);
-				}));
+				this.grid.on("dgrid-select", lang.hitch(this,"_gridSelect"));
+				this.grid.on("dgrid-deselect", lang.hitch(this,"_gridSelect"));
 				domClass.add(this.grid.domNode,"thumbnailx"+this.thumbnailSize);
 				this.grid.startup();
+			},
+			_gridSelect:function(ev){
+				selection = array.map(ev.rows,function(_){
+					return _.data;
+				});
+				if(this.persist){
+					var resources = this.getSelected();
+					if(resources && resources.length>0){
+						cookie("dexistSelection",resources.join(","));
+					} else {
+						cookie("dexistSelection","");
+					}
+				}
+				this.updateToolbar(selection.length);
 			},
 			_gridDblClick:function(ev) {
 				var row = this.grid.row(ev);
@@ -28145,7 +28160,7 @@ define([
 							return domConstruct.create('img',{
 								src:require.toUrl("dexist/resources/images/info.svg")
 							});
-					    },
+						},
 						formatter:lang.hitch(this,"formatMediaType")
 					},{
 						label: "Name",
@@ -28425,7 +28440,7 @@ define([
 				this.inherited(arguments);
 			},
 			getSelected: function(collectionsOnly) {
-				if(selection.length && selection.length > 0) {
+				if(selection && selection.length > 0) {
 					var resources = [];
 					array.forEach(selection, function(item) {
 						if (!collectionsOnly || item.isCollection)
@@ -28434,6 +28449,13 @@ define([
 					return resources;
 				}
 				return null;
+			},
+			setSelected: function(resources) {
+				if(resources && resources.length > 0) {
+					array.forEach(resources, function(id) {
+						this.grid.select(this.grid.row(id));
+					},this);
+				}
 			},
 			refresh: function(collection) {
 				if(collection) {
