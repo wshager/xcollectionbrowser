@@ -117,7 +117,7 @@ declare function db:reindex($target as xs:string, $id as xs:string, $directives 
 
 declare function db:delete-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
 	try {
-		for $item in $resources/string()
+		for $item in $resources/json:value/string()
 			let $resource := "/db/" || $item
 			return
 				if (xmldb:collection-available($resource)) then
