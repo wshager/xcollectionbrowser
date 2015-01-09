@@ -232,10 +232,6 @@
 	display:inline-block;
 	border-right:1px solid #ccc;
 	background-color:#e9f2fe;
-	padding: 4px 2px;
-}
-.dexistCollectionBrowser .breadcrumb a {
-	display:inline-block;
 	padding: 4px 6px 4px;
 }
 .dexistCollectionBrowser .breadcrumb a:hover {
@@ -255,7 +251,6 @@
 }
 
 .dexistCollectionBrowser .dijitToolbar {
-	font-size:90%;
 }
 .dexistCollectionBrowser .dijitToolbar .dijitIcon {
 	width:16px;
