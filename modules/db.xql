@@ -145,29 +145,43 @@ declare
 function db:permissions-from-data($permissions) {
 	string-join(
 		for $type in ("User", "Group", "Other")
-			return db:rwx-from-data($permissions[id = $type])
+			return db:rwx-from-data($permissions[id = $type], $type)
 	)
 };
 
 declare
 	%private
 function db:rwx-from-data($permissions) {
+    db:rwx-from-data($permissions,"")
+};
+
+declare
+    %private
+function db:rwx-from-data($permissions,$type as xs:string) {
 	let $perms := map {
 		"read" := "r",
 		"write" := "w",
 		"execute" := "x"
 	}
-	return
-		string-join(
-			for $perm in ("read", "write", "execute")
-				let $param := $permissions/*[name() = $perm]
-				return
-					if($param = "true") then
-						$perms($perm)
-					else
-						"-",
-				""
-		)
+	let $ret := 
+		for $perm in ("read", "write", "execute")
+			let $param := $permissions/*[name() = $perm]
+			return
+				if($param = "true") then
+					$perms($perm)
+				else
+					"-"
+	let $special :=
+		if($permissions/special = "true") then
+			if($type = ("User","Group")) then
+				"s"
+			else if($type = "Other") then 
+				"t"
+			else
+				$ret[3]
+		else
+			$ret[3]
+	return concat($ret[1],$ret[2],$special)
 };
 
 declare
