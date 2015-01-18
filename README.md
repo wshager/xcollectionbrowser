@@ -17,7 +17,21 @@ Build the package and install into eXist using the manager in the dashboard.
 
 To test, point your browser to http://localhost:8080/exist/apps/collectionbrowser/
 
+Building
 --------
+
+To build the javascript client from scratch you need to download the [Dojo Toolkit source files](http://dojotoolkit.org/download/) and `git clone` the following packages into the same directory where you unpack it:
+
+* https://github.com/sitepen/dstore
+* https://github.com/lagua/dforma
+* https://github.com/sitepen/dgrid
+* https://github.com/kriszyp/xstyle
+* https://github.com/kriszyp/put-selector
+
+Create an environment variable DOJO_HOME pointing to the dojo directory inside the source directory. Then run `ant` with the target `main`.
+
+----------
+
 
 If you want to use the collection browser from your app, add the dojo scripts and CSS to your page, where 'resources' should be replaced with the path to /exist/apps/collectionbrowser/resources from your current setup, and 'claro' may be replaced with the theme of your choice:
 ```html
