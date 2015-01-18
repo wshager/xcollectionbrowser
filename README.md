@@ -30,6 +30,7 @@ To build the javascript client from scratch you need to download the [Dojo Toolk
 
 Create an environment variable DOJO_HOME pointing to the dojo directory inside the source directory. Then run `ant` with the target `main`.
 
+Embedding
 ----------
 
 
