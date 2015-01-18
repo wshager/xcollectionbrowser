@@ -22,6 +22,7 @@ Building
 
 To build the javascript client from scratch you need to download the [Dojo Toolkit source files](http://dojotoolkit.org/download/) and `git clone` the following packages into the same directory where you unpack it:
 
+* https://github.com/wshager/dexist
 * https://github.com/lagua/dforma
 * https://github.com/sitepen/dstore
 * https://github.com/sitepen/dgrid
