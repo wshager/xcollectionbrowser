@@ -12710,7 +12710,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		event.
 		// description:
 		//		To listen for "click" events on a button node, we can do:
-		//		|	define(["dojo/on"], function(listen){
+		//		|	define(["dojo/on"], function(on){
 		//		|		on(button, "click", clickHandler);
 		//		|		...
 		//		Evented JavaScript objects can also have their own events.
@@ -12719,7 +12719,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		And then we could publish a "foo" event:
 		//		|	on.emit(obj, "foo", {key: "value"});
 		//		We can use extension events as well. For example, you could listen for a tap gesture:
-		//		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
+		//		|	define(["dojo/on", "dojo/gesture/tap", function(on, tap){
 		//		|		on(button, tap, tapHandler);
 		//		|		...
 		//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
@@ -12898,7 +12898,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		Indicates if children elements of the selector should be allowed. This defaults to 
 		//		true
 		// example:
-		// |	require(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(listen, mouse){
+		// |	require(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(on, mouse){
 		// |		on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
 		return function(target, listener){
 			// if the selector is function, use it to select the node, otherwise use the matches method
@@ -19038,10 +19038,6 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 			});
 		};
 
-	if(has("dojo-unit-tests")){
-		var unitTests = thisModule.unitTests = [];
-	}
-
 	if(has("dojo-preload-i18n-Api") ||  1 ){
 		var normalizeLocale = thisModule.normalizeLocale = function(locale){
 				var result = locale ? locale.toLowerCase() : dojo.locale;
@@ -19346,35 +19342,6 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 			);
 			return result;
 		};
-
-		if(has("dojo-unit-tests")){
-			unitTests.push(function(doh){
-				doh.register("tests.i18n.unit", function(t){
-					var check;
-
-					check = evalBundle("{prop:1}", checkForLegacyModules, "nonsense", amdValue);
-					t.is({prop:1}, check); t.is(undefined, check[1]);
-
-					check = evalBundle("({prop:1})", checkForLegacyModules, "nonsense", amdValue);
-					t.is({prop:1}, check); t.is(undefined, check[1]);
-
-					check = evalBundle("{'prop-x':1}", checkForLegacyModules, "nonsense", amdValue);
-					t.is({'prop-x':1}, check); t.is(undefined, check[1]);
-
-					check = evalBundle("({'prop-x':1})", checkForLegacyModules, "nonsense", amdValue);
-					t.is({'prop-x':1}, check); t.is(undefined, check[1]);
-
-					check = evalBundle("define({'prop-x':1})", checkForLegacyModules, "nonsense", amdValue);
-					t.is(amdValue, check); t.is({'prop-x':1}, amdValue.result);
-
-					check = evalBundle("define('some/module', {'prop-x':1})", checkForLegacyModules, "nonsense", amdValue);
-					t.is(amdValue, check); t.is({'prop-x':1}, amdValue.result);
-
-					check = evalBundle("this is total nonsense and should throw an error", checkForLegacyModules, "nonsense", amdValue);
-					t.is(check instanceof Error, true);
-				});
-			});
-		}
 	}
 
 	return lang.mixin(thisModule, {
@@ -27954,7 +27921,7 @@ define([
 	
 	"./util/load-css",
 	"./Uploader",
-	"dojo/_base/sniff"
+	"dojo/sniff"
 ],
 	function(declare, lang, array, has, dom, domConstruct, domClass, domGeometry, domForm, on, query, request, locale, cookie, 
 			Memory, Cache, Rest, DstoreAdapter,
@@ -27962,6 +27929,24 @@ define([
 			OnDemandGrid, OnDemandList, Editor, Keyboard, Selection, touchUtil, DijitRegistry, 
 			Builder, Grid, DateTimeTextBox, RadioGroup,
 			loadCss, Uploader) {
+	
+	
+		if(has("ie") < 9) {
+			lang.extend(Array, {
+				indexOf: function(x){
+					return array.indexOf(this,x);
+				},
+				forEach: function(fn) {
+					return array.forEach(this,fn);
+				},
+				map: function(fn) {
+					return array.map(this,fn);
+				},
+				filter: function(fn) {
+					return array.filter(this,fn);
+				}
+			});
+		}
 		
 		var util = {
 			confirm: function(title, message, callback) {
@@ -28087,11 +28072,13 @@ define([
 			display:has("touch") ? "tiles" : "details",
 			persist:true,
 			baseClass:"dexistCollectionBrowser",
+			rootId:"",
 			updateBreadcrumb:function() {
 				var self = this;
 				this.breadcrumb.innerHTML = "";
-				array.forEach(this.collection.split("/"),function(part,i,parts){
-					if(!part) return;
+				var rootCount = this.rootId.split("/").length;
+				this.collection.split("/").forEach(function(part,i,parts){
+					if(!part || i<rootCount) return;
 					domConstruct.create("a",{
 						innerHTML:part,
 						target: parts.slice(0,i+1).join("/"),
@@ -28114,8 +28101,8 @@ define([
 				var files = ["xml","xhtml+xml","xquery","json","css","xslt+xml","xml-dtd","html","x-javascript","octet-stream"];
 				var thumb = item.thumbnail ? this.target+"thumb"+item.thumbnail :
 					base+"/"+(item.isCollection ? "collection" : 
-						array.indexOf(files,ext)>-1 ? ext : 
-							array.indexOf(files,sub)>-1 ? sub : 
+						files.indexOf(ext)>-1 ? ext : 
+							files.indexOf(sub)>-1 ? sub : 
 								sup =="image" ? "img" : "generic")+".png";
 				return "<img title=\""+value+"\" class=\"thumbnail\" src=\""+thumb+"\"/>";
 			},
@@ -28149,8 +28136,10 @@ define([
 				this.grid.startup();
 			},
 			_gridSelect:function(ev){
-				selection = array.map(ev.rows,function(_){
+				selection = ev.rows.map(function(_){
 					return _.data;
+				}).filter(function(_){
+					return !!_;
 				});
 				if(this.persist){
 					var resources = this.getSelected();
@@ -28260,7 +28249,7 @@ define([
 					title:"Upload resources"
 				}];
 				this.tools = {};
-				array.forEach(tools,function(_){
+				tools.forEach(function(_){
 					var bt = new Button({
 						title:_.title,
 						iconClass:"toolbar-"+_.id,
@@ -28390,7 +28379,7 @@ define([
 			updateToolbar:function(len){
 				var disable = ["properties","delete","copy","cut"];
 				for(var k in this.tools) {
-					if(array.indexOf(disable,k)>-1){
+					if(disable.indexOf(k)>-1){
 						this.tools[k].set("disabled",len===0);
 					}
 				}
@@ -28402,6 +28391,11 @@ define([
 					this.thumbnailSize = cookie("dexistThumbnailSize") || this.thumbnailSize;
 					this.display = cookie("dexistDisplay") || this.display;
 					this.sort = cookie("dexistSort") || this.sort;
+				}
+				if(this.rootId) {
+					if(this.collection.substr(4,this.rootId.length)!=this.rootId){
+						this.collection = "/db/"+this.rootId;
+					}					
 				}
 				var self = this;
 				
@@ -28465,12 +28459,14 @@ define([
 					cancellable:true,
 					cancel:function(){
 						self.selectChild(self.browsingPage);
+						self.refresh();
 					},
 					submit:function(){
 						if(!this.validate()) return;
 						var data = this.get("value");
 						self.store.put(data).then(function(){
 							self.selectChild(self.browsingPage);
+							self.refresh();
 							util.message("Properties updated successfully", "Properties updated");
 						},function(err){
 							util.message("Changing Properties Failed!", "Could not change properties on all resources! <br>Server says: "+err.response.xhr.responseText);
@@ -28487,7 +28483,7 @@ define([
 			getSelected: function(collectionsOnly) {
 				if(selection && selection.length > 0) {
 					var resources = [];
-					array.forEach(selection, function(item) {
+					selection.forEach(function(item) {
 						if (!collectionsOnly || item.isCollection)
 							resources.push(item.id);
 					});
@@ -28497,7 +28493,7 @@ define([
 			},
 			setSelected: function(resources) {
 				if(resources && resources.length > 0) {
-					array.forEach(resources, function(id) {
+					resources.forEach(function(id) {
 						this.grid.select(this.grid.row(id));
 					},this);
 				}
@@ -29029,6 +29025,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 						req = "dijit/form/ComboBox";
 					break;
 					case "grid":
+					case "list":
 						req = "dforma/Grid";
 					break;
 					case "multiselect":
@@ -29150,6 +29147,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 				case "textarea":
 					cc.block = true;
 				break;
+				case "list":
 				case "grid":
 					cc.hint = c.description || "";
 					if(c.columns) {
@@ -29302,7 +29300,7 @@ var Builder = declare("dforma.Builder",[_GroupMixin,Form],{
 			if(c.controller) {
 				controller = parent.controllerWidget = co;
 			}
-			if(c.type=="grid") {
+			if(c.type=="grid" || c.type=="list") {
 				parent.addChild(co);
 				cc.subform.parentform = co;
 				parent.addChild(cc.subform);
@@ -32720,6 +32718,10 @@ define([
 		// |		_setMyClassAttr: { node: "domNode", type: "class" }
 		//		Maps this.myClass to this.domNode.className
 		//
+		//		- Toggle DOM node CSS class
+		// |		_setMyClassAttr: { node: "domNode", type: "toggleClass" }
+		//		Toggles myClass on this.domNode by this.myClass
+		//
 		//		If the value of _setXXXAttr is an array, then each element in the array matches one of the
 		//		formats of the above list.
 		//
@@ -33368,6 +33370,9 @@ define([
 						break;
 					case "class":
 						domClass.replace(mapNode, value, this[attr]);
+						break;
+					case "toggleClass":
+						domClass.toggle(mapNode, command.className || attr, value);
 						break;
 				}
 			}, this);
@@ -41405,7 +41410,11 @@ define([
 			}
 
 			this.collection = collection;
-			this.refresh();
+
+			// Avoid unnecessary refresh if instance hasn't started yet (startup will refresh)
+			if (this._started) {
+				this.refresh();
+			}
 		},
 
 		_setStore: function () {
@@ -46928,6 +46937,8 @@ define([
 				} else if(prop.type=="array" || prop.hasOwnProperty("enum") || prop.hasOwnProperty("oneOf")) {
 					if(prop.format == "list") {
 						type = "list";
+					} else if(prop.format == "grid") {
+						type = "grid";
 					} else if(prop.format == "select") {
 						type = "select";
 					} else if(prop.format == "radiogroup") {
@@ -46972,7 +46983,7 @@ define([
 				if(prop.hasOwnProperty("description")) {
 					c.description = prop.description;
 				}
-				if(type=="list") {
+				if(type=="list" || type=="grid") {
 					c.columns = prop.columns;
 					c.controller = prop.controller;
 				}
@@ -47210,7 +47221,7 @@ define([
 							self._total = total;
 						}
 						// now we need to adjust the height and total count based on the first result set
-						if (total === 0) {
+						if (total === 0 && parentNode) {
 							if (noDataNode) {
 								put(noDataNode, '!');
 								delete self.noDataNode;
@@ -50900,6 +50911,8 @@ define([
 				});
 			}
 			enableNavigation(this.contentNode);
+
+			this._debouncedEnsureRowScroll = miscUtil.debounce(this._ensureRowScroll, this);
 		},
 
 		removeRow: function (rowElement) {
@@ -51021,6 +51034,22 @@ define([
 				this[isHeader ? 'headerKeyMap' : 'keyMap'], key, callback, true);
 		},
 
+		_ensureRowScroll: function (rowElement) {
+			// summary:
+			//		Ensures that the entire row is visible within the viewport.
+			//		Called for cell navigation in complex structures.
+
+			var scrollY = this.getScrollPosition().y;
+			if (scrollY > rowElement.offsetTop) {
+				// Row starts above the viewport
+				this.scrollTo({ y: rowElement.offsetTop });
+			}
+			else if (scrollY + this.contentNode.offsetHeight < rowElement.offsetTop + rowElement.offsetHeight) {
+				// Row ends below the viewport
+				this.scrollTo({ y: rowElement.offsetTop - this.contentNode.offsetHeight + rowElement.offsetHeight });
+			}
+		},
+
 		_focusOnNode: function (element, isHeader, event) {
 			var focusedNodeProperty = '_focused' + (isHeader ? 'Header' : '') + 'Node',
 				focusedNode = this[focusedNodeProperty],
@@ -51094,6 +51123,10 @@ define([
 
 			if (event) {
 				on.emit(focusedNode, 'dgrid-cellfocusin', event);
+			}
+
+			if (this.cellNavigation && (this.columnSets || this.subRows.length > 1) && !isHeader) {
+				this._debouncedEnsureRowScroll(cell.row.element);
 			}
 		},
 
@@ -51277,6 +51310,7 @@ define([
 
 	return Keyboard;
 });
+
 },
 'url:dijit/form/templates/DropDownBox.html':"<div class=\"dijit dijitReset dijitInline dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\trole=\"combobox\"\r\n\taria-haspopup=\"true\"\r\n\tdata-dojo-attach-point=\"_popupStateNode\"\r\n\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer'\r\n\t\tdata-dojo-attach-point=\"_buttonNode\" role=\"presentation\"\r\n\t\t><input class=\"dijitReset dijitInputField dijitArrowButtonInner\" value=\"&#9660; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"button presentation\" aria-hidden=\"true\"\r\n\t\t\t${_buttonInputDisabled}\r\n\t/></div\r\n\t><div class='dijitReset dijitValidationContainer'\r\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\r\n\t/></div\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class='dijitReset dijitInputInner' ${!nameAttrSetting} type=\"text\" autocomplete=\"off\"\r\n\t\t\tdata-dojo-attach-point=\"textbox,focusNode\" role=\"textbox\"\r\n\t/></div\r\n></div>\r\n",
 'url:dijit/templates/Tooltip.html':"<div class=\"dijitTooltip dijitTooltipLeft\" id=\"dojoTooltip\" data-dojo-attach-event=\"mouseenter:onMouseEnter,mouseleave:onMouseLeave\"\r\n\t><div class=\"dijitTooltipConnector\" data-dojo-attach-point=\"connectorNode\"></div\r\n\t><div class=\"dijitTooltipContainer dijitTooltipContents\" data-dojo-attach-point=\"containerNode\" role='alert'></div\r\n></div>\r\n",
