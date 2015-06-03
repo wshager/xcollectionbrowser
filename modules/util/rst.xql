@@ -13,13 +13,13 @@ import module namespace json="http://www.json.org";
 import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";
 
 (:  the main function to call from the controller :)
-declare function rst:process($path as xs:string, $directives as map) {
+declare function rst:process($path as xs:string, $directives as item()) {
 	let $query := string(request:get-query-string())
 	return rst:process($path, $directives, $query)
 };
 
 (:  function to call from the controller, override query :)
-declare function rst:process($path as xs:string, $directives as map, $query as item()*) {
+declare function rst:process($path as xs:string, $directives as item(), $query as item()*) {
 	let $directives := map:new(($directives, map { "from-controller" := true() }))
 	let $method := request:get-method()
 	let $content-type := string(request:get-header("content-type"))
@@ -33,7 +33,7 @@ declare function rst:process($path as xs:string, $directives as map, $query as i
 };
 
 (:  the main function to call from RESTXQ :)
-declare function rst:process($path as xs:string, $directives as map, $query as item()*, $content-type as xs:string, $accept as xs:string, $data as item()*, $method as xs:string) {
+declare function rst:process($path as xs:string, $directives as item(), $query as item()*, $content-type as xs:string, $accept as xs:string, $data as item()*, $method as xs:string) {
 	let $directives := 
 		if(map:contains($directives,"id-property")) then
 			$directives
@@ -112,31 +112,31 @@ declare function rst:process($path as xs:string, $directives as map, $query as i
 			$response
 };
 
-declare function rst:get($collection as xs:string,$id as xs:string,$directives as map) {
+declare function rst:get($collection as xs:string,$id as xs:string,$directives as item()) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":get"), 3)
 	return $fn($collection,$id,$directives)
 };
 
-declare function rst:query($collection as xs:string,$query as item()*,$directives as map) {
+declare function rst:query($collection as xs:string,$query as item()*,$directives as item()) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":query"), 3)
 	return $fn($collection,$query,$directives)
 };
 
-declare function rst:put($collection as xs:string,$data as node(),$directives as map) {
+declare function rst:put($collection as xs:string,$data as node(),$directives as item()) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":put"), 3)
 	return $fn($collection,$data,$directives)
 };
 
-declare function rst:delete($collection as xs:string,$id as xs:string,$directives as map) {
+declare function rst:delete($collection as xs:string,$id as xs:string,$directives as item()) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":delete"), 3)
 	return $fn($collection,$id,$directives)
 };
 
-declare function rst:rpc($target as xs:string,$method as xs:string,$params as node()*,$id as xs:string,$directives as map) {
+declare function rst:rpc($target as xs:string,$method as xs:string,$params as node()*,$id as xs:string,$directives as item()) {
 	let $module := rst:import-module($directives)
 	let $arity := count($params)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":" || $method), $arity + 3)
@@ -160,7 +160,7 @@ declare function rst:rpc($target as xs:string,$method as xs:string,$params as no
 				$fn($target,$id,$directives)
 };
 
-declare function rst:import-module($directives as map) {
+declare function rst:import-module($directives as item()) {
 	let $uri := xs:anyURI($directives("module-uri"))
 	let $prefix := $directives("module-prefix")
 	let $location := xs:anyURI($directives("module-location"))

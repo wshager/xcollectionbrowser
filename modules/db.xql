@@ -7,13 +7,13 @@ import module namespace sm="http://exist-db.org/xquery/securitymanager";
 declare namespace json="http://www.json.org";
 
 (: standard crud functions :)
-declare function db:get($collection as xs:string, $id as xs:string, $directives as map) {
+declare function db:get($collection as xs:string, $id as xs:string, $directives as item()) {
 	let $is-collection := xmldb:collection-available($collection || "/" || $id)
 	return
 		db:resource-xml($collection || "/" || $id, true(), $is-collection)
 };
 
-declare function db:query($collection as xs:string, $query-string as xs:string, $directives as map) {
+declare function db:query($collection as xs:string, $query-string as xs:string, $directives as item()) {
 	let $rqlquery := rql:parse($query-string)
 	let $parent := util:unescape-uri(rql:get-element-by-property($rqlquery,"collection"),"utf-8")
 	let $resources := 
@@ -49,7 +49,7 @@ declare function db:query($collection as xs:string, $query-string as xs:string, 
 	)
 };
 
-declare function db:put($collection as xs:string, $data as node(), $directives as map) {
+declare function db:put($collection as xs:string, $data as node(), $directives as item()) {
 	let $id := $data/id/string()
 	return
 		if($id) then
@@ -71,7 +71,7 @@ declare function db:put($collection as xs:string, $data as node(), $directives a
 };
 
 (: RPC functions :)
-declare function db:create-collection($target as xs:string, $create as node(), $id as xs:string, $directives as map) {
+declare function db:create-collection($target as xs:string, $create as node(), $id as xs:string, $directives as item()) {
 	let $create := $create/string()
 	let $log := util:log("DEBUG", ("creating collection ", $create))
 	return
@@ -97,15 +97,15 @@ declare function db:create-collection($target as xs:string, $create as node(), $
 			)
 };
 
-declare function db:move-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
+declare function db:move-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as item()) {
 	db:copyOrMove($target, $resources/json:value/string(), "move", $id)
 };
 
-declare function db:copy-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
+declare function db:copy-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as item()) {
 	db:copyOrMove($target, $resources/json:value/string(), "copy", $id)
 };
 
-declare function db:reindex($target as xs:string, $id as xs:string, $directives as map) {
+declare function db:reindex($target as xs:string, $id as xs:string, $directives as item()) {
 	let $reindex := xmldb:reindex($target)
 	return
 		element response { 
@@ -115,7 +115,7 @@ declare function db:reindex($target as xs:string, $id as xs:string, $directives 
 		}
 };
 
-declare function db:delete-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as map) {
+declare function db:delete-resources($target as xs:string, $resources as node()*, $id as xs:string, $directives as item()) {
 	try {
 		for $item in $resources/json:value/string()
 			let $resource := "/db/" || $item
@@ -123,9 +123,9 @@ declare function db:delete-resources($target as xs:string, $resources as node()*
 				if (xmldb:collection-available($resource)) then
 					xmldb:remove($resource)
 				else
-					let $split := text:groups($resource, "^(.*)/([^/]+)$")
+					let $split := analyze-string($resource,"^(.*)/([^/]+)$")//fn:group/text()
 					return
-						xmldb:remove($split[2], $split[3]),
+						xmldb:remove($split[1], $split[2]),
 			<response id="{$id}" error="">
 				<result>Resources removed successfully</result>
 			</response>
@@ -307,13 +307,13 @@ declare %private function db:copyOrMove($target as xs:string, $sources as xs:str
 					default return
 						xmldb:copy($source, $target)
 			else
-				let $split := text:groups($source, "^(.*)/([^/]+)$")
+				let $split := analyze-string($resource,"^(.*)/([^/]+)$")//fn:group/text()
 				let $res :=
 					switch($action)
 						case "move" return
-							xmldb:move($split[2], $target, $split[3])
+							xmldb:move($split[1], $target, $split[2])
 						default return
-							xmldb:copy($split[2], $target, $split[3])
+							xmldb:copy($split[1], $target, $split[2])
 				return
 					<response id="{$id}" error="">
 						<result>{$res}</result>
