@@ -90,8 +90,6 @@ declare variable $rql:operatorMap := map {
 	"<" := "lt",
 	"<=" := "le",
 	"!=" := "ne",
-	"values" := "ne",
-	"!=" := "distinct-values",
 	"mean" := "avg"
 };
 
@@ -110,13 +108,17 @@ declare function rql:to-xq-string($value as node()*) {
     let $v := $value/name/text()
 	return
 	if($v = $rql:operators) then
-		let $path := replace($value/args[1]/text(),"\.",":")
+		let $path :=
+			if($value/args[1]/args) then
+				rql:to-xq-string($value/args[1])
+			else
+				util:unescape-uri(replace($value/args[1]/text(),"\.",":"),"UTF-8")
 		let $operator := $v
 		let $target :=
 			if($value/args[2]/args) then
 				rql:to-xq-string($value/args[2])
 			else
-				rql:converters-default($value/args[2]/text())
+				rql:converters-default(string($value/args[2]))
 		(: ye olde wildcard :)
 		let $operator :=
 			if($value/args[2]/args) then
@@ -124,7 +126,7 @@ declare function rql:to-xq-string($value as node()*) {
 			else if($operator eq "eq" and contains($target,"*")) then
 				"wildcardmatch"
 			else if($target instance of xs:double) then
-				(: reverse lookup :)
+				(: reverse lookup 
 				let $operator := 
 					for $k in map:keys($rql:operatorMap) return
 					    if($rql:operatorMap($k) eq $operator) then
@@ -132,6 +134,8 @@ declare function rql:to-xq-string($value as node()*) {
 					    else
 					        ()
 				return $operator[last()]
+				:)
+				$operator
 			else
 				$operator
 		return
@@ -144,7 +148,11 @@ declare function rql:to-xq-string($value as node()*) {
 			if($v eq "search") then
 				"ft:query"
 			else $v
-		let $path := replace($value/args[1]/text(),"\.",":")
+		let $path :=
+			if($value/args[1]/args) then
+				rql:to-xq-string($value/args[1])
+			else
+				util:unescape-uri(replace($value/args[1]/text(),"\.",":"),"UTF-8")
 		let $range :=
 			if($value/args[3]) then
 				$value/args[3]/text()
@@ -155,9 +163,9 @@ declare function rql:to-xq-string($value as node()*) {
 				if($v eq "ft:query" and $range eq "phrase") then
 					concat(",<phrase>",util:unescape-uri($value/args[2]/text(),"UTF-8"),"</phrase>")
 				else if($v eq "in") then
-					string-join(for $x in $value/args[2]/args return rql:converters-default($x/text()),",")
+					string-join(for $x in $value/args[2]/args return rql:converters-default(string($x)),",")
 				else
-					concat(",",rql:converters-default($value/args[2]/text()))
+					concat(",",rql:converters-default(string($value/args[2])))
 			else
 				""
 		let $params := 
@@ -176,7 +184,11 @@ declare function rql:to-xq-string($value as node()*) {
 			else
 				concat($v,"(",$path,$target,$params,")")
 	else if($v = "deep") then
-		let $path := util:unescape-uri(replace($value/args[1]/text(),"\.",":"),"UTF-8")
+		let $path :=
+			if($value/args[1]/args) then
+				rql:to-xq-string($value/args[1])
+			else
+				util:unescape-uri(replace($value/args[1]/text(),"\.",":"),"UTF-8")
 		let $expr := rql:to-xq-string($value/args[2])
 		return concat($path,"[",$expr,"]")
 	else if($v = ("not")) then
@@ -238,7 +250,7 @@ declare function rql:to-xq($value as node()*) {
 			$limit
 	let $limit := 
 		if(count($limit) > 0 and count($limit)<3) then
-			concat(1,0,$limit)
+			insert-before(1,0,$limit)
 		else
 			$limit
 	return
@@ -324,18 +336,18 @@ declare function rql:get-limit-from-range($range as xs:string, $maxLimit as xs:i
 	let $end := 1 div 0e0
 	return
 		if($range) then
-			let $groups := text:groups($range, "^items=(\d+)-(\d+)?$")
+			let $groups := analyze-string($range,"^items=(\d+)-(\d+)?$")//fn:group/text()
 			return
 			if(count($groups)>0) then
 				let $start := 
-					if($groups[2]) then
-						number($groups[2])
+					if($groups[1]) then
+						number($groups[1])
 					else
 						$start
 				
 				let $end := 
-					if($groups[3]) then
-						number($groups[3])
+					if($groups[2]) then
+						number($groups[2])
 					else
 						$end
 				let $limit :=
@@ -420,6 +432,7 @@ declare variable $rql:autoConvertedString := (
 	"false",
 	"null",
 	"undefined",
+	"",
 	"Infinity",
 	"-Infinity"
 );
@@ -427,30 +440,26 @@ declare variable $rql:autoConvertedString := (
 declare variable $rql:autoConvertedValue := (
 	"true()",
 	"false()",
-	"()",
-	"()",
+	"''",
+	"''",
+	"''",
 	"1 div 0e0",
 	"-1 div 0e0"
 );
 
-declare function rql:converters-auto($string){
+declare function rql:converters-auto($string as xs:string){
 	if($rql:autoConvertedString = $string) then
 		$rql:autoConvertedValue[index-of($rql:autoConvertedString,$string)]
 	else
-		let $number := number($string)
-		return 
-			if($number ne 0 and string($number) ne $string) then
-				if(contains($string,"(")) then
-					util:unescape-uri($string,"UTF-8")
-				else
-					concat("'",util:unescape-uri($string,"UTF-8"),"'")
-			else
-				$number
+		if(contains($string,"(")) then
+			util:unescape-uri($string,"UTF-8")
+		else
+			concat("'",util:unescape-uri($string,"UTF-8"),"'")
 };
-declare function rql:converters-number($x){
+declare function rql:converters-number($x as xs:string){
 	number($x)
 };
-declare function rql:converters-epoch($x){
+declare function rql:converters-epoch($x as xs:string){
 	(:
 		var date = new Date(+x);
 		if (isNaN(date.getTime())) {
@@ -460,7 +469,7 @@ declare function rql:converters-epoch($x){
 		:)
 	$x
 };
-declare function rql:converters-isodate($x){
+declare function rql:converters-isodate($x as xs:string){
 	$x
 	(:
 		// four-digit year
@@ -470,7 +479,7 @@ declare function rql:converters-isodate($x){
 		return exports.converters.date(date);
 	:)
 };
-declare function rql:converters-date($x){
+declare function rql:converters-date($x as xs:string){
 	$x
 	(:
 		var isoDate = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(x);
@@ -487,22 +496,22 @@ declare function rql:converters-date($x){
 };
 
 (: original character class [\+\*\$\-:\w%\._] or with comma :)
-declare variable $rql:ignore := "[A-Za-z0-9\+\*\$\-:%\._]";
-declare variable $rql:ignorec := "[A-Za-z0-9\+\*\$\-:%\._,]";
+declare variable $rql:ignore := "[\+\*\$\-:\w%\._]";
+declare variable $rql:ignorec := "[\+\*\$\-:\w%\._,]";
 
-declare function rql:converters-boolean($x){
+declare function rql:converters-boolean($x as xs:string){
 	$x eq "true"
 };
-declare function rql:converters-string($string){
+declare function rql:converters-string($string as xs:string){
 	xmldb:decode-uri($string)
 };
-declare function rql:converters-re($x){
+declare function rql:converters-re($x as xs:string){
 	xmldb:decode-uri($x)
 };
-declare function rql:converters-RE($x){
+declare function rql:converters-RE($x as xs:string){
 	xmldb:decode-uri($x)
 };
-declare function rql:converters-glob($x){
+declare function rql:converters-glob($x as xs:string){
 	$x
 	(:
 		var s = decodeURIComponent(x).replace(/([\\|\||\(|\)|\[|\{|\^|\$|\*|\+|\?|\.|\<|\>])/g, function(x){return '\\'+x;}).replace(/\\\*/g,'.*').replace(/\\\?/g,'.?');
@@ -519,7 +528,7 @@ declare function rql:converters-glob($x){
 // RP.converters["default"] = RQ.converter.string;
 :)
 
-declare function rql:converters-default($x) {
+declare function rql:converters-default($x as xs:string) {
 	rql:converters-auto($x)
 };
 
@@ -798,7 +807,7 @@ declare function rql:parse-query($query as xs:string?, $parameters as xs:anyAtom
 		else
 			$query
 		(: convert FIQL to normalized call syntax form :)
-		let $analysis := analyze-string($query, concat("(\(",$rql:ignorec,"+\)|",$rql:ignore,"*|)([<>!]?=([A-Za-z0-9]*=)?|>|<)(\(",$rql:ignorec,"+\)|",$rql:ignore,"*|)"))
+		let $analysis := analyze-string($query, concat("(\(",$rql:ignorec,"+\)|",$rql:ignore,"*|)([<>!]?=(?:[\w]*=)?|>|<)(\(",$rql:ignorec,"+\)|",$rql:ignore,"*|)"))
 		
 		let $analysis :=
 			for $x in $analysis/* return
@@ -807,7 +816,7 @@ declare function rql:parse-query($query as xs:string?, $parameters as xs:anyAtom
 				else
 					let $property := $x/fn:group[@nr=1]/text()
 					let $operator := $x/fn:group[@nr=2]/text()
-					let $value := $x/fn:group[@nr=4]/text()
+					let $value := $x/fn:group[@nr=3]/text()
 					let $operator := 
 						if(string-length($operator) < 3) then
 							if(map:contains($rql:operatorMap,$operator)) then
