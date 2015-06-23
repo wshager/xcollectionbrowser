@@ -7,11 +7,6 @@ xquery version "3.0";
 
 module namespace rql="http://lagua.nl/lib/rql";
 
-declare namespace text="http://exist-db.org/xquery/text";
-declare namespace request="http://exist-db.org/xquery/request";
-declare namespace response="http://exist-db.org/xquery/response";
-
-
 declare function rql:to-string($q as node()*) {
     if($q/name) then
         concat($q/name,"(",
@@ -68,9 +63,7 @@ declare function rql:remove-nested-conjunctions($nodes as node()*) as node()* {
 			if($node/name = ("and","or") and count($node/args) = 0) then
 				()
 	 		else if($node/name = ("and","or") and count($node/args) = 1) then
-				element {node-name($node)} {
-					rql:remove-nested-conjunctions($node/args/*)
-				}
+				rql:remove-nested-conjunctions($node/args)
 			else
 				element {node-name($node)} {
 					rql:remove-nested-conjunctions($node/node())
@@ -96,6 +89,10 @@ declare variable $rql:operatorMap := map {
 
 declare function rql:declare-namespaces($node as element(),$nss as xs:string*) {
 	for $ns in $nss return util:declare-namespace($ns,namespace-uri-for-prefix($ns,$node))
+};
+
+declare function rql:declare-namespace($ns,$uri) {
+	util:declare-namespace($ns,$uri)
 };
 
 declare function rql:to-xq-string($value as node()*) {
@@ -789,7 +786,7 @@ declare function rql:parse-query($query as xs:string?, $parameters as xs:anyAtom
 			$query
 	let $query :=
 		if(contains($query,"/")) then
-			let $tokens := tokenize($query,concat("",$rql:ignore,"*/",substring($rql:ignore,1,string-length($rql:ignore)-1),"/]*"))
+			let $tokens := tokenize($query,concat("",$rql:ignore,"*/[",substring($rql:ignore,1,string-length($rql:ignore)-1),"/]*"))
 			let $replaced := fold-left(?,$query,function($q, $x) {
 				if($x) then
 					replace($q,$x,"?")

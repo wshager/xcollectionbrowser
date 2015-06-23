@@ -13,40 +13,44 @@ import module namespace json="http://www.json.org";
 import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";
 
 (:  the main function to call from the controller :)
-declare function rst:process($path as xs:string, $directives as item()) {
-	let $query := string(request:get-query-string())
-	return rst:process($path, $directives, $query)
+declare function rst:process($path as xs:string, $directives as item()*) {
+	rst:process($path, $directives, string(request:get-query-string()))
 };
 
 (:  function to call from the controller, override query :)
-declare function rst:process($path as xs:string, $directives as item(), $query as item()*) {
+declare function rst:process($path as xs:string, $directives as item()*, $query as item()*) {
 	let $directives := map:new(($directives, map { "from-controller" := true() }))
 	let $method := request:get-method()
-	let $content-type := string(request:get-header("content-type"))
-	let $accept := string(request:get-header("accept"))
+	let $content-type := string(request:get-header("Content-Type"))
+	let $accept := string(request:get-header("Accept"))
+	let $range := string(request:get-header("Range"))
 	let $data :=
 		if($method = ("PUT","POST")) then
 			string(request:get-data())
 		else
 			()
-	return rst:process($path, $directives, $query, $content-type, $accept, $data, $method)
+	return rst:process($path, $directives, $query, $content-type, $accept, $data, $method, $range)
 };
 
 (:  the main function to call from RESTXQ :)
-declare function rst:process($path as xs:string, $directives as item(), $query as item()*, $content-type as xs:string, $accept as xs:string, $data as item()*, $method as xs:string) {
-	let $directives := 
-		if(map:contains($directives,"id-property")) then
-			$directives
-		else
-			map:new(($directives, map { "id-property" := "id" }))
+declare function rst:process($path as xs:string, $directives as item()*, $query as item()*, $content-type as xs:string, $accept as xs:string, $data as item()*, $method as xs:string, $range as xs:string) {
+	(: TODO check if all properties are available, if not throw error :)
 	let $model := replace($path, "^/?([^/]+).*", "$1")
 	let $id := replace($path, "^/?" || $model || "/(.*)", "$1")
 	let $root := $directives("root-collection")
+	let $directives := map:new(($directives, map {
+		"content-type" := $content-type,
+		"accept" := $accept,
+		"range" := $range,
+		"model" := $model,
+		"id" := $id,
+		"id-property" := ( if(map:contains($directives,"id-property")) then $directives("id-property") else "id" )
+	}))
 	(: TODO choose default root :)
 	let $collection := $root || "/" || $model
 	let $response :=
 		if($method = "GET") then
-			if($id) then
+			if($query eq "" and $id ne "") then
 				rst:get($collection,$id,$directives)
 			else 
 				rst:query($collection,$query,$directives)
@@ -76,10 +80,19 @@ declare function rst:process($path as xs:string, $directives as item(), $query a
 			rst:delete($collection,$id,$directives)
 		else
 			<http:response status="405" message="Method not implemented"/>
-	let $output := (
-		util:declare-option("output:method", "json"),
-		util:declare-option("output:media-type", "application/json")
-	)
+	let $output :=
+		if(matches($accept,"application/(json|javascript)")) then
+			(
+				util:declare-option("output:method", "json"),
+				util:declare-option("output:media-type", "application/json")
+			)
+		else if(matches($accept,"application/xml")) then
+			(
+				util:declare-option("output:method", "xml"),
+				util:declare-option("output:media-type", "application/xml")
+			)
+		else
+			()
 	return
 		if(name($response[1]) = "http:response") then
 			(: expect custom response :)
@@ -112,31 +125,31 @@ declare function rst:process($path as xs:string, $directives as item(), $query a
 			$response
 };
 
-declare function rst:get($collection as xs:string,$id as xs:string,$directives as item()) {
+declare function rst:get($collection as xs:string,$id as xs:string,$directives as item()*) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":get"), 3)
 	return $fn($collection,$id,$directives)
 };
 
-declare function rst:query($collection as xs:string,$query as item()*,$directives as item()) {
+declare function rst:query($collection as xs:string,$query as item()*,$directives as item()*) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":query"), 3)
 	return $fn($collection,$query,$directives)
 };
 
-declare function rst:put($collection as xs:string,$data as node(),$directives as item()) {
+declare function rst:put($collection as xs:string,$data as node(),$directives as item()*) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":put"), 3)
 	return $fn($collection,$data,$directives)
 };
 
-declare function rst:delete($collection as xs:string,$id as xs:string,$directives as item()) {
+declare function rst:delete($collection as xs:string,$id as xs:string,$directives as item()*) {
 	let $module := rst:import-module($directives)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":delete"), 3)
 	return $fn($collection,$id,$directives)
 };
 
-declare function rst:rpc($target as xs:string,$method as xs:string,$params as node()*,$id as xs:string,$directives as item()) {
+declare function rst:rpc($target as xs:string,$method as xs:string,$params as node()*,$id as xs:string,$directives as item()*) {
 	let $module := rst:import-module($directives)
 	let $arity := count($params)
 	let $fn := function-lookup(xs:QName($directives("module-prefix") || ":" || $method), $arity + 3)
@@ -160,7 +173,7 @@ declare function rst:rpc($target as xs:string,$method as xs:string,$params as no
 				$fn($target,$id,$directives)
 };
 
-declare function rst:import-module($directives as item()) {
+declare function rst:import-module($directives as item()*) {
 	let $uri := xs:anyURI($directives("module-uri"))
 	let $prefix := $directives("module-prefix")
 	let $location := xs:anyURI($directives("module-location"))
