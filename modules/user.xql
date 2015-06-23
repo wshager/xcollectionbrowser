@@ -7,13 +7,13 @@ import module namespace sm="http://exist-db.org/xquery/securitymanager";
 declare namespace json="http://www.json.org";
 
 (: standard crud functions :)
-declare function user:get($collection as xs:string, $id as xs:string, $directives as map) {
+declare function user:get($collection as xs:string, $id as xs:string, $directives as item()*) {
 	element root {
 		element id { $id }
 	}
 };
 
-declare function user:query($collection as xs:string, $query-string as xs:string, $directives as map) {
+declare function user:query($collection as xs:string, $query-string as xs:string, $directives as item()*) {
 	let $result :=
 		for $user in sm:list-users() return
 			element json:value {
