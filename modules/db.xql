@@ -4,6 +4,7 @@ module namespace db="http://exist-db.org/apps/collectionbrowser/db";
 
 import module namespace rql="http://lagua.nl/lib/rql" at "util/rql.xql";
 import module namespace sm="http://exist-db.org/xquery/securitymanager";
+declare namespace http="http://expath.org/ns/http-client";
 declare namespace json="http://www.json.org";
 
 (: standard crud functions :)
